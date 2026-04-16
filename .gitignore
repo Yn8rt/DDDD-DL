@@ -1,3 +1,5 @@
 .DS_Store
 .trae/
-outp/result.txt
+common/config/
+outp/
+文档/
