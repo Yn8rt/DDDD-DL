@@ -1,0 +1,37 @@
+http:
+    - host-redirects: true
+      matchers:
+        - condition: or
+          part: body
+          regex:
+            - (?m)^Missing route token in request$
+            - VMware Horizon
+          type: regex
+      max-redirects: 2
+      method: GET
+      path:
+        - '{{BaseURL}}'
+        - '{{BaseURL}}/portal/webclient/index.html'
+      stop-at-first-match: true
+id: vmware-horizon-panel
+info:
+    author: dhiyaneshDK,pdteam
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: VMware Horizon login panel was detected.
+    metadata:
+        max-request: 2
+    name: VMware Horizon Login Panel - Detect
+    reference:
+        - https://www.exploit-db.com/ghdb/6496
+    severity: info
+    tags:
+        - horizon
+        - vmware
+        - edb
+        - panel
+        - vmware horizon
+        - VMware-Horizon
+        - vmware Horizon

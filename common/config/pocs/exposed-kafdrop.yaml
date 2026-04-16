@@ -1,0 +1,23 @@
+http:
+    - matchers:
+        - condition: and
+          type: word
+          words:
+            - '<title>Kafdrop: Broker List</title>'
+            - Kafka Cluster Overview
+      method: GET
+      path:
+        - '{{BaseURL}}'
+id: exposed-kafdrop
+info:
+    author: dhiyaneshDk
+    metadata:
+        max-request: 1
+    name: Publicly exposed Kafdrop Interface
+    severity: low
+    tags:
+        - exposure
+        - misconfig
+        - kafdrop
+        - Kafdrop
+        - Cluster

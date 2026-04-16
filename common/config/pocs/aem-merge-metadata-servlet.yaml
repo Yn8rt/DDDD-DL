@@ -1,0 +1,28 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - condition: and
+          type: word
+          words:
+            - assetPaths
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/libs/dam/merge/metadata.html?path=/etc&.ico'
+id: aem-merge-metadata-servlet
+info:
+    author: DhiyaneshDk
+    metadata:
+        max-request: 1
+        shodan-query: http.component:"Adobe Experience Manager"
+    name: AEM MergeMetadataServlet
+    reference:
+        - https://speakerdeck.com/0ang3el/aem-hacker-approaching-adobe-experience-manager-webapps-in-bug-bounty-programs?slide=91
+    severity: info
+    tags:
+        - aem
+        - misconfig
+        - Adobe-Experience-Manager
+        - Servlet

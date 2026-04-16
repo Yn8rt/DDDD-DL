@@ -1,0 +1,53 @@
+http:
+    - attack: pitchfork
+      cookie-reuse: true
+      matchers:
+        - condition: or
+          part: body_2
+          type: word
+          words:
+            - '"userId":'
+            - '"email":'
+        - condition: and
+          dsl:
+            - status_code_1 == 302 && status_code_2 == 200
+            - contains(tolower(header_2), 'application/json')
+          type: dsl
+      matchers-condition: and
+      payloads:
+        pass:
+            - admin
+        user:
+            - apollo
+      raw:
+        - |
+          POST /signin HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+          Origin: {{BaseURL}}
+          Referer: {{BaseURL}}/signin?
+
+          username={{user}}&password={{pass}}&login-submit=Login
+        - |
+          GET /user HTTP/1.1
+          Host: {{Hostname}}
+      req-condition: true
+id: apollo-default-login
+info:
+    author: PaperPen
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L
+        cvss-score: 8.3
+        cwe-id: CWE-522
+    description: An Apollo default login was discovered.
+    metadata:
+        max-request: 2
+        shodan-query: http.favicon.hash:11794165
+    name: Apollo Default Login
+    reference:
+        - https://github.com/apolloconfig/apollo
+    severity: high
+    tags:
+        - apollo
+        - default-login
+        - Apollo

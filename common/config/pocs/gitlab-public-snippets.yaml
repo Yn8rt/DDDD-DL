@@ -1,0 +1,36 @@
+http:
+    - matchers:
+        - type: word
+          words:
+            - <title>Snippets · Explore · GitLab</title>
+        - status:
+            - 200
+          type: status
+        - condition: or
+          negative: true
+          type: word
+          words:
+            - No snippets found
+            - Nothing here.
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/explore/snippets'
+        - '{{BaseURL}}/-/snippets'
+id: gitlab-public-snippets
+info:
+    author: pdteam
+    metadata:
+        max-request: 2
+        shodan-query: http.title:"GitLab"
+    name: GitLab public snippets
+    reference:
+        - https://gist.github.com/vysecurity/20311c29d879e0aba9dcffbe72a88b10
+        - https://twitter.com/intigriti/status/1375078783338876929
+    severity: info
+    tags:
+        - gitlab
+        - exposure
+        - misconfig
+        - GitLab
+        - thin

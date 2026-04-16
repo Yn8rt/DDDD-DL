@@ -1,0 +1,37 @@
+# 框架指纹黑名单配置
+# 这些指纹将被跳过，不进行POC匹配
+blacklist:
+  # 常见前端框架
+  - jquery
+  - jquery-ui
+  - bootstrap
+  - Ubuntu-system
+  
+  # 常见编程语言和框架
+  - jsp
+  - php
+  - javascript
+  - asp
+  - aspx
+  - java
+  - python
+  - django
+  - flask
+  - node.js
+  - asp.net
+  
+  # 常见Web服务器
+  - nginx
+  - iis
+  - apache-web-server
+  - apache-http-server-centos
+  - struts2
+
+  
+  # 操作系统
+  - windows
+  - MySQL
+  
+  # 其他通用组件
+  - openssl
+  - Google- Webmaster Platform

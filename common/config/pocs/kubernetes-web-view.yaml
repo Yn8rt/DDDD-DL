@@ -1,0 +1,41 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - Kubernetes Web View</title>
+            - a href="https://codeberg.org/hjacobs/kube-web-view
+        - part: header
+          type: word
+          words:
+            - text/html
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}'
+        - '{{BaseURL}}/clusters/local'
+id: kubernetes-web-view
+info:
+    author: tess
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N
+        cvss-score: 6.5
+        cwe-id: CWE-200
+    description: Kubernetes local cluster web view panel discovered.
+    metadata:
+        max-request: 2
+        shodan-query: title:"Kubernetes Web View"
+        verified: true
+    name: Kubernetes Local Cluster Web View Panel- Detect
+    severity: medium
+    tags:
+        - panel
+        - misconfig
+        - kubernetes
+        - k8s
+        - Cluster
+        - Kubernetes

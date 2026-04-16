@@ -1,0 +1,29 @@
+http:
+    - headers:
+        CQ-Handle: /content
+        CQ-Path: /content
+      matchers:
+        - part: body
+          type: word
+          words:
+            - <H1>OK</H1>
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/dispatcher/invalidate.cache'
+id: aem-cached-pages
+info:
+    author: hetroublemakr
+    metadata:
+        max-request: 1
+        shodan-query: http.component:"Adobe Experience Manager"
+    name: Invalidate / Flush Cached Pages on AEM
+    reference:
+        - https://twitter.com/AEMSecurity/status/1244965623689609217
+    severity: low
+    tags:
+        - aem
+        - misconfig

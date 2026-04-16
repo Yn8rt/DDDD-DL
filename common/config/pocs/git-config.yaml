@@ -1,0 +1,44 @@
+http:
+    - extractors:
+        - group: 1
+          part: body
+          regex:
+            - url ?= ?https?://(.*:.*)@
+            - 'AUTHORIZATION: basic (.*)'
+            - pass = (.*)
+          type: regex
+      matchers:
+        - condition: or
+          part: body
+          type: word
+          words:
+            - '[credentials]'
+            - '[core]'
+        - condition: and
+          dsl:
+            - '!contains(tolower(body), ''<html'')'
+            - '!contains(tolower(body), ''<body'')'
+          type: dsl
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/.git/config'
+id: git-config
+info:
+    author: pdteam,pikpikcu,Mah3Sec_,m4lwhere
+    classification:
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N
+        cvss-score: 5.3
+        cwe-id: CWE-200
+    description: Git configuration was detected via the pattern /.git/config and log file on passed URLs.
+    metadata:
+        max-request: 1
+    name: Git Configuration - Detect
+    severity: medium
+    tags:
+        - config
+        - git
+        - exposure

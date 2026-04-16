@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '"ServiceList":'
+            - '"items":'
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/api/v1/namespaces/default/services'
+id: kube-api-services
+info:
+    author: sharath
+    description: Scans for kube services
+    metadata:
+        max-request: 1
+    name: Kube API Services
+    severity: info
+    tags:
+        - tech
+        - k8s
+        - kubernetes
+        - devops
+        - kube
+        - Kubernetes

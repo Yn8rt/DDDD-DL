@@ -1,0 +1,41 @@
+http:
+    - attack: pitchfork
+      matchers:
+        - part: body
+          regex:
+            - <title>R-SeeNet (.*)</title>
+          type: regex
+        - part: body
+          type: word
+          words:
+            - User is succesfully logged.
+      matchers-condition: and
+      payloads:
+        pass:
+            - conel
+        user:
+            - admin
+      raw:
+        - |
+          POST /index.php HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          page=login_change&oper=0&username={{user}}&password={{pass}}&submit=Login
+id: rseenet-default-login
+info:
+    author: princechaddha
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L
+        cvss-score: 8.3
+        cwe-id: CWE-522
+    description: Advantech R-SeeNet default admin credentials were discovered. R-SeeNet is a software system used for monitoring of status and functions of Advantech routers.
+    metadata:
+        max-request: 1
+    name: Advantech R-SeeNet Default Login
+    reference:
+        - https://icr.advantech.cz/products/software/r-seenet
+    severity: high
+    tags:
+        - rseenet
+        - default-login

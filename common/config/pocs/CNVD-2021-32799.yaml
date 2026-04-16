@@ -1,0 +1,37 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '"reason":'
+            - '"success"'
+            - '"antiadwa":'
+            - '"clientupgrade":'
+        - part: header
+          type: word
+          words:
+            - application/json
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/api/dp/rptsvcsyncpoint?ccid=1'
+id: CNVD-2021-32799
+info:
+    author: SleepingBag945
+    metadata:
+        fofa-query: app="360新天擎"
+        max-request: 1
+        verified: true
+    name: 360 Xintianqing - SQL Injection
+    reference:
+        - https://blog.51cto.com/u_9691128/4295047
+        - https://www.cnvd.org.cn/patchInfo/show/270651
+        - https://github.com/zan8in/afrog/blob/main/v2/pocs/afrog-pocs/CNVD/2021/CNVD-2021-32799.yaml
+    severity: high
+    tags:
+        - "360"
+        - xintianqing

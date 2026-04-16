@@ -1,0 +1,27 @@
+http:
+    - body: <?xml version="1.0" encoding="utf-8"?><methodCall><methodName>system.listMethods</methodName><params></params></methodCall>
+      matchers:
+        - status:
+            - 200
+          type: status
+        - condition: and
+          part: body
+          type: word
+          words:
+            - system.multicall
+            - system.listMethods
+            - demo.sayHello
+      matchers-condition: and
+      method: POST
+      path:
+        - '{{BaseURL}}/xmlrpc.php'
+id: wordpress-xmlrpc-listmethods
+info:
+    author: 0ut0fb4nd
+    metadata:
+        max-request: 1
+    name: Wordpress XML-RPC List System Methods
+    severity: info
+    tags:
+        - wordpress
+        - WordPress

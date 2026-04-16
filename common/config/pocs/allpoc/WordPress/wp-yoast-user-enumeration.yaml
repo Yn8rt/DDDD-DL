@@ -1,0 +1,45 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - <?xml
+            - <lastmod>
+            - <loc>
+        - part: header
+          type: word
+          words:
+            - application/xml
+            - text/xml
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          @timeout: 15s
+          GET /author-sitemap.xml HTTP/1.1
+          Host: {{Hostname}}
+id: wp-yoast-user-enumeration
+info:
+    author: FLX
+    classification:
+        cpe: cpe:2.3:a:yoast:yoast_seo:*:*:*:*:wordpress:*:*:*
+    metadata:
+        google-query: inurl:"/author-sitemap.xml"
+        max-request: 1
+        product: yoast_seo
+        vendor: yoast
+        verified: true
+    name: WordPress Yoast SEO Plugin -  User Enumeration
+    reference:
+        - https://developer.yoast.com/features/xml-sitemaps/functional-specification/
+    severity: info
+    tags:
+        - wp
+        - wp-plugin
+        - wordpress
+        - username
+        - disclosure
+        - WordPress

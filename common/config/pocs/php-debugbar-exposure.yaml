@@ -1,0 +1,34 @@
+http:
+    - host-redirects: true
+      matchers:
+        - condition: or
+          dsl:
+            - contains(body_1, "phpdebugbar") && contains(body, "widget")
+            - contains_all(body_2, "\"utime\"","\"datetime\"","{\"id") && contains(content_type_2, "application/json")
+          type: dsl
+      max-redirects: 2
+      method: GET
+      path:
+        - '{{BaseURL}}'
+        - '{{BaseURL}}/_debugbar/open'
+id: php-debugbar-exposure
+info:
+    author: ritikchaddha,pdteam
+    description: |
+        The DebugBar integrates easily in any projects and can display profiling data from any part of your application. It comes built-in with data collectors for standard PHP features and popular projects.
+    metadata:
+        max-request: 2
+        shodan-query: html:"phpdebugbar"
+        verified: true
+    name: Php Debug Bar - Exposure
+    reference:
+        - https://hackerone.com/reports/1883806
+        - http://phpdebugbar.com/
+        - https://github.com/maximebf/php-debugbar
+    severity: medium
+    tags:
+        - hackerone
+        - misconfig
+        - phpdebug
+        - exposure
+        - PHPDebugBar

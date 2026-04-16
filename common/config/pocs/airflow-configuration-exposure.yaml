@@ -1,0 +1,27 @@
+http:
+    - matchers:
+        - condition: and
+          type: word
+          words:
+            - '[core]'
+            - '[api]'
+      method: GET
+      path:
+        - '{{BaseURL}}/airflow.cfg'
+id: airflow-configuration-exposure
+info:
+    author: pdteam
+    classification:
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N
+        cvss-score: 5.3
+        cwe-id: CWE-200
+    description: Apache Airflow configuration page was detected.
+    metadata:
+        max-request: 1
+    name: Apache Airflow Configuration Page - Detect
+    severity: medium
+    tags:
+        - exposure
+        - config
+        - airflow
+        - apache

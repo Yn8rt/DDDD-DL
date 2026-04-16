@@ -1,0 +1,28 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - '"standalone_mode":"cluster"'
+        - part: body
+          regex:
+            - '"version":"2\..*?"'
+          type: regex
+      matchers-condition: or
+      method: GET
+      path:
+        - '{{BaseURL}}/nacos/v1/console/server/state'
+        - '{{BaseURL}}/v1/console/server/state'
+id: nacos-jraftserver-deserialization-rce
+info:
+    author: unknown
+    description: Nacos uses Hessian for deserialization when processing certain Jraft based requests, but no restrictions are set, resulting in remote code execution (RCE) vulnerabilities in the application.
+    metadata:
+        max-request: 1
+    name: Nacos - jraftserver deserialization Remote Code Execution
+    reference: https://stack.chaitin.com/techblog/detail?id=106
+    severity: critical
+    tags:
+        - nacos
+        - Oce
+        - Cluster

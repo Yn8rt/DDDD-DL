@@ -1,0 +1,32 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - status_code == 200
+            - contains(body,"httpd_design_handlers") && contains(body,"external_manager")
+          type: dsl
+      method: GET
+      path:
+        - '{{BaseURL}}/_config'
+id: apache-couchdb-unauth
+info:
+    author: SleepingBag945
+    metadata:
+        fofa-query: app="APACHE-CouchDB"
+        max-request: 1
+        shodan-query: product:"CouchDB"
+        verified: true
+    name: Apache CouchDB - Unauthenticated Access
+    reference:
+        - https://github.com/ax1sX/SecurityList/blob/main/Database/CouchDB.md
+        - https://github.com/taomujian/linbing/blob/master/python/app/plugins/http/CouchDB/Couchdb_Unauthorized.py
+        - https://github.com/mubix/tools/blob/master/nmap/scripts/couchdb-stats.nse
+    severity: high
+    tags:
+        - couchdb
+        - unauth
+        - misconfig
+        - Python
+        - authenticate
+        - ujian
+        - APACHE-CouchDB

@@ -1,0 +1,36 @@
+http:
+    - extractors:
+        - json:
+            - .data[].attributes.display_name
+          type: json
+      matchers:
+        - regex:
+            - \{"display_name":"([A-Sa-z0-9-_]+)"\}
+          type: regex
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/jsonapi/user/user'
+id: drupal-jsonapi-user-listing
+info:
+    author: lixts
+    classification:
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N
+        cvss-score: 5.3
+        cwe-id: CWE-200
+    description: Drupal JSON:API username listing was detected via the /user/user endpoint.
+    metadata:
+        max-request: 1
+        shodan-query: http.component:"drupal"
+        verified: true
+    name: Drupal JSON:API Username Listing - Detect
+    reference:
+        - https://www.drupal.org/project/drupal/issues/3240913
+    severity: medium
+    tags:
+        - drupal
+        - exposure
+        - Drupal

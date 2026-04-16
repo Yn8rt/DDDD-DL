@@ -1,0 +1,33 @@
+http:
+    - headers:
+        Cookie: _gitlab_session=
+      matchers:
+        - part: header
+          type: word
+          words:
+            - 'Set-Cookie: _gitlab_session='
+        - part: body
+          type: word
+          words:
+            - name_with_namespace
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/api/v4/projects'
+id: gitlab-public-repos
+info:
+    author: ldionmarcil
+    metadata:
+        max-request: 1
+        shodan-query: http.title:"GitLab"
+    name: GitLab public repositories
+    reference:
+        - https://twitter.com/ldionmarcil/status/1370052344562470922
+        - https://github.com/ldionmarcil/gitlab-unauth-parser
+    severity: info
+    tags:
+        - gitlab
+        - exposure
+        - misconfig
+        - GitLab
+        - parse

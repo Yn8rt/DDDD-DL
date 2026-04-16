@@ -1,0 +1,28 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '"results":'
+            - '"items":'
+            - '"more":'
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/api/components/suggestions?recentlyBrowsed='
+id: sonarqube-public-projects
+info:
+    author: sickwell
+    metadata:
+        max-request: 1
+    name: Sonarqube with public projects
+    reference:
+        - https://next.sonarqube.com/sonarqube/web_api/api/components/suggestions?internal=true
+    severity: low
+    tags:
+        - sonarqube
+        - misconfig

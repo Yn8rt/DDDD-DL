@@ -1,0 +1,32 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - Redash Initial Setup
+            - Admin User
+        - part: header
+          type: word
+          words:
+            - text/html
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/setup'
+id: redash-installer
+info:
+    author: DhiyaneshDk
+    metadata:
+        max-request: 1
+        shodan-query: html:"Redash Initial Setup"
+        verified: true
+    name: Redash Installer Exposure
+    severity: high
+    tags:
+        - misconfig
+        - redash
+        - install

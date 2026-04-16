@@ -1,0 +1,22 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - type: word
+          words:
+            - down.download?FM_SYS_ID
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}'
+id: fanruanoa2012-detect
+info:
+    author: YanYun
+    metadata:
+        max-request: 1
+    name: FanRuanOA2012-detect
+    severity: info
+    tags:
+        - fanruan
+        - tech

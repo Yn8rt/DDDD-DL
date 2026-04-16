@@ -1,0 +1,38 @@
+http:
+    - host-redirects: true
+      matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - Administrative Console Login
+            - Log in to the Administrative Console
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      max-redirects: 2
+      method: GET
+      path:
+        - '{{BaseURL}}/console'
+id: ibm-websphere-admin-panel
+info:
+    author: ritikchaddha
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: IBM WebSphere Application Server Community Edition admin login panel was detected.
+    metadata:
+        max-request: 1
+        shodan-query: http.favicon.hash:1337147129
+        verified: true
+    name: IBM WebSphere Application Server Community Edition Admin Login Panel - Detect
+    reference:
+        - https://www.ibm.com/support/pages/what-default-username-and-password-websphere-application-server-community-edition-and-how-add-users-admin-group
+    severity: info
+    tags:
+        - websphere
+        - panel
+        - ibm
+        - IBM-WebSphere

@@ -1,0 +1,49 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - len(body) > 50
+            - status_code == 200
+          type: dsl
+        - condition: or
+          negative: true
+          part: response
+          type: word
+          words:
+            - MongoDB over HTTP on the native
+            - application/javascript
+            - application/x-javascript
+            - application/json
+            - application/xml
+            - html
+            - <!doctype
+            - <script
+            - <meta
+            - image/
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/.hgignore'
+id: mercurial-hgignore
+info:
+    author: DhiyaneshDK
+    classification:
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: Mercurial Ignore file disclosure was detected.
+    metadata:
+        max-request: 1
+        shodan-query: html:"hgignore"
+        verified: true
+    name: Mercurial Ignore - File Disclosure
+    reference:
+        - https://swcarpentry.github.io/hg-novice/08-ignore/
+    severity: info
+    tags:
+        - exposure
+        - hgignore
+        - config
+        - mercurial
+        - mongodb
+        - Mercurial

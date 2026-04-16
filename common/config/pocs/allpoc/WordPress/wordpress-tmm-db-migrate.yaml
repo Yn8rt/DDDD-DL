@@ -1,0 +1,33 @@
+http:
+    - matchers:
+        - part: header
+          type: word
+          words:
+            - application/zip
+        - part: body
+          regex:
+            - '[a-z0-9_]+.dat'
+          type: regex
+        - status:
+            - 200
+          type: status
+        - binary:
+            - 504B0304
+          type: binary
+      matchers-condition: and
+      max-size: 1000
+      method: GET
+      path:
+        - '{{BaseURL}}/wp-content/uploads/tmm_db_migrate/tmm_db_migrate.zip'
+id: wordpress-tmm-db-migrate
+info:
+    author: dwisiswant0
+    metadata:
+        max-request: 1
+    name: WordPress ThemeMarkers DB Migration File
+    severity: info
+    tags:
+        - wordpress
+        - wp-plugin
+        - backup
+        - WordPress

@@ -1,0 +1,34 @@
+http:
+    - attack: pitchfork
+      matchers:
+        - condition: and
+          type: word
+          words:
+            - Welcome to the Apache ActiveMQ Console of <b>
+            - <h2>Broker</h2>
+      payloads:
+        password:
+            - user
+            - admin
+        username:
+            - user
+            - admin
+      raw:
+        - |
+          GET /admin/ HTTP/1.1
+          Host: {{Hostname}}
+          Authorization: Basic {{base64(username + ':' + password)}}
+id: activemq-default-login
+info:
+    author: pdteam
+    description: Apache ActiveMQ default login information was discovered.
+    metadata:
+        max-request: 2
+    name: Apache ActiveMQ Default Login
+    reference:
+        - https://knowledge.broadcom.com/external/article/142813/vulnerability-apache-activemq-admin-con.html
+    severity: high
+    tags:
+        - apache
+        - activemq
+        - default-login

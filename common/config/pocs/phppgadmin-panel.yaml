@@ -1,0 +1,41 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - status_code == 200
+            - contains(body, 'intro.php') && contains(body, 'browser.php')
+          type: dsl
+        - condition: and
+          dsl:
+            - status_code == 200
+            - contains(body, '<title>phpPgAdmin')
+          type: dsl
+      matchers-condition: or
+      method: GET
+      path:
+        - '{{BaseURL}}'
+        - '{{BaseURL}}/phppgadmin/'
+id: phppgadmin-panel
+info:
+    author: Ganofins,Nullfuzz
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: |
+        phpPgAdmin login ipanel was detected.
+    metadata:
+        max-request: 2
+        shodan-query: http.title:phpPgAdmin
+        verified: true
+    name: phpPgAdmin Login Panel - Detect
+    reference:
+        - https://docs.cpanel.net/cpanel/databases/phppgadmin/
+    severity: info
+    tags:
+        - panel
+        - phppgadmin
+        - phpPgAdmin
+        - cPanel
+        - pgAdmin
+        - cpanel

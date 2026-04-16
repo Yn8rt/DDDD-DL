@@ -1,0 +1,39 @@
+http:
+    - matchers:
+        - type: word
+          words:
+            - '[core]'
+      method: GET
+      path:
+        - '{{BaseURL}}/static../.git/config'
+        - '{{BaseURL}}/js../.git/config'
+        - '{{BaseURL}}/images../.git/config'
+        - '{{BaseURL}}/img../.git/config'
+        - '{{BaseURL}}/css../.git/config'
+        - '{{BaseURL}}/assets../.git/config'
+        - '{{BaseURL}}/content../.git/config'
+        - '{{BaseURL}}/events../.git/config'
+        - '{{BaseURL}}/media../.git/config'
+        - '{{BaseURL}}/lib../.git/config'
+      stop-at-first-match: true
+id: git-config-nginxoffbyslash
+info:
+    author: organiccrap
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N
+        cvss-score: 5.3
+        cwe-id: CWE-200
+    description: Nginx is vulnerable to git configuration exposure.
+    metadata:
+        max-request: 10
+    name: Nginx - Git Configuration Exposure
+    reference:
+        - https://beaglesecurity.com/blog/vulnerability/nginx-off-by-slash-exposes-git-config.html
+        - https://twitter.com/Random_Robbie/status/1262676628167110656
+        - https://github.com/PortSwigger/nginx-alias-traversal/blob/master/off-by-slash.py
+    severity: medium
+    tags:
+        - config
+        - exposure
+        - nginx
+        - Nginx

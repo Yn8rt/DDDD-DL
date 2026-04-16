@@ -1,0 +1,26 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - contains(header_1, "Set-Cookie") && (contains(header_1, "rememberMe=") || contains(header_1, "=deleteMe"))
+            - '!contains(header_2, "rememberMe=") && !contains(header_2, "=deleteMe")'
+          type: dsl
+      raw:
+        - |
+          GET / HTTP/1.1
+          Host: {{Hostname}}
+          Cookie: JSESSIONID={{randstr}};rememberMe=123;
+        - |
+          GET / HTTP/1.1
+          Host: {{Hostname}}
+          Cookie: JSESSIONID={{randstr}};rememberMe=XxPkup6RsyY1APZVA/omc/cGW2IWMOPMejEr8DIuDW0IqcJR7i93WUI5v7HNMpJ8MSzbc6I2cGgnnfTXjmdzwYRogYARuSIIiGY6NgrCI1x3gZfbJpnjgpY+Tqit9G9j2enzwjPJp4n333MC5+ffqhh2cnCZl7sNXJv9HDpX1S5oKSkgWdYqgYVA4AkJMn8Q;
+      req-condition: true
+id: ruoyi-shiro-default-key-cbc
+info:
+    author: SleepingBag945
+    description: Ruoyi-shiro框架默认key fCq+/xW488hMTCD+cmJ3aQ== ,可尝试寻找利用链进行命令执行。
+    name: Detect RuoYi CMS Shiro Default Key
+    severity: critical
+    tags:
+        - shiro
+        - ruoyi

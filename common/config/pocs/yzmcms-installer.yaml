@@ -1,0 +1,39 @@
+http:
+    - matchers:
+        - condition: or
+          part: body
+          type: word
+          words:
+            - 安装程序 - YzmCMS
+            - YzmCMS
+        - condition: or
+          part: body
+          type: word
+          words:
+            - /index.php?step=2
+            - /install.css
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/application/install/index.php'
+id: yzmcms-installer
+info:
+    author: ritikchaddha
+    metadata:
+        fofa-query: title="YzmCMS"
+        max-request: 1
+        shodan-query: title:"YzmCMS"
+        verified: true
+    name: YzmCMS - Installer
+    severity: high
+    tags:
+        - misconfig
+        - yzmcms
+        - install
+        - exposure
+        - YzmCMS
+        - MCMS
+        - mcms

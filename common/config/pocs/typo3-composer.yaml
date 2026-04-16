@@ -1,0 +1,36 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - The Install Tool mounted as the module Tools>Install in TYPO3.
+            - typo3-cms-framework
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/typo3/sysext/install/composer.json'
+id: typo3-composer
+info:
+    author: 0x_Akoko
+    description: |
+        The web application is based on Typo3 CMS. A sensitive file has been found. Access to such files must be restricted, as it may lead to disclosure of sensitive information about the web application.
+    metadata:
+        max-request: 1
+        shodan-query: 'X-TYPO3-Parsetime: 0ms'
+        verified: true
+    name: Typo3 composer.json Exposure
+    reference:
+        - https://docs.typo3.org/c/typo3/cms-core/main/en-us/Changelog/9.0/Breaking-83302-ComposerRestrictsInstallationOfTypo3cms.html
+    severity: low
+    tags:
+        - typo3
+        - exposure
+        - misconfig
+        - parse
+        - TYPO3
+        - TYPO3CMS
+        - TYPO3 CMS

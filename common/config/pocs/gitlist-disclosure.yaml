@@ -1,0 +1,24 @@
+http:
+    - matchers:
+        - type: word
+          words:
+            - GitList</title>
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}'
+id: gitlist-disclosure
+info:
+    author: dhiyaneshDK
+    metadata:
+        max-request: 1
+        shodan-query: title:"GitList"
+    name: GitList Disclosure
+    severity: low
+    tags:
+        - gitlist
+        - misconfig
+        - GitList

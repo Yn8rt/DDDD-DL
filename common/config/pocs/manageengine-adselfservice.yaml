@@ -1,0 +1,44 @@
+http:
+    - extractors:
+        - group: 1
+          part: body
+          regex:
+            - '"BUILD_NUMBER":"([0-9]+)"'
+          type: regex
+      matchers:
+        - condition: or
+          part: body
+          type: word
+          words:
+            - <title>ADSelfService Plus</title>
+            - '"PRODUCT_NAME":"ManageEngine ADSelfService'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/authorization.do'
+        - '{{BaseURL}}/servlet/GetProductVersion'
+id: manageengine-adselfservice
+info:
+    author: dhiyaneshDK,SaK1
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: ZOHO ManageEngine ADSelfService panel was detected.
+    metadata:
+        max-request: 2
+        shodan-query: http.title:"ADSelfService Plus"
+        verified: true
+    name: ZOHO ManageEngine ADSelfService Plus - Detect
+    severity: info
+    tags:
+        - panel
+        - zoho
+        - manageengine
+        - ManageEngine-ADSelfService
+        - Zoho ManageEngine
+        - ManageEngine
+        - Servlet

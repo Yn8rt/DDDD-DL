@@ -1,0 +1,34 @@
+http:
+    - matchers:
+        - condition: and
+          type: word
+          words:
+            - <title>选择人员</title>
+            - /UserSelect/dept.php
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/UserSelect/'
+id: weaver-userselect-unauth
+info:
+    author: SleepingBag945
+    description: |
+        OA E-Office UserSelect interface has an unauthorized access vulnerability, through which attackers can obtain sensitive information
+    metadata:
+        fofa-query: app="泛微-EOffice"
+        max-request: 1
+        verified: true
+    name: OA E-Office UserSelect Unauthorized Access
+    reference:
+        - https://github.com/achuna33/MYExploit/blob/8ffbf7ee60cbd77ad90b0831b93846aba224ab29/src/main/java/com/achuna33/Controllers/WeaverEOfficeController.java
+        - http://wiki.peiqi.tech/wiki/oa/泛微OA/泛微OA%20E-Office%20UserSelect%20未授权访问漏洞.html
+    severity: high
+    tags:
+        - weaver
+        - e-office
+        - unauth
+        - 泛微-EOffice
+        - 泛微oa

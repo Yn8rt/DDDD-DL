@@ -1,0 +1,25 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - part: body
+          type: word
+          words:
+            - '"host=localhost,name=AccessLogValve,type=Valve"'
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/jolokia/list'
+id: jolokia-acceslogvalve-rce
+info:
+    author: pathtaga
+    description: RCE in Jolokia < 1.7.1 using AccesLogValve
+    name: Jolokia write to RCE valve
+    reference:
+        - https://github.com/laluka/jolokia-exploitation-toolkit
+        - https://therealcoiffeur.github.io/c11011
+    severity: critical
+    tags:
+        - jolokia
+        - Jolokia

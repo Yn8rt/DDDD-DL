@@ -1,0 +1,35 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - Create an account! [Jenkins]
+        - part: header
+          type: word
+          words:
+            - text/html
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/signup'
+id: jenkins-openuser-register
+info:
+    author: DhiyaneshDk
+    description: The Jenkins allows registering a new user and accessing the dashboard.
+    metadata:
+        max-request: 1
+        shodan-query: X-Jenkins
+        verified: true
+    name: Jenkins Open User registration
+    reference:
+        - https://www.acunetix.com/vulnerabilities/web/jenkins-open-user-registration/
+    remediation: Its recommended to turn off user registration.
+    severity: medium
+    tags:
+        - misconfig
+        - jenkins
+        - tomcat
+        - Jenkins

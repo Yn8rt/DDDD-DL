@@ -1,0 +1,26 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - <title>yii\base\ErrorException</title>
+        - status:
+            - 500
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}'
+id: yii-error-page
+info:
+    author: DhiyaneshDk
+    metadata:
+        max-request: 1
+        shodan-query: html:"yii\base\ErrorException"
+        verified: "true"
+    name: Yii Error Page - Detct
+    severity: unknown
+    tags:
+        - exposure
+        - yii
+        - logs

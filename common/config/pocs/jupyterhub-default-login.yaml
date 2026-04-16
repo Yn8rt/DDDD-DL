@@ -1,0 +1,45 @@
+http:
+    - attack: pitchfork
+      matchers:
+        - condition: and
+          dsl:
+            - contains(tolower(header), 'jupyterhub-session-id=')
+            - contains(tolower(header), 'jupyterhub-hub-login=')
+          type: dsl
+        - status:
+            - 302
+          type: status
+      matchers-condition: and
+      payloads:
+        pass:
+            - admin
+            - jupyter
+        user:
+            - admin
+            - jovyan
+      raw:
+        - |
+          POST /hub/login?next= HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          username={{user}}&password={{pass}}
+id: jupyterhub-default-login
+info:
+    author: For3stCo1d
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L
+        cvss-score: 8.3
+        cwe-id: CWE-522
+    description: Jupyterhub default admin credentials were discovered.
+    metadata:
+        max-request: 2
+        shodan-query: http.title:"JupyterHub"
+    name: Jupyterhub - Default Admin Discovery
+    reference:
+        - https://github.com/jupyterhub/jupyterhub
+    severity: high
+    tags:
+        - jupyterhub
+        - default-login
+        - JupyterHub

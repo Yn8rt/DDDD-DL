@@ -1,0 +1,39 @@
+http:
+    - body: |
+        <?xml version='1.0'?>
+        <methodCall>
+        <methodName>extended_version</methodName>
+        <params></params>
+        </methodCall>
+      extractors:
+        - group: 1
+          part: body
+          regex:
+            - <value><string>([0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3})</string></value>
+          type: regex
+      headers:
+        Content-Type: text/xml
+      matchers:
+        - status:
+            - 200
+          type: status
+        - part: body
+          type: word
+          words:
+            - <name>version</name>
+      matchers-condition: and
+      method: POST
+      path:
+        - '{{BaseURL}}/cobbler_api'
+id: cobbler-version
+info:
+    author: c-sh0
+    description: Obtain cobbler version information
+    metadata:
+        max-request: 1
+    name: Cobbler Version Detection
+    severity: info
+    tags:
+        - tech
+        - cobbler
+        - api

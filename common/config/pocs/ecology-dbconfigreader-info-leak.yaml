@@ -1,0 +1,27 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - binary:
+            - 7005536e
+            - "70054073"
+          condition: or
+          type: binary
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/mobile/DBconfigReader.jsp'
+id: ecology-dbconfigreader-info-leak
+info:
+    author: SleepingBag945
+    description: |
+        泛微ecology OA系统接口存在数据库配置信息泄露漏洞
+    name: 泛微ecology OA 数据库配置信息泄露
+    reference:
+        - https://github.com/jas502n/DBconfigReader
+    severity: high
+    tags:
+        - ecology
+        - leak
+        - database

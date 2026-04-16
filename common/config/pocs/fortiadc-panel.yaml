@@ -1,0 +1,36 @@
+http:
+    - matchers:
+        - type: word
+          words:
+            - <title>FortiADC</title>
+        - part: header
+          type: word
+          words:
+            - text/html
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/ui/#navigate/Login'
+id: fortiadc-panel
+info:
+    author: DhiyaneshDk
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: FortiADC login panel was detected.
+    metadata:
+        max-request: 1
+        shodan-query: title:"FortiADC"
+        verified: true
+    name: FortiADC Login Panel - Detect
+    reference:
+        - https://www.fortinet.com/products/application-delivery-controller/fortiadc
+    severity: info
+    tags:
+        - panel
+        - fortinet
+        - FortiADC

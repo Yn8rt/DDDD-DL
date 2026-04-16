@@ -1,0 +1,26 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - condition: and
+          part: body
+          type: word
+          words:
+            - Druid Stat Index
+            - DruidVersion
+      matchers-condition: and
+      raw:
+        - |
+          GET /webpage/system/druid/index.html HTTP/1.1
+          Host: {{Hostname}}
+id: jeecg-druid-unauth
+info:
+    author: SleepingBag945
+    name: Jeecg-Boot Druid 未授权访问
+    severity: high
+    tags:
+        - JEECG
+        - druid
+        - Jeecg-Boot
+        - WebPA

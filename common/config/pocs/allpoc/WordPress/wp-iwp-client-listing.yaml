@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - condition: and
+          type: word
+          words:
+            - Index of
+            - wp-content/plugins/iwp-client/
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/wp-content/plugins/iwp-client/'
+id: wp-iwp-client-listing
+info:
+    author: pussycat0x
+    description: Searches for sensitive directories present in the iwp-client plugin.
+    metadata:
+        max-request: 1
+    name: WordPress Plugin Iwp-client Listing
+    reference:
+        - https://www.exploit-db.com/ghdb/6427
+    severity: info
+    tags:
+        - wordpress
+        - listing
+        - plugin
+        - edb
+        - WordPress

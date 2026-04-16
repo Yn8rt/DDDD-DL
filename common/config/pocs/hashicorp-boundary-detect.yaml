@@ -1,0 +1,20 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - HashiCorp Boundary
+      method: GET
+      path:
+        - '{{BaseURL}}'
+id: hashicorp-boundary-detect
+info:
+    author: codexlynx
+    description: Detects HashiCorp Boundary
+    metadata:
+        max-request: 1
+    name: HashiCorp Boundary Detect
+    severity: info
+    tags:
+        - tech
+        - hashicorp

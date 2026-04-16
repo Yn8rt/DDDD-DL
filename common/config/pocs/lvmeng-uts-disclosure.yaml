@@ -1,0 +1,34 @@
+http:
+    - headers:
+        Content-Type: application/json
+      matchers:
+        - status:
+            - 200
+          type: status
+        - condition: and
+          part: header
+          type: word
+          words:
+            - application/json
+        - condition: and
+          part: body
+          type: word
+          words:
+            - password
+            - nsfocus_uts
+            - MANAGER_IP
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/webapi/v1/system/accountmanage/account'
+id: lvmeng-uts-disclosure
+info:
+    author: pikpikcu
+    description: Lvmeng UTS was discovered.
+    metadata:
+        max-request: 1
+    name: Lvmeng - UTS Disclosure
+    severity: high
+    tags:
+        - config
+        - exposure

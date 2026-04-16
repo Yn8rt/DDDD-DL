@@ -1,0 +1,29 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - <title>FUEL CMS</title>
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/fuel/login'
+id: fuelcms-panel
+info:
+    author: Adam Crosser
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: Fuel CMS login panel was detected.
+    metadata:
+        max-request: 1
+    name: Fuel CMS Login Panel - Detect
+    severity: info
+    tags:
+        - panel
+        - fuelcms
+        - oss

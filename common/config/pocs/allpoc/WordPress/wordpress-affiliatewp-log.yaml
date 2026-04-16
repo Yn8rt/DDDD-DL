@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - type: word
+          words:
+            - Referral could not be retrieved
+            - Affiliate CSV
+        - part: header
+          type: word
+          words:
+            - text/plain
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/wp-content/uploads/affwp-debug.log'
+id: wordpress-affiliatewp-log
+info:
+    author: dhiyaneshDK
+    description: Exposed debug log in AffiliateWP Wordpress Plugin
+    metadata:
+        max-request: 1
+    name: WordPress Plugin "AffiliateWP -- Allowed Products" Log Disclosure
+    severity: low
+    tags:
+        - wordpress
+        - log
+        - plugin
+        - WordPress

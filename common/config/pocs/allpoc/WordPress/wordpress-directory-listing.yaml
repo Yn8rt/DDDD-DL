@@ -1,0 +1,26 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - type: word
+          words:
+            - Index of /
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/wp-content/uploads/'
+        - '{{BaseURL}}/wp-content/themes/'
+        - '{{BaseURL}}/wp-content/plugins/'
+        - '{{BaseURL}}/wp-includes/'
+id: wordpress-directory-listing
+info:
+    author: Manas_Harsh
+    description: Directory listing enabled in wordpress.
+    metadata:
+        max-request: 4
+    name: Wordpress directory listing
+    severity: info
+    tags:
+        - wordpress
+        - WordPress

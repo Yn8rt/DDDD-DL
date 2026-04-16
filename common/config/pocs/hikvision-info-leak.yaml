@@ -1,0 +1,31 @@
+http:
+    - matchers:
+        - condition: and
+          type: word
+          words:
+            - <user name=
+            - password=
+        - part: header
+          type: word
+          words:
+            - text/xml
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/config/user.xml'
+id: hikvision-info-leak
+info:
+    author: pikpikcu
+    classification:
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N
+        cvss-score: 5.3
+        cwe-id: CWE-200
+    description: Hikvision configuration file was detected.
+    metadata:
+        max-request: 1
+    name: Hikvision Configuration File - Detect
+    severity: medium
+    tags:
+        - exposure
+        - config
+        - hikvision

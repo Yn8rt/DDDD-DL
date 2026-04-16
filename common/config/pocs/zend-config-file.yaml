@@ -1,0 +1,42 @@
+http:
+    - matchers:
+        - condition: and
+          regex:
+            - db.*(.password).*=
+            - db.*(.username).*=
+          type: regex
+        - part: header
+          type: word
+          words:
+            - text/plain
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/application/configs/application.ini'
+        - '{{BaseURL}}/admin/configs/application.ini'
+        - '{{BaseURL}}/application.ini'
+        - '{{BaseURL}}/aplicacao/application/configs/application.ini'
+        - '{{BaseURL}}/cloudexp/application/configs/application.ini'
+        - '{{BaseURL}}/cms/application/configs/application.ini'
+        - '{{BaseURL}}/moto/application/configs/application.ini'
+        - '{{BaseURL}}/Partners/application/configs/application.ini'
+        - '{{BaseURL}}/radio/application/configs/application.ini'
+        - '{{BaseURL}}/seminovos/application/configs/application.ini'
+        - '{{BaseURL}}/shop/application/configs/application.ini'
+        - '{{BaseURL}}/site_cg/application/configs/application.ini'
+        - '{{BaseURL}}/slr/application/configs/application.ini'
+      stop-at-first-match: true
+id: zend-config-file
+info:
+    author: pdteam,geeknik,Akokonunes
+    metadata:
+        max-request: 13
+    name: Zend Configuration File
+    severity: high
+    tags:
+        - config
+        - exposure
+        - zend

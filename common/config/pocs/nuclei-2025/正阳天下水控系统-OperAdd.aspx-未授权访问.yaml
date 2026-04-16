@@ -1,0 +1,31 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - 用户名
+            - 密码
+            - 确认密码
+            - 角色
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /Auth/OperAdd.aspx HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:136.0) Gecko/20100101 Firefox/136.0
+id: zhengyangtianxia-OperAdd_aspx-unauthorized
+info:
+    author: Superhero
+    description: |-
+        fofa: body="登陆页" && body="水控消费后台管理系统"
+        正阳天下水控系统 OperAdd.aspx存在未授权访问漏洞，攻击者可利用漏洞获取添加用户登录系统。
+    name: 正阳天下水控系统 OperAdd.aspx 未授权访问
+    reference:
+        - https://mp.weixin.qq.com/s/zmF4UnrAwViUVIDQDZ82pg
+    severity: high
+    tags:
+        - unauthorized

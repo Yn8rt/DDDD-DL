@@ -1,0 +1,42 @@
+http:
+    - extractors:
+        - group: 1
+          part: body
+          regex:
+            - href="\/themes\/lite1\/css\/typography\.css\?version=(([0-9a-z]+)([0-9.]+))
+          type: regex
+      matchers:
+        - condition: or
+          part: body
+          type: word
+          words:
+            - <title>Sophos</title>
+            - uiLangToHTMLLangAttributeValueMapping
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/webconsole/webpages/login.jsp'
+        - '{{BaseURL}}/userportal/webpages/myaccount/login.jsp'
+      stop-at-first-match: true
+id: sophos-fw-version-detect
+info:
+    author: organiccrap,daffainfo
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: Sophos Firewall login panel was detected.
+    metadata:
+        max-request: 2
+        shodan-query: title:"Sophos"
+        verified: true
+    name: Sophos Firewall Login Panel - Detect
+    severity: info
+    tags:
+        - panel
+        - sophos
+        - Firewall
+        - WebPA

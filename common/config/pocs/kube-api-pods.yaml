@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '"PodList":'
+            - '"items":'
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/api/v1/namespaces/default/pods'
+id: kube-api-pods
+info:
+    author: sharath
+    description: Scans for kube pods
+    metadata:
+        max-request: 1
+    name: Kube API Pods
+    severity: info
+    tags:
+        - tech
+        - k8s
+        - kubernetes
+        - devops
+        - kube
+        - Kubernetes

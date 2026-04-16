@@ -1,0 +1,40 @@
+http:
+    - attack: pitchfork
+      matchers:
+        - condition: and
+          type: word
+          words:
+            - '"message": "success"'
+            - '"username": "admin"'
+            - '"type": "login"'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      payloads:
+        password:
+            - arlpass
+        username:
+            - admin
+      raw:
+        - |
+          POST /api/user/login HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/json; charset=UTF-8
+
+          {"username":"{{username}}","password":"{{password}}"}
+id: arl-default-login
+info:
+    author: pikpikcu
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L
+        cvss-score: 8.3
+        cwe-id: CWE-522
+    description: An ARL default admin login was discovered.
+    metadata:
+        max-request: 1
+    name: ARL Default Admin Login
+    severity: high
+    tags:
+        - arl
+        - default-login

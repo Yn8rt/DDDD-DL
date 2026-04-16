@@ -1,0 +1,35 @@
+http:
+    - matchers:
+        - condition: and
+          type: word
+          words:
+            - Magnolia Installation
+            - Welcome to Magnolia
+        - part: header
+          type: word
+          words:
+            - text/html
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}'
+id: magnolia-installer
+info:
+    author: pussycat0x
+    metadata:
+        max-request: 1
+        shodan-query: title:"Magnolia Installation"
+        verified: true
+    name: Magnolia CMS Installer
+    reference:
+        - https://www.magnolia-cms.com/
+    severity: info
+    tags:
+        - magnolia
+        - exposure
+        - installer
+        - misconfig
+        - Magnolia-CMS

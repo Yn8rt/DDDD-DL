@@ -1,0 +1,40 @@
+http:
+    - host-redirects: true
+      matchers:
+        - condition: or
+          part: body
+          type: word
+          words:
+            - Roxy file manager
+            - '[{"p":"'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      max-redirects: 2
+      method: GET
+      path:
+        - '{{BaseURL}}/index.html'
+        - '{{BaseURL}}/fileman/index.html'
+        - '{{BaseURL}}/fileman/php/fileslist.php'
+        - '{{BaseURL}}/fileman/asp_net/main.ashx'
+      stop-at-first-match: true
+id: roxy-fileman
+info:
+    author: liquidsec,DhiyaneshDk
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: Roxy File Manager panel was detected.
+    metadata:
+        google-query: intitle:"Roxy file manager"
+        max-request: 4
+        verified: true
+    name: Roxy File Manager - Panel Detect
+    severity: info
+    tags:
+        - tech
+        - roxy
+        - fileman
+        - panel

@@ -1,0 +1,25 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - part: body
+          type: word
+          words:
+            - Web Session Stat
+      matchers-condition: and
+      raw:
+        - |
+          GET /prod-api/druid/websession.html HTTP/1.1
+          Host: {{Hostname}}
+id: ruoyi-druid-unauth
+info:
+    author: SleepingBag945
+    description: 若依Driud未授权访问
+    name: 若依Driud未授权访问
+    reference:
+        - https://github.com/zan8in/afrog/blob/main/v2/pocs/afrog-pocs/unauthorized/ruoyi-druid-unauth.yaml
+    severity: high
+    tags:
+        - druid
+        - 若依

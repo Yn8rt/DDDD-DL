@@ -1,0 +1,43 @@
+http:
+    - attack: pitchfork
+      matchers:
+        - status:
+            - 200
+          type: status
+        - condition: and
+          part: body
+          type: word
+          words:
+            - setCookie
+            - efm_session_id
+            - login.cgi
+      matchers-condition: and
+      payloads:
+        password:
+            - admin
+        username:
+            - admin
+      raw:
+        - |
+          POST /sess-bin/login_handler.cgi HTTP/1.1
+          Host: {{Hostname}}
+          Referer: {{BaseURL}}/sess-bin/login_session.cgi
+
+          username={{username}}&passwd={{password}}
+id: iptime-default-login
+info:
+    author: gy741
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L
+        cvss-score: 8.3
+        cwe-id: CWE-522
+    description: ipTIME default admin credentials were discovered.
+    metadata:
+        max-request: 1
+    name: ipTIME Default Login
+    reference:
+        - https://www.freewebtools.com/IPTIME/
+    severity: high
+    tags:
+        - iptime
+        - default-login

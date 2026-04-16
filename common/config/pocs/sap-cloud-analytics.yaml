@@ -1,0 +1,35 @@
+http:
+    - host-redirects: true
+      matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - SAP Analytics Cloud
+            - /approuter/
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      max-redirects: 2
+      method: GET
+      path:
+        - '{{BaseURL}}'
+id: sap-cloud-analytics
+info:
+    author: righettod
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: SAP Analytics Cloud panel was detected.
+    metadata:
+        max-request: 1
+        shodan-query: http.html:"SAP Analytics Cloud"
+        verified: true
+    name: SAP Analytics Cloud Panel - Detect
+    severity: info
+    tags:
+        - panel
+        - sap
+        - cloudanalytics

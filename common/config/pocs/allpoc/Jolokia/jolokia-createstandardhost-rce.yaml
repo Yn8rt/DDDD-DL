@@ -1,0 +1,27 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '"desc":"Create a new StandardHost"'
+            - '"desc":"Array of Diagnostic Commands Arguments and Options"'
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/jolokia/list'
+id: jolokia-createstandardhost-rce
+info:
+    author: laluka,pathtaga
+    description: File read and file write to RCE by deploying a vhost with MBeanFactory/createStandardHost and DiagnosticCommand/jfrStart
+    name: Jolokia file write to RCE jfr
+    reference:
+        - https://github.com/laluka/jolokia-exploitation-toolkit
+    severity: critical
+    tags:
+        - jolokia
+        - NOS
+        - Jolokia

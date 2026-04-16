@@ -1,0 +1,28 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - NginX Auto Installer
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}'
+id: nginx-auto-installer
+info:
+    author: pussycat0x
+    metadata:
+        max-request: 1
+        shodan-query: title:"NginX Auto Installer"
+        verified: true
+    name: NginX Auto Installer Exposure
+    severity: low
+    tags:
+        - misconfig
+        - nginx
+        - install
+        - exposure
+        - Nginx

@@ -1,0 +1,32 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - Installation - Moodle
+        - part: header
+          type: word
+          words:
+            - text/html
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/install.php'
+id: moodle-installer
+info:
+    author: tess
+    metadata:
+        max-request: 1
+        shodan-query: title:"Installation Moodle"
+        verified: true
+    name: Moodle Installation Exposure
+    severity: high
+    tags:
+        - misconfig
+        - moodle
+        - install
+        - exposure
+        - Moodle

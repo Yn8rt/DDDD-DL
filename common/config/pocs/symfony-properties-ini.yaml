@@ -1,0 +1,32 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - name=
+            - author=
+            - orm=
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/properties.ini'
+        - '{{BaseURL}}/config/properties.ini'
+      stop-at-first-match: true
+id: symfony-properties-ini
+info:
+    author: DhiyaneshDK
+    metadata:
+        google-query: intitle:"index of" "properties.ini"
+        max-request: 2
+        verified: true
+    name: Symfony properties.ini File Disclosure
+    severity: info
+    tags:
+        - symfony
+        - exposure
+        - files
+        - Symfony

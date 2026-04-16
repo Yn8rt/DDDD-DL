@@ -1,0 +1,35 @@
+http:
+    - extractors:
+        - group: 1
+          regex:
+            - 'WebLogic Server Version: (.*?)<'
+          type: regex
+      matchers:
+        - type: word
+          words:
+            - WebLogic
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/console/login/LoginForm.jsp'
+id: weblogic-login
+info:
+    author: bing0o,meme-lord
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: Oracle WebLogic login panel was detected.
+    metadata:
+        max-request: 1
+        shodan-query: product:"Oracle Weblogic"
+    name: Oracle WebLogic Login Panel - Detect
+    severity: info
+    tags:
+        - panel
+        - oracle
+        - weblogic
+        - WebLogic

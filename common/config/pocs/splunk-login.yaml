@@ -1,0 +1,29 @@
+http:
+    - matchers:
+        - type: word
+          words:
+            - <title>Splunk SOAR</title>
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/login?next=/'
+id: splunk-login
+info:
+    author: dhiyaneshDK
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: Splunk SOAR login panel was detected.
+    metadata:
+        max-request: 1
+        shodan-query: http.title:"Splunk SOAR"
+    name: Splunk SOAR Login Panel - Detect
+    severity: info
+    tags:
+        - panel
+        - splunk
+        - Splunk

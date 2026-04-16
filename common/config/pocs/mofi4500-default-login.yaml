@@ -1,0 +1,41 @@
+http:
+    - attack: pitchfork
+      matchers:
+        - type: word
+          words:
+            - MOFI4500 - General - LuCI
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      payloads:
+        password:
+            - admin
+        username:
+            - root
+      raw:
+        - |
+          POST /cgi-bin/luci/ HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          username=root&password=admin
+id: mofi4500-default-login
+info:
+    author: pikpikcu
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L
+        cvss-score: 8.3
+        cwe-id: CWE-522
+    description: Mofi Network MOFI4500-4GXELTE wireless router default admin credentials were discovered.
+    metadata:
+        max-request: 1
+    name: MOFI4500-4GXeLTE-V2 Default Login
+    reference:
+        - https://www.cleancss.com/router-default/Mofi_Network/MOFI4500-4GXELTE
+    severity: high
+    tags:
+        - mofi
+        - default-login
+        - MOFI4500
+        - LuCI

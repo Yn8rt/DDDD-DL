@@ -1,0 +1,40 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - <!--警示提示处-->
+        - part: body
+          type: word
+          words:
+            - <h1 class="logo">安防综合管理平台</h1>
+        - part: body
+          type: word
+          words:
+            - 杭州海康威视系统技术有限公司 版权所有
+        - part: body
+          type: word
+          words:
+            - serviceip
+      matchers-condition: or
+      method: GET
+      path: /
+      stop-at-first-match: true
+id: hikvision-ivms-fingerprint
+info:
+    author:
+        - PocAgent
+    description: Detects Hikvision iVMS (Intelligent Video Management System) by common fingerprint keywords.
+    metadata:
+        fofa-query: app="Hikvision-iVMS"
+        verified: true
+    name: Hikvision iVMS Fingerprint Detection
+    reference:
+        - https://www.hikvision.com/
+    severity: info
+    tags:
+        - hikvision
+        - ivms
+        - video-surveillance
+        - security-system
+        - fingerprint

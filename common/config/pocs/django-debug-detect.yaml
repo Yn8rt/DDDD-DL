@@ -1,0 +1,27 @@
+http:
+    - matchers:
+        - condition: and
+          type: word
+          words:
+            - URLconf defined
+            - Page not found
+            - Django tried these URL patterns, in this order
+        - status:
+            - 404
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/NON_EXISTING_PATH/'
+id: django-debug
+info:
+    author: dhiyaneshDK,hackergautam
+    metadata:
+        max-request: 1
+    name: Django Debug Method Enabled
+    severity: medium
+    tags:
+        - django
+        - debug
+        - misconfig
+        - Django

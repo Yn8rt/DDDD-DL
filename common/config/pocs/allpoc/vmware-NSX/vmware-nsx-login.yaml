@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - <title>VMware Appliance Management</title>
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/login.jsp'
+id: vmware-nsx-login
+info:
+    author: DhiyaneshDk
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: VMware NSX login panel was detected.
+    metadata:
+        shodan-query: html:"vmw_nsx_logo-black-triangle-500w.png"
+        verified: true
+    name: VMware NSX Login Panel - Detect
+    severity: info
+    tags:
+        - panel
+        - vmware
+        - vmware-NSX

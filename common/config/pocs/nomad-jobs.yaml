@@ -1,0 +1,38 @@
+http:
+    - matchers:
+        - condition: and
+          type: word
+          words:
+            - Nomad
+            - nomad-ui
+        - part: header
+          type: word
+          words:
+            - text/html
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/ui/jobs'
+id: exposed-nomad
+info:
+    author: pdteam
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N
+        cvss-score: 5.3
+        cwe-id: CWE-200
+    description: Nomad jobs were discovered.
+    metadata:
+        max-request: 1
+    name: Nomad - Exposed Jobs
+    reference:
+        - https://www.nomadproject.io/docs/internals/security
+    severity: medium
+    tags:
+        - nomad
+        - devops
+        - hashicorp
+        - panel
+        - misconfig

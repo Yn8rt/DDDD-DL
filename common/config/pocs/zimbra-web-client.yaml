@@ -1,0 +1,40 @@
+http:
+    - extractors:
+        - group: 1
+          part: body
+          regex:
+            - AjxPackage\.setQueryString\("v=(.+)"\);
+          type: regex
+      matchers:
+        - part: body
+          type: word
+          words:
+            - <title>Zimbra Administration</title>
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/zimbraAdmin/'
+id: zimbra-web-client
+info:
+    author: dhiyaneshDk,idealphase
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: Zimbra panel was detected. Zimbra provides open source server and client software for messaging and collaboration.
+    metadata:
+        max-request: 1
+        shodan-query: http.title:"Zimbra Web Client Sign In"
+        verified: true
+    name: Zimbra Panel - Detect
+    reference:
+        - https://www.exploit-db.com/ghdb/7409
+        - https://www.zimbra.com/
+    severity: info
+    tags:
+        - edb
+        - panel
+        - zimbra

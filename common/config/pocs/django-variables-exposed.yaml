@@ -1,0 +1,52 @@
+http:
+    - matchers:
+        - condition: or
+          type: word
+          words:
+            - seeing this error because you have <code>DEBUG = True</code>
+            - SuspiciousOperation
+            - DisallowedHost
+            - DisallowedModelAdminLookup
+            - DisallowedModelAdminToField
+            - DisallowedRedirect
+            - InvalidSessionKey
+            - RequestDataTooBig
+            - SuspiciousFileOperation
+            - SuspiciousMultipartForm
+            - SuspiciousSession
+            - TooManyFieldsSent
+            - PermissionDenied
+        - part: header
+          type: word
+          words:
+            - text/html
+        - status:
+            - 400
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}'
+id: django-variables-exposed
+info:
+    author: nobody
+    classification:
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: Django configuration information was detected, which could reveal web application framework exceptions that could indicate exploitation attempts.
+    metadata:
+        max-request: 1
+        verified: true
+    name: Django Config - Detect
+    reference:
+        - https://docs.djangoproject.com/en/1.11/ref/exceptions/
+        - https://docs.djangoproject.com/en/1.11/topics/logging/#django-security
+        - https://github.com/projectdiscovery/nuclei-templates/blob/master/file/logs/django-framework-
+    severity: info
+    tags:
+        - exposure
+        - config
+        - django
+        - Logging
+        - Django

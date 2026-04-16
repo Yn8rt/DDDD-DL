@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - Index of /
+            - .pub
+            - wpmudev
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/wp-content/plugins/wpmudev-updates/keys/'
+id: wpmudev-pub-keys
+info:
+    author: dhiyaneshDk
+    description: Wpmudev Wordpress Plugin public key leaked.
+    metadata:
+        max-request: 1
+    name: Wpmudev Dashboard Pub Key
+    reference:
+        - https://www.exploit-db.com/ghdb/6443
+    severity: medium
+    tags:
+        - wordpress
+        - edb
+        - WordPress

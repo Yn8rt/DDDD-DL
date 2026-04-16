@@ -1,0 +1,34 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - Magento Installation Wizard
+            - Welcome to Magento's Installation Wizard!
+        - part: header
+          type: word
+          words:
+            - text/html
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/index.php/install/'
+id: magento-installer
+info:
+    author: DhiyaneshDk
+    metadata:
+        max-request: 1
+        shodan-query: html:"Magento Installation"
+        verified: true
+    name: Magento Installation Wizard
+    severity: high
+    tags:
+        - misconfig
+        - magento
+        - install
+        - exposure
+        - Magento

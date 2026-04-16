@@ -1,0 +1,25 @@
+http:
+    - matchers:
+        - type: word
+          words:
+            - lucee.runtime
+        - condition: or
+          status:
+            - 500
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}'
+id: lucee-stack-trace
+info:
+    author: dhiyaneshDK
+    metadata:
+        max-request: 1
+        shodan-query: http.title:"Lucee"
+    name: Lucee Stack Trace Error
+    severity: low
+    tags:
+        - lucee
+        - exposure

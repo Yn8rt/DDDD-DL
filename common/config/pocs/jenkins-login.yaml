@@ -1,0 +1,29 @@
+http:
+    - matchers:
+        - type: word
+          words:
+            - Sign in [Jenkins]
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/login'
+id: jenkins-login
+info:
+    author: pdteam
+    classification:
+        cwe-id: CWE-200
+    description: Jenkins is an open source automation server.
+    metadata:
+        max-request: 1
+    name: Jenkins Login Detected
+    reference:
+        - https://www.jenkins.io/doc/book/security/
+    remediation: Ensure proper access.
+    severity: info
+    tags:
+        - panel
+        - jenkins
+        - Jenkins

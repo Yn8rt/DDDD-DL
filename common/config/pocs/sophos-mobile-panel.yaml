@@ -1,0 +1,33 @@
+http:
+    - extractors:
+        - group: 1
+          regex:
+            - src="\/javax\.faces\.resource\/texteditor\/texteditor\.js\.xhtml\?ln=primefaces&amp;v=(.+)"><\/script>
+            - src="\/javax\.faces\.resource\/components\.js\.xhtml\?ln=primefaces&amp;v=(.+)"><\/script>
+          type: regex
+      matchers:
+        - type: word
+          words:
+            - <title>Sophos Mobile</title>
+      method: GET
+      path:
+        - '{{BaseURL}}/login.xhtml?faces-redirect=true'
+id: sophos-mobile-panel
+info:
+    author: Adam Crosser,idealphase
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: Sophos Mobile panel was detected.
+    metadata:
+        max-request: 1
+        shodan-query: http.title:"Sophos Mobile"
+    name: Sophos Mobile Panel - Detect
+    reference:
+        - https://www.sophos.com/en-us/products/mobile-control
+        - https://www.sophos.com/en-us/support/downloads/sophos-mobile
+    severity: info
+    tags:
+        - panel
+        - sophos

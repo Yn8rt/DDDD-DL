@@ -1,0 +1,75 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - DB_NAME
+            - DB_PASSWORD
+        - condition: and
+          part: body
+          type: word
+          words:
+            - DBNAME
+            - PASSWORD
+        - condition: and
+          part: body
+          type: word
+          words:
+            - DB_USERNAME
+            - DB_PASSWORD
+      matchers-condition: or
+      method: GET
+      path:
+        - '{{BaseURL}}{{paths}}'
+      payloads:
+        paths:
+            - /wp-config.php
+            - /.wp-config.php.swp
+            - /wp-config-sample.php
+            - /wp-config.inc
+            - /wp-config.old
+            - /wp-config.txt
+            - /wp-config.php.txt
+            - /wp-config.php.bak
+            - /wp-config.php.BAK
+            - /wp-config.php.old
+            - /wp-config.php.OLD
+            - /wp-config.php.dist
+            - /wp-config.php.inc
+            - /wp-config.php.swp
+            - /wp-config.php.html
+            - /wp-config-backup.txt
+            - /wp-config.php.save
+            - /wp-config.php.SAVE
+            - /wp-config.php~
+            - /wp-config.php-backup
+            - /wp-config.php.orig
+            - /wp-config.php_orig
+            - /wp-config.php.original
+            - /wp-config.backup
+            - /_wpeprivate/config.json
+            - /config.php.zip
+            - /config.php.tar.gz
+            - /config.php.new
+            - /common/config.php.new
+            - /wp-config.php.bk
+            - /home/{{DN}}WORDPRESS.txt
+            - /home/{{DN}}-WORDPRESS.txt
+      stop-at-first-match: true
+id: wordpress-accessible-wpconfig
+info:
+    author: Kiblyn11,zomsop82,madrobot,geeknik,daffainfo,r12w4n,tess,0xpugal,mastercho,c4sper0
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N
+        cvss-score: 5.3
+        cwe-id: CWE-200
+    description: WordPress `wp-config` was discovered. This file is remotely accessible and its content available for reading.
+    metadata:
+        max-request: 32
+    name: WordPress wp-config Detection
+    severity: high
+    tags:
+        - wordpress
+        - backup
+        - WordPress

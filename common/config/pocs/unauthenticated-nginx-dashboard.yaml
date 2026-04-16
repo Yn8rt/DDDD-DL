@@ -1,0 +1,28 @@
+http:
+    - matchers:
+        - type: word
+          words:
+            - Nginx+ Dashboard
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      max-size: 2048
+      method: GET
+      path:
+        - '{{BaseURL}}/dashboard.html'
+id: unauthenticated-nginx-dashboard
+info:
+    author: BibekSapkota (sar00n)
+    metadata:
+        max-request: 1
+        shodan-query: html:"NGINX+ Dashboard"
+    name: Nginx Dashboard
+    reference:
+        - https://www.acunetix.com/vulnerabilities/web/unrestricted-access-to-nginx-dashboard/
+    severity: low
+    tags:
+        - misconfig
+        - nginx
+        - authenticate
+        - Nginx

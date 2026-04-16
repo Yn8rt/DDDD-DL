@@ -1,0 +1,40 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - condition: and
+          type: word
+          words:
+            - '"couchbase":'
+            - '"bucket":'
+            - '"data":'
+        - part: header
+          type: word
+          words:
+            - application/json
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/pools/default/buckets'
+id: couchbase-buckets-api
+info:
+    author: geeknik
+    classification:
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N
+        cvss-score: 5.3
+        cwe-id: CWE-200
+    description: Couchbase Buckets REST API without authentication was detected.
+    metadata:
+        max-request: 1
+    name: Couchbase Buckets Unauthenticated REST API - Detect
+    reference:
+        - https://docs.couchbase.com/server/current/rest-api/rest-bucket-intro.html
+        - https://www.elastic.co/guide/en/beats/metricbeat/current/metricbeat-metricset-couchbase-bucket.html
+    severity: medium
+    tags:
+        - exposure
+        - couchbase
+        - elastic
+        - authenticate
+        - HBase

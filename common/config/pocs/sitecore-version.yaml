@@ -1,0 +1,45 @@
+http:
+    - extractors:
+        - group: 1
+          regex:
+            - <major>([0-9]+)</major>
+          type: regex
+        - group: 1
+          regex:
+            - <minor>([0-9]+)</minor>
+          type: regex
+        - group: 1
+          regex:
+            - <build>([0-9]+)</build>
+          type: regex
+        - group: 1
+          regex:
+            - <revision>([0-9]+)</revision>
+          type: regex
+      matchers:
+        - status:
+            - 200
+          type: status
+        - part: body
+          type: word
+          words:
+            - Sitecore Corporation
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/sitecore/shell/sitecore.version.xml'
+id: sitecore-version
+info:
+    author: bernardofsr
+    metadata:
+        max-request: 1
+    name: Sitecore version detection
+    reference:
+        - https://www.cvedetails.com/vulnerability-list/vendor_id-9609/Sitecore.html
+    severity: info
+    tags:
+        - sitecore
+        - tech
+        - Sitecore
+        - ecor
+        - ECOR

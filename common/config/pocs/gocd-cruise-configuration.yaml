@@ -1,0 +1,35 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - condition: and
+          type: word
+          words:
+            - server agentAutoRegisterKey
+            - webhookSecret
+            - tokenGenerationKey
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/go/add-on/business-continuity/api/cruise_config'
+id: gocd-cruise-configuration
+info:
+    author: dhiyaneshDk
+    metadata:
+        max-request: 1
+        shodan-query: http.title:"Create a pipeline - Go",html:"GoCD Version"
+    name: GoCd Cruise Configuration disclosure
+    reference:
+        - https://attackerkb.com/assessments/9101a539-4c6e-4638-a2ec-12080b7e3b50
+        - https://blog.sonarsource.com/gocd-pre-auth-pipeline-takeover
+        - https://twitter.com/wvuuuuuuuuuuuuu/status/1456316586831323140
+    severity: high
+    tags:
+        - go
+        - gocd
+        - config
+        - exposure
+        - misconfig
+        - GoCD
+        - GOCD

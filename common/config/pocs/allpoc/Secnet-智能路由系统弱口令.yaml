@@ -1,0 +1,32 @@
+http:
+    - matchers:
+        - part: header
+          type: word
+          words:
+            - 'Set-Cookie: ac_userid=admin'
+        - condition: and
+          part: body
+          type: word
+          words:
+            - window.open(
+            - index.htm?_
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /login.cgi HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36
+          Content-Type: application/x-www-form-urlencoded
+
+          user=admin&password=admin
+id: Secnet-Weakpassword
+info:
+    author: Superhero
+    description: Secnet-智能路由系统存在弱口令，攻击者可直接利用弱口令登录系统。
+    name: Secnet-智能路由系统弱口令
+    severity: medium
+    tags:
+        - Weak password

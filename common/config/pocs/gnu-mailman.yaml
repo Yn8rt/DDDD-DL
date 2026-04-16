@@ -1,0 +1,40 @@
+http:
+    - matchers:
+        - case-insensitive: true
+          condition: and
+          type: word
+          words:
+            - Mailing Lists
+            - Description
+            - list
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/mailman/listinfo'
+        - '{{BaseURL}}/listinfo'
+      stop-at-first-match: true
+id: gnu-mailman
+info:
+    author: Matt Galligan
+    classification:
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: |
+        GNU Mailman panel was detected. Panel exposes all public mailing lists on server.
+    metadata:
+        max-request: 2
+        shodan-query: title:"Mailing Lists"
+        verified: true
+    name: GNU Mailman Panel - Detect
+    severity: info
+    tags:
+        - exposure
+        - mailman
+        - panel
+        - u-mail
+        - Mailman
+        - U-Mail

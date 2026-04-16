@@ -1,0 +1,31 @@
+http:
+    - matchers:
+        - type: word
+          words:
+            - <title>Create a pipeline - Go</title>
+        - part: header
+          type: word
+          words:
+            - text/html
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/go/admin/pipelines/create?group=defaultGroup'
+id: gocd-unauth-dashboard
+info:
+    author: dhiyaneshDk
+    metadata:
+        max-request: 1
+        shodan-query: http.title:"Create a pipeline - Go",html:"GoCD Version"
+    name: GoCd Unauth Dashboard
+    severity: medium
+    tags:
+        - go
+        - gocd
+        - unauth
+        - misconfig
+        - GoCD
+        - GOCD

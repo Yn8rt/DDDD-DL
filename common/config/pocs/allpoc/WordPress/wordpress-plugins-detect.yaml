@@ -1,0 +1,34 @@
+http:
+    - extractors:
+        - group: 1
+          part: body
+          regex:
+            - ===\s(.*)\s===
+            - '(?m)Stable tag: ([0-9.]+)'
+          type: regex
+      matchers:
+        - status:
+            - 200
+          type: status
+        - type: word
+          words:
+            - == Description ==
+      matchers-condition: and
+      payloads:
+        pluginSlug: helpers/wordlists/wordpress-plugins.txt
+      raw:
+        - |
+          GET /wp-content/plugins/{{pluginSlug}}/readme.txt HTTP/1.1
+          Host: {{Hostname}}
+id: wordpress-plugins-detect
+info:
+    author: 0xcrypto
+    metadata:
+        max-request: 100563
+    name: WordPress Plugins Detection
+    severity: info
+    tags:
+        - fuzz
+        - wordpress
+        - fuzzing
+        - WordPress

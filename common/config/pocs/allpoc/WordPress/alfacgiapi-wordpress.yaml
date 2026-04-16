@@ -1,0 +1,35 @@
+http:
+    - matchers:
+        - type: word
+          words:
+            - Index of
+        - condition: or
+          type: word
+          words:
+            - /wp-content/plugins/
+            - /wp-includes/ALFA_DATA/
+            - /ALFA_DATA/alfacgiapi/
+            - /cgi-bin/ALFA_DATA/alfacgiapi/
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/wp-includes/ALFA_DATA/'
+        - '{{BaseURL}}/wp-content/uploads/alm_templates/ALFA_DATA/alfacgiapi/'
+        - '{{BaseURL}}/ALFA_DATA/alfacgiapi/'
+        - '{{BaseURL}}/cgi-bin/ALFA_DATA/alfacgiapi/'
+id: alfacgiapi-wordpress
+info:
+    author: pussycat0x
+    description: Searches for sensitive directories present in the alfacgiapi plugin.
+    metadata:
+        max-request: 4
+    name: alfacgiapi
+    reference: https://www.exploit-db.com/ghdb/6999
+    severity: low
+    tags:
+        - wordpress
+        - listing
+        - WordPress

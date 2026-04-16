@@ -1,0 +1,48 @@
+http:
+    - extractors:
+        - group: 1
+          regex:
+            - <serialNumber>([A-Z0-9]+)<\/serialNumber>
+          type: regex
+      matchers:
+        - condition: or
+          status:
+            - 200
+            - 501
+          type: status
+        - condition: and
+          type: word
+          words:
+            - <serialNumber>
+            - <deviceType>
+            - <modelNumber>
+        - part: header
+          type: word
+          words:
+            - text/xml
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/rootDesc.xml'
+id: netgear-router-exposure
+info:
+    author: geeknik
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N
+        cvss-score: 5.3
+        cwe-id: CWE-200
+    description: |
+        Multiple NETGEAR router models disclose their serial number which can be used to obtain the admin password if password recovery is enabled.
+    metadata:
+        max-request: 1
+    name: NETGEAR Routers - Serial Number Disclosure
+    reference:
+        - https://www.exploit-db.com/exploits/47117
+    severity: medium
+    tags:
+        - edb
+        - netgear
+        - exposure
+        - iot
+        - router
+        - NETGEAR-ROUTER

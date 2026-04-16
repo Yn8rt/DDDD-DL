@@ -1,0 +1,28 @@
+http:
+    - matchers:
+        - dsl:
+            - status_code_1 == 200 && contains((body_1), 'licenseWeworkCount') && contains(header_1, 'application/json')
+          type: dsl
+      raw:
+        - |
+          GET /taste/addTaste?company=1&userName=1&openid=1&source=1&mobile=1 HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36
+          Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+id: fanwei-ebridge-addtaste-sqli
+info:
+    author: pphua,xy
+    description: 泛微云桥前台Mysql时间盲注漏洞，参数在mobile
+    metadata:
+        fofa-query: app="泛微-云桥e-Bridge"
+        max-request: 1
+        veified: true
+    name: 泛微云桥前台addtaste Mysql时间盲注漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/biCiA1XKKUbMI28_JMU_dA
+    severity: high
+    tags:
+        - fanwei
+        - ebridge
+        - Python
+        - 泛微-云桥e-Bridge

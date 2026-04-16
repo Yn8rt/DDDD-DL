@@ -1,0 +1,32 @@
+http:
+    - matchers:
+        - part: header
+          type: word
+          words:
+            - application/json
+        - condition: and
+          part: body
+          type: word
+          words:
+            - KernelVersion
+            - BuildTime
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - http://{{Hostname}}/version
+        - http://{{Hostname}}/v1.24/version
+id: exposed-docker-api
+info:
+    author: furkansenan,dwisiswant0
+    metadata:
+        max-request: 2
+    name: Exposed Docker API
+    severity: info
+    tags:
+        - docker
+        - unauth
+        - devops
+        - misconfig

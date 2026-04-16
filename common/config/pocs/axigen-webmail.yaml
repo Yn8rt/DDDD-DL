@@ -1,0 +1,36 @@
+http:
+    - extractors:
+        - group: 1
+          part: body
+          regex:
+            - <script type="text\/javascript" src="js\/lib_login\.js\?v=(.+)"><\/script>
+          type: regex
+      matchers:
+        - condition: or
+          regex:
+            - (?i)(Axigen WebMail)
+            - <title>Axigen Standard Webmail - (.*)</title>
+          type: regex
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}'
+id: axigen-webmail
+info:
+    author: dhiyaneshDk,idealphase
+    classification:
+        cwe-id: CWE-200
+    description: An Axigen webmail panel was discovered.
+    metadata:
+        max-request: 1
+        shodan-query: http.title:"Axigen WebMail"
+    name: Axigen WebMail PanelDetection
+    reference:
+        - https://www.axigen.com/
+    severity: info
+    tags:
+        - axigen
+        - panel

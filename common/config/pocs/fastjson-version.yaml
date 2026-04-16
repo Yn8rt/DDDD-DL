@@ -1,0 +1,32 @@
+http:
+    - extractors:
+        - group: 1
+          part: body
+          regex:
+            - fastjson-version.*([0-9]\.[0-9]+\.[0-9]+)
+          type: regex
+      matchers:
+        - type: word
+          words:
+            - fastjson-version
+      raw:
+        - |
+          POST / HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/json
+
+          {"@type":"java.lang.AutoCloseable"
+id: fastjson-version
+info:
+    author: yuansec
+    description: If the server returns an exception to the client,The fastjson version will be retrieved,Fastjson versions greater than 1.2.41,Contains the latest version(1.2.76).
+    metadata:
+        max-request: 1
+    name: Fastjson Version Detection
+    reference:
+        - https://blog.csdn.net/caiqiiqi/article/details/107907489
+    severity: info
+    tags:
+        - fastjson
+        - tech
+        - Fastjson

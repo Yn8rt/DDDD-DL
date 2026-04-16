@@ -1,0 +1,25 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - hybris Management Console
+      method: GET
+      path:
+        - '{{BaseURL}}/hmc/hybris'
+        - '{{BaseURL}}/hybris/hmc/hybris'
+id: hmc-hybris-panel
+info:
+    author: dogasantos
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: Hybris Management Console login panel was detected.
+    metadata:
+        max-request: 2
+    name: Hybris Management Console Login Panel - Detect
+    severity: info
+    tags:
+        - panel
+        - sap

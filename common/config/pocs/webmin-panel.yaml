@@ -1,0 +1,27 @@
+http:
+    - host-redirects: true
+      matchers:
+        - part: body
+          type: word
+          words:
+            - <title>Login to Webmin</title>
+      method: GET
+      path:
+        - '{{BaseURL}}'
+        - '{{BaseURL}}/webmin/'
+id: webmin-panel
+info:
+    author: PR3R00T
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: Webmin admin login panel was detected.
+    metadata:
+        max-request: 2
+    name: Webmin Admin Login Panel - Detect
+    severity: info
+    tags:
+        - panel
+        - webmin
+        - Webmin

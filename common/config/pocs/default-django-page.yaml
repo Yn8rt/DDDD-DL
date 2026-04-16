@@ -1,0 +1,21 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - <title>The install worked successfully! Congratulations!</title>
+      method: GET
+      path:
+        - '{{BaseURL}}'
+id: default-django-page
+info:
+    author: dhiyaneshDk
+    metadata:
+        max-request: 1
+        shodan-query: http.title:"The install worked successfully! Congratulations!"
+    name: Django Default Page
+    severity: info
+    tags:
+        - tech
+        - django
+        - Django

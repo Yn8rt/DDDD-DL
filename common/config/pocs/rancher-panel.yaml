@@ -1,0 +1,45 @@
+http:
+    - extractors:
+        - group: 1
+          part: body
+          regex:
+            - <!\-\- ([0-9. ]+)\-\->
+          type: regex
+      matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - <title>Loading
+            - ember-basic-dropdown-wormhole
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}'
+id: rancher-panel
+info:
+    author: princechaddha,idealphase,ritikchaddha
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: Rancher login panel was detected.
+    metadata:
+        max-request: 1
+        shodan-query: http.favicon.hash:464587962
+        verified: true
+    name: Rancher Login Panel - Detect
+    reference:
+        - https://github.com/rancher/rancher
+        - https://rancher.com/
+    severity: info
+    tags:
+        - panel
+        - rancher
+        - kubernetes
+        - devops
+        - cloud
+        - Kubernetes

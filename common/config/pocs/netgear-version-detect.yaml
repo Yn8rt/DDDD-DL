@@ -1,0 +1,35 @@
+http:
+    - extractors:
+        - part: body
+          regex:
+            - Model=([^\s]+)
+            - Firmware=([^\s]+)
+          type: regex
+      matchers:
+        - status:
+            - 200
+          type: status
+        - part: body
+          regex:
+            - ^((((Re(adyShareSupportedLevel|gionTag)|InternetConnectionStatus|SOAPVersion|Firmware|Model)|Region)|LoginMethod)|ParentalControlSupported)=
+          type: regex
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/currentsetting.htm'
+id: netgear-version-detect
+info:
+    author: dwisiswant0
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: NETGEAR router panel was detected.
+    metadata:
+        max-request: 1
+    name: NETGEAR Router Panel - Detect
+    severity: info
+    tags:
+        - panel
+        - router
+        - netgear

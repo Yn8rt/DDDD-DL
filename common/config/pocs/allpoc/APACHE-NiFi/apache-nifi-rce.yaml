@@ -1,0 +1,42 @@
+http:
+    - extractors:
+        - json:
+            - .id
+          type: json
+      matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - revision
+            - canRead
+            - permissions
+        - part: header
+          type: word
+          words:
+            - application/json
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/nifi-api/process-groups/root'
+id: apache-nifi-rce
+info:
+    author: arliya
+    description: |
+        Apache NiFi is designed for data streaming. It supports highly configurable data routing, transformation, and system mediation logic that indicate graphs. The system has unauthorized remote command execution vulnerability.
+    metadata:
+        shodan-query: title:"NiFi"
+        verified: true
+    name: Apache NiFi  - Remote Code Execution
+    reference:
+        - https://github.com/imjdl/Apache-NiFi-Api-RCE
+        - https://labs.withsecure.com/tools/metasploit-modules-for-rce-in-apache-nifi-and-kong-api-gateway
+        - https://packetstormsecurity.com/files/160260/apache_nifi_processor_rce.rb.txt
+    severity: critical
+    tags:
+        - apache
+        - nifi
+        - rce

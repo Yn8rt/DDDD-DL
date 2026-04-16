@@ -1,0 +1,32 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - type: word
+          words:
+            - https://confluence.atlassian.com
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/servicedesk/customer/user/login'
+        - '{{BaseURL}}/servicedesk/customer/portal/10/user/login'
+id: servicedesk-login-panel
+info:
+    author: aashiq
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: Jira Service Desk login panel was detected.
+    metadata:
+        max-request: 2
+        shodan-query: http.component:"Atlassian Confluence"
+    name: Jira Service Desk Login Panel - Detect
+    severity: info
+    tags:
+        - servicedesk
+        - confluence
+        - jira
+        - panel
+        - atlassian

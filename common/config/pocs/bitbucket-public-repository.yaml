@@ -1,0 +1,33 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - Public Repositories - Bitbucket
+        - part: header
+          type: word
+          words:
+            - text/html
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/repos?visibility=public'
+        - '{{BaseURL}}/bitbucket/repos?visibility=public'
+      stop-at-first-match: true
+id: bitbucket-public-repository
+info:
+    author: DhiyaneshDk
+    metadata:
+        max-request: 2
+        shodan-query: http.component:"Bitbucket"
+        verified: true
+    name: Atlassian Bitbucket Public Repository Exposure
+    severity: low
+    tags:
+        - misconfig
+        - bitbucket
+        - Bitbucket
+        - atlassian

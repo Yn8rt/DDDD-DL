@@ -1,0 +1,45 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - contains(body, "searchCriteria")
+            - contains(body, "parameters")
+            - contains(body, "message")
+            - contains(tolower(header), "application/json")
+          type: dsl
+        - condition: and
+          dsl:
+            - contains(body, "secure_base_link_url")
+            - contains(body, "timezone")
+            - contains(tolower(header), "application/json")
+            - status_code == 200
+          type: dsl
+        - condition: and
+          dsl:
+            - contains(body, "name")
+            - contains(body, "website_id")
+            - contains(tolower(header), "application/json")
+            - status_code == 200
+          type: dsl
+      matchers-condition: or
+      method: GET
+      path:
+        - '{{BaseURL}}/rest/V1/products'
+        - '{{BaseURL}}/rest/V1/store/storeConfigs'
+        - '{{BaseURL}}/rest/V1/store/storeViews'
+id: magento-2-exposed-api
+info:
+    author: TechbrunchFR
+    description: The API in Magento 2 can be accessed by the world without providing credentials. Through the API information like storefront, (hidden) products including prices are exposed.
+    metadata:
+        max-request: 3
+        shodan-query: http.component:"Magento"
+    name: Exposed Magento 2 API
+    reference:
+        - https://support.hypernode.com/en/ecommerce/magento-2/how-to-protect-the-magento-2-api
+    severity: info
+    tags:
+        - magento
+        - Magento
+        - efront
+        - eFront

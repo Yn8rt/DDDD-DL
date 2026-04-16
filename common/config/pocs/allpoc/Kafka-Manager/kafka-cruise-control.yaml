@@ -1,0 +1,21 @@
+http:
+    - host-redirects: true
+      matchers:
+        - type: word
+          words:
+            - <title>Kafka Cruise Control UI</title>
+      max-redirects: 2
+      method: GET
+      path:
+        - '{{BaseURL}}'
+id: kafka-cruise-control
+info:
+    author: dhiyaneshDK
+    metadata:
+        max-request: 1
+        shodan-query: http.title:"Kafka Cruise Control UI"
+    name: Kafka Cruise Control UI
+    severity: medium
+    tags:
+        - kafka
+        - misconfig

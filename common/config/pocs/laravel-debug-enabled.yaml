@@ -1,0 +1,28 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - can_execute_commands
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/_ignition/health-check'
+id: laravel-debug-enabled
+info:
+    author: notsoevilweasel
+    description: |
+        Laravel with APP_DEBUG set to true is prone to show verbose errors.
+    metadata:
+        max-request: 1
+    name: Laravel Debug Enabled
+    remediation: |
+        Disable Laravel's debug mode by setting APP_DEBUG to false.
+    severity: medium
+    tags:
+        - debug
+        - laravel
+        - misconfig

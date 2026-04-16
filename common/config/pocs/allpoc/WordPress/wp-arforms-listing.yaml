@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - condition: and
+          type: word
+          words:
+            - Index of
+            - wp-content/plugins/arforms/
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/wp-content/plugins/arforms/'
+id: wp-arforms-listing
+info:
+    author: pussycat0x
+    description: Searches for sensitive directories present in the arforms plugin.
+    metadata:
+        max-request: 1
+    name: WordPress Plugin Arforms Listing
+    reference:
+        - https://www.exploit-db.com/ghdb/6424
+    severity: info
+    tags:
+        - listing
+        - plugin
+        - edb
+        - wordpress
+        - WordPress

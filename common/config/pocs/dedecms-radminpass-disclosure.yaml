@@ -1,0 +1,24 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - part: body
+          type: word
+          words:
+            - http://yousite/radminpass.php
+      matchers-condition: and
+      raw:
+        - |
+          GET /radminpass.php HTTP/1.1
+          Host: {{Hostname}}
+id: dedecms-radminpass-disclosure
+info:
+    author: SleepingBag945
+    description: radminpass.php文件是一个用于修改管理员密码的PHP脚本工具,多出现在新手站长用过这个工具以后忘记删了
+    name: 织梦CMS radminpass.php文件泄露
+    reference:
+        - https://www.78moban.com/article/3246.html
+    severity: high
+    tags:
+        - DedeCMS

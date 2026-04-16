@@ -1,0 +1,24 @@
+http:
+    - matchers:
+        - type: word
+          words:
+            - cgi-bin/luci/admin/system/admin
+      method: GET
+      path:
+        - '{{BaseURL}}/cgi-bin/luci'
+id: openwrt-default-login
+info:
+    author: For3stCo1d
+    description: An Opentwrt admin login page was discovered.
+    metadata:
+        max-request: 1
+        shodan-query: http.title:"OpenWrt - LuCI"
+    name: Opentwrt - Admin Login Page
+    reference:
+        - https://forum.archive.openwrt.org/viewtopic.php?id=16611
+    severity: high
+    tags:
+        - default-login
+        - openwrt
+        - OpenWrt
+        - LuCI

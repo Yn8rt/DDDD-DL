@@ -1,0 +1,29 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - <h1> Ooops. </h1>
+            - Traceback (most recent call last)
+        - status:
+            - 500
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/admin/airflow/login'
+id: airflow-debug
+info:
+    author: pdteam
+    metadata:
+        max-request: 1
+        shodan-query: title:"Airflow - DAGs"
+        verified: true
+    name: Airflow Debug Trace
+    severity: low
+    tags:
+        - apache
+        - airflow
+        - fpd
+        - misconfig

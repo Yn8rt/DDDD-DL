@@ -1,0 +1,38 @@
+http:
+    - matchers:
+        - condition: or
+          part: body
+          type: word
+          words:
+            - InvalidArgumentException
+            - local.ERROR
+            - ErrorException
+            - syntax error
+        - condition: or
+          part: header
+          type: word
+          words:
+            - text/plain
+            - text/x-log
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/storage/logs/laravel.log'
+id: laravel-log-file
+info:
+    author: sheikhrishad,geeknik
+    description: The log file of this Laravel web app might reveal details on the inner workings of the app, possibly even tokens, credentials or personal information.
+    metadata:
+        max-request: 1
+    name: Laravel log file publicly accessible
+    reference:
+        - https://laravel.com/docs/master/logging
+    severity: high
+    tags:
+        - laravel
+        - logs
+        - exposure
+        - Logging

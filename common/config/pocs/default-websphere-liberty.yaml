@@ -1,0 +1,31 @@
+http:
+    - extractors:
+        - part: body
+          regex:
+            - (WebSphere Liberty).*?([a-zA-Z0-9.-]+)
+          type: regex
+      matchers:
+        - part: body
+          type: word
+          words:
+            - WebSphere Liberty
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}'
+id: default-websphere-liberty
+info:
+    author: oppsec
+    metadata:
+        max-request: 1
+        shodan-query: http.title:"WebSphere Liberty"
+        verified: true
+    name: WebSphere Liberty Default Page
+    severity: info
+    tags:
+        - tech
+        - websphere
+        - liberty

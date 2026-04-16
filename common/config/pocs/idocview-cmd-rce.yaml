@@ -1,0 +1,23 @@
+http:
+    - matchers:
+        - part: status_code
+          status:
+            - 200
+          type: status
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '"code":"1"'
+      matchers-condition: and
+      raw:
+        - |
+          GET /system/cmd.json HTTP/1.1
+          Host: {{Hostname}}
+id: idocview-cmd-rce
+info:
+    author: SleepingBag945
+    name: iDocView cmd.json RCE
+    severity: critical
+    tags:
+        - IDocView

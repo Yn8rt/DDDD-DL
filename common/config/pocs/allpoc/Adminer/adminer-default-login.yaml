@@ -1,0 +1,63 @@
+http:
+    - attack: clusterbomb
+      cookie-reuse: true
+      host-redirects: true
+      matchers:
+        - case-insensitive: true
+          condition: and
+          part: body
+          type: word
+          words:
+            - Create database
+            - Privileges
+            - Process list
+            - Adminer
+        - part: header
+          type: word
+          words:
+            - text/html
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      max-redirects: 1
+      payloads:
+        password:
+            - root
+            - toor
+            - 123
+            - 123456
+            - 123456789
+        username:
+            - root
+      raw:
+        - |
+          POST /index.php HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          auth[driver]=server&auth[server]=&auth[username]={{username}}&auth[password]={{password}}&auth[db]=
+      stop-at-first-match: true
+id: adminer-default-login
+info:
+    author: j4vaovo
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L
+        cvss-score: 8.3
+        cwe-id: CWE-522
+    description: |
+        Adminer contains a default login vulnerability. An attacker can obtain access to user accounts and access sensitive information, modify data, and/or execute unauthorized operations.
+    metadata:
+        max-request: 5
+        shodan-query: http.title:adminer
+        verified: "true"
+    name: Adminer Default Login - Detect
+    reference:
+        - https://www.adminer.org
+    severity: high
+    tags:
+        - default-login
+        - adminer
+        - Adminer
+        - Oce
+        - Cluster

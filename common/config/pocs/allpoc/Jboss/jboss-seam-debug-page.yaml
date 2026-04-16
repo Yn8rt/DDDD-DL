@@ -1,0 +1,28 @@
+http:
+    - matchers:
+        - condition: and
+          type: word
+          words:
+            - SeamDebugPage
+            - org.jboss.seam
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/debug.seam'
+id: jboss-seam-debug-page
+info:
+    author: dhiyaneshDK
+    metadata:
+        max-request: 1
+    name: Jboss Seam Debug Page Enabled
+    reference:
+        - https://github.com/jaeles-project/jaeles-signatures/blob/master/common/jboss-seam-debug-page.yaml
+    severity: medium
+    tags:
+        - jboss
+        - logs
+        - exposure
+        - Jboss

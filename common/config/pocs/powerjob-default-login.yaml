@@ -1,0 +1,45 @@
+http:
+    - attack: pitchfork
+      matchers:
+        - part: body
+          type: word
+          words:
+            - '{"success":true,"data":'
+        - part: header
+          type: word
+          words:
+            - application/json
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      payloads:
+        password:
+            - '"powerjob123"'
+        username:
+            - '"powerjob-worker-samples"'
+      raw:
+        - |
+          POST /appInfo/assert HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/json
+
+          {"appName":{{username}},"password":{{password}}}
+id: powerjob-default-login
+info:
+    author: j4vaovo
+    description: |
+        PowerJob default login credentials were discovered.
+    metadata:
+        fofa-query: title="PowerJob"
+        max-request: 1
+        shodan-query: http.title:"PowerJob"
+        verified: true
+    name: PowerJob - Default Login
+    reference:
+        - https://www.yuque.com/powerjob/guidence/trial
+    severity: high
+    tags:
+        - powerjob
+        - default-login
+        - PowerJob

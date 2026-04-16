@@ -1,0 +1,32 @@
+http:
+    - matchers:
+        - condition: and
+          type: word
+          words:
+            - Index of
+            - /wp-content/plugins/bbpress/
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/wp-content/plugins/bbpress/'
+id: wordpress-bbpress-plugin-listing
+info:
+    author: dhiyaneshDK
+    description: Searches for sensitive directories present in the bbpress wordpress plugin.
+    metadata:
+        max-request: 1
+    name: WordPress bbPress Plugin Directory Listing
+    reference:
+        - https://www.exploit-db.com/ghdb/6158
+    severity: info
+    tags:
+        - wordpress
+        - listing
+        - plugin
+        - edb
+        - bbpress
+        - WordPress
+        - bbPress

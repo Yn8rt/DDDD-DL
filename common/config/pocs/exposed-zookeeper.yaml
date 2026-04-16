@@ -1,0 +1,27 @@
+id: exposed-zookeeper
+info:
+    author: pdteam
+    description: Apache ZooKeeper was able to be accessed without any required authentication.
+    metadata:
+        max-request: 1
+    name: Apache ZooKeeper - Unauthenticated Access
+    reference:
+        - https://zookeeper.apache.org/security.html
+    severity: high
+    tags:
+        - network
+        - zookeeper
+        - unauth
+        - exposure
+        - authenticate
+tcp:
+    - host:
+        - '{{Hostname}}'
+      inputs:
+        - data: "envi\r\nquit\r\n"
+      matchers:
+        - type: word
+          words:
+            - zookeeper.version
+      port: 2181
+      read-size: 2048

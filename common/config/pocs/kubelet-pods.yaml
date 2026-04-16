@@ -1,0 +1,31 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '"PodList":'
+            - '"items":'
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/pods'
+id: kubelet-pods
+info:
+    author: sharath
+    description: Scans for kubelet pods
+    metadata:
+        max-request: 1
+    name: Kubelet Scan
+    severity: info
+    tags:
+        - tech
+        - k8s
+        - kubernetes
+        - devops
+        - kubelet
+        - pods
+        - Kubernetes

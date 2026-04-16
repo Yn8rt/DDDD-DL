@@ -1,0 +1,39 @@
+http:
+    - extractors:
+        - part: body
+          regex:
+            - '"[\w \-\_\@\.]+\"'
+          type: regex
+      matchers:
+        - part: body
+          type: word
+          words:
+            - '":"a.'
+            - '":"A.'
+        - part: header
+          type: word
+          words:
+            - application/json
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/admin/views/ajax/autocomplete/user/a'
+        - '{{BaseURL}}/views/ajax/autocomplete/user/a'
+        - '{{BaseURL}}/?q=admin/views/ajax/autocomplete/user/a'
+        - '{{BaseURL}}/?q=views/ajax/autocomplete/user/a'
+      stop-at-first-match: true
+id: drupal-user-enum-ajax
+info:
+    author: 0w4ys
+    metadata:
+        max-request: 4
+        shodan-query: http.component:"drupal"
+    name: Drupal User Enumration [Ajax]
+    severity: info
+    tags:
+        - drupal
+        - misconfig
+        - Drupal

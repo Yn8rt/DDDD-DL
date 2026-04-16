@@ -1,0 +1,49 @@
+http:
+    - extractors:
+        - group: 1
+          name: version
+          regex:
+            - (?i)Apache Tomcat.*\D([1-9]*[0-9]\.[0-9]+\.[0-9]+)
+          type: regex
+      matchers:
+        - dsl:
+            - contains(tolower(header), "tomcat")
+          type: dsl
+        - condition: or
+          dsl:
+            - contains(tolower(body), "apache tomcat")
+            - contains(tolower(body), "/manager/html")
+            - contains(tolower(body), "/manager/status")
+          type: dsl
+      matchers-condition: or
+      method: GET
+      path:
+        - '{{BaseURL}}'
+        - '{{BaseURL}}/{{randstr}}'
+        - '{{BaseURL}}/docs/introduction.html'
+      stop-at-first-match: true
+id: tomcat-detect
+info:
+    author: philippedelteil,dhiyaneshDk,AdamCrosser
+    classification:
+        cpe: cpe:2.3:a:apache:tomcat:*:*:*:*:*:*:*:*
+    description: If an Tomcat instance is deployed on the target URL, when we send a request for a non existent resource we receive a Tomcat error page with version.
+    metadata:
+        fofa-query:
+            - body="apache tomcat"
+            - title="apache tomcat"
+        google-query: intitle:"apache tomcat"
+        max-request: 3
+        product: tomcat
+        shodan-query:
+            - title:"Apache Tomcat"
+            - http.title:"apache tomcat"
+            - http.html:"apache tomcat"
+            - cpe:"cpe:2.3:a:apache:tomcat"
+        vendor: apache
+    name: Tomcat Detection
+    severity: info
+    tags:
+        - tech
+        - tomcat
+        - intrusive

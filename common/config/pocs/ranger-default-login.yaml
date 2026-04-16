@@ -1,0 +1,43 @@
+http:
+    - attack: pitchfork
+      matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '"statusCode":200'
+            - '"msgDesc":"Login Successful"'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      payloads:
+        pass:
+            - admin
+        user:
+            - admin
+      raw:
+        - |
+          POST /login HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+          username={{user}}&password={{pass}}
+id: ranger-default-login
+info:
+    author: For3stCo1d
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L
+        cvss-score: 8.3
+        cwe-id: CWE-522
+    description: Apache Ranger contains a default login vulnerability. An attacker can obtain access to user accounts and access sensitive information, modify data, and/or execute unauthorized operations.
+    metadata:
+        max-request: 1
+        shodan-query: http.title:"Ranger - Sign In"
+    name: Apache Ranger - Default Login
+    reference:
+        - https://github.com/apache/ranger
+    severity: high
+    tags:
+        - ranger
+        - default-login

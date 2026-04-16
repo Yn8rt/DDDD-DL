@@ -1,0 +1,48 @@
+http:
+    - attack: pitchfork
+      matchers:
+        - part: header
+          type: word
+          words:
+            - 'Set-Cookie: lld=%21'
+        - condition: or
+          part: header
+          type: word
+          words:
+            - index.pl
+            - server.pl
+            - status.pl
+        - status:
+            - 302
+          type: status
+      matchers-condition: and
+      payloads:
+        password:
+            - leo
+        username:
+            - admin
+      raw:
+        - |
+          POST / HTTP/1.1
+          Host: {{Hostname}}
+
+          login_type=0&user={{username}}&password={{password}}&submit=SIGN+IN
+id: leostream-default-login
+info:
+    author: bhutch
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L
+        cvss-score: 8.3
+        cwe-id: CWE-522
+    description: |
+        Leostream default admin credentials were discovered.
+    metadata:
+        max-request: 1
+        shodan-query: http.title:"Leostream"
+        verified: true
+    name: Leostream Default Login
+    severity: high
+    tags:
+        - leostream
+        - default-login
+        - Leostream

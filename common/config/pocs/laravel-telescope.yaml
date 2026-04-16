@@ -1,0 +1,28 @@
+http:
+    - host-redirects: true
+      matchers:
+        - condition: and
+          type: word
+          words:
+            - <title>Telescope</title>
+            - Requests
+            - Commands
+            - Schedule
+      method: GET
+      path:
+        - '{{BaseURL}}/telescope/requests'
+id: laravel-telescope
+info:
+    author: geeknik
+    description: Telescope provides insight into the requests coming into your application, exceptions, log entries, database queries, queued jobs, mail, notifications, cache operations, scheduled tasks, variable dumps, and more.
+    metadata:
+        max-request: 1
+    name: Laravel Telescope Disclosure
+    reference:
+        - https://laravel.com/docs/8.x/telescope
+    severity: medium
+    tags:
+        - laravel
+        - disclosure
+        - logs
+        - exposure

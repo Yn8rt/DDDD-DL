@@ -1,0 +1,31 @@
+id: sap-router-info-leak
+info:
+    author: randomstr1ng
+    description: SAPRouter contains an information leakage vulnerability.
+    metadata:
+        max-request: 1
+    name: SAPRouter - Routing information leak
+    reference:
+        - https://securityforeveryone.com/tools/saprouter-routing-information-leakage-vulnerability-scanner
+        - https://support.sap.com/en/tools/connectivity-tools/saprouter.html
+    severity: critical
+    tags:
+        - network
+        - sap
+        - misconfig
+        - AP-Router
+        - ap-router
+tcp:
+    - host:
+        - '{{Hostname}}'
+      inputs:
+        - data: 00000022524f555445525f41444d002802000000000000000000000000000000000000000000
+          type: hex
+      matchers:
+        - type: word
+          words:
+            - Routtab
+            - Working directory
+            - SAProuter Connection Table
+      port: 3299
+      read-size: 2048

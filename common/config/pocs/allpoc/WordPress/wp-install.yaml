@@ -1,0 +1,32 @@
+http:
+    - matchers:
+        - condition: and
+          type: word
+          words:
+            - <title>WordPress &rsaquo; Installation</title>
+            - Site Title
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/wp-admin/install.php'
+id: wp-install
+info:
+    author: princechaddha
+    classification:
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:H/A:H
+        cvss-score: 9.4
+        cwe-id: CWE-284
+    description: Wordpress installation files have been detected
+    metadata:
+        max-request: 1
+    name: WordPress Exposed Installation
+    reference:
+        - https://smaranchand.com.np/2020/04/misconfigured-wordpress-takeover-to-remote-code-execution/
+    severity: critical
+    tags:
+        - panel
+        - wordpress
+        - WordPress

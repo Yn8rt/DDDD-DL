@@ -1,0 +1,22 @@
+http:
+    - matchers:
+        - condition: and
+          type: word
+          words:
+            - <debug>
+            - <struts.actionMapping>
+      method: GET
+      path:
+        - '{{BaseURL}}'
+id: struts-debug-mode
+info:
+    author: pdteam
+    metadata:
+        max-request: 1
+    name: Apache Struts setup in Debug-Mode
+    severity: low
+    tags:
+        - logs
+        - struts
+        - exposure
+        - setup

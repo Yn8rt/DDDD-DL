@@ -1,0 +1,20 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - <meta name="vault/config/environment"
+      method: GET
+      path:
+        - '{{BaseURL}}/ui/vault/auth'
+id: hashicorp-vault-detect
+info:
+    author: Adam Crosser
+    description: Detects HashiCorp Vault
+    metadata:
+        max-request: 1
+    name: HashiCorp Vault Detect
+    severity: info
+    tags:
+        - tech
+        - hashicorp

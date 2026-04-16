@@ -1,0 +1,36 @@
+http:
+    - matchers:
+        - condition: or
+          part: body
+          type: word
+          words:
+            - 'title="MantisBT: Text Search"'
+            - 'title="MantisBT: Issue Id"'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/login_page.php'
+id: mantisbt-panel
+info:
+    author: makyotox,daffainfo
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: MantisBT login panel was detected.
+    metadata:
+        max-request: 1
+        shodan-query: http.favicon.hash:662709064
+        verified: true
+    name: MantisBT Login Panel - Detect
+    reference:
+        - https://www.mantisbt.org/
+    severity: info
+    tags:
+        - panel
+        - mantisbt
+        - MantisBT
+        - mantis

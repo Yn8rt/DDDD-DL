@@ -1,0 +1,23 @@
+http:
+    - matchers:
+        - condition: and
+          type: word
+          words:
+            - dashboards
+            - startAt
+            - maxResults
+      method: GET
+      path:
+        - '{{BaseURL}}/rest/api/2/dashboard?maxResults=100'
+id: jira-unauthenticated-dashboards
+info:
+    author: TechbrunchFR
+    metadata:
+        max-request: 1
+        shodan-query: http.component:"Atlassian Jira"
+    name: Jira Unauthenticated Dashboards
+    severity: info
+    tags:
+        - atlassian
+        - jira
+        - authenticate

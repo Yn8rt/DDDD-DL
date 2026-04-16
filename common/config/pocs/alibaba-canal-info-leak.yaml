@@ -1,0 +1,44 @@
+http:
+    - headers:
+        Content-Type: application/json
+      matchers:
+        - status:
+            - 200
+          type: status
+        - condition: and
+          part: header
+          type: word
+          words:
+            - application/json
+        - condition: and
+          part: body
+          type: word
+          words:
+            - ncanal.aliyun.accessKey
+            - ncanal.aliyun.secretKey
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/api/v1/canal/config/1/1'
+id: alibaba-canal-info-leak
+info:
+    author: pikpikcu
+    classification:
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: Alibaba Canal configuration information was detected.
+    metadata:
+        max-request: 1
+    name: Alibaba Canal Config - Detect
+    reference:
+        - https://github.com/alibaba/canal/issues/632
+        - https://netty.io/wiki/reference-counted-objects.html
+        - https://my.oschina.net/u/4581879/blog/4753320
+    severity: info
+    tags:
+        - config
+        - exposure
+        - alibaba
+        - Canal
+        - Alibaba-Canal

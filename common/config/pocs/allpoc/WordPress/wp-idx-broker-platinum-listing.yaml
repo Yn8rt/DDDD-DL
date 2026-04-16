@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - condition: and
+          type: word
+          words:
+            - Index of
+            - wp-content/plugins/idx-broker-platinum/
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/wp-content/plugins/idx-broker-platinum/'
+id: wp-idx-broker-platinum-listing
+info:
+    author: pussycat0x
+    description: Searches for sensitive directories present in the idx-broker-platinum plugin.
+    metadata:
+        max-request: 1
+    name: WordPress Plugin Idx Broker Platinum Listing
+    reference:
+        - https://www.exploit-db.com/ghdb/6416
+    severity: info
+    tags:
+        - plugin
+        - edb
+        - wordpress
+        - listing
+        - WordPress

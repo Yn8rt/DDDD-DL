@@ -1,0 +1,31 @@
+http:
+    - matchers:
+        - condition: or
+          part: body
+          type: word
+          words:
+            - <title>Desktop Portal | VMware&reg; Horizon DaaS&trade; Platform</title>
+            - Desktop Portal | VMware Horizon DaaS
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/index.action'
+id: vmware-horizon-daas
+info:
+    author: DhiyaneshDK
+    metadata:
+        max-request: 1
+        shodan-query: title:"Horizon DaaS"
+        verified: true
+    name: Desktop Portal VMware Horizon DaaS Trade Platform
+    severity: info
+    tags:
+        - panel
+        - vmware
+        - vmware horizon
+        - VMware-Horizon-DaaS
+        - VMware-Horizon
+        - vmware Horizon

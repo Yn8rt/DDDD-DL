@@ -1,0 +1,23 @@
+﻿id: casdoor-login
+info:
+    author: princechaddha
+    metadata:
+        shodan-query: http.title:"Casdoor"
+    name: Casdoor Login Panel
+    severity: info
+    tags:
+        - panel
+        - casdoor
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - <title>Casdoor</title>
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/login'

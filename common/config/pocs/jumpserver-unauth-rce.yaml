@@ -1,0 +1,42 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - status_code_1==401
+            - status_code_2==404
+            - contains(body_1, 'not_authenticated')
+            - body_2=="\"\""
+          type: dsl
+        - condition: and
+          dsl:
+            - status_code_3==401
+            - status_code_4==404
+            - contains(body_3, 'not_authenticated')
+            - body_4=="\"\""
+          type: dsl
+      matchers-condition: or
+      raw:
+        - |
+          GET /api/v1/authentication/connection-token/ HTTP/1.1
+          Host: {{Hostname}}
+        - |
+          GET /api/v1/authentication/connection-token/?user-only={{r1}} HTTP/1.1
+          Host: {{Hostname}}
+        - |
+          GET /api/v1/users/connection-token/ HTTP/1.1
+          Host: {{Hostname}}
+        - |
+          GET /api/v1/users/connection-token/?user-only={{r1}} HTTP/1.1
+          Host: {{Hostname}}
+id: jumpserver-unauth-rce
+info:
+    author: SleepingBag945
+    description: |
+        Jumpserver
+    name: Jumpserver Unauth RCE
+    severity: critical
+    tags:
+        - authenticate
+        - jumpserver
+variables:
+    r1: '{{rand_base(5)}}'

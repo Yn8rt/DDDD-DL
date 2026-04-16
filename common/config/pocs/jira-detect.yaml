@@ -1,0 +1,39 @@
+http:
+    - extractors:
+        - group: 1
+          part: body
+          regex:
+            - title="JiraVersion" value="([0-9.]+)
+          type: regex
+      host-redirects: true
+      matchers:
+        - type: word
+          words:
+            - Project Management Software
+      max-redirects: 2
+      method: GET
+      path:
+        - '{{BaseURL}}/secure/Dashboard.jspa'
+        - '{{BaseURL}}/jira/secure/Dashboard.jspa'
+        - '{{BaseURL}}/login.jsp'
+      stop-at-first-match: true
+id: jira-detect
+info:
+    author: pdteam,philippedelteil,AdamCrosser
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+        cvss-score: 0
+        cwe-id: CWE-200
+    description: Jira login panel was detected.
+    metadata:
+        category: productivity
+        max-request: 3
+        product: jira
+        vendor: atlassian
+    name: Jira Detect
+    severity: info
+    tags:
+        - tech
+        - panel
+        - jira
+        - atlassian

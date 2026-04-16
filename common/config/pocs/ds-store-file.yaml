@@ -1,0 +1,33 @@
+http:
+    - matchers:
+        - condition: or
+          dsl:
+            - "contains(body, '\0@\0')"
+            - contains(hex_encode(body), '0000000142756431')
+          type: dsl
+        - dsl:
+            - status_code == 200
+          type: dsl
+        - condition: or
+          dsl:
+            - 'contains(to_lower(header), "accept-ranges: bytes")'
+            - contains(to_lower(header), "octet-stream")
+          type: dsl
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}/.DS_Store'
+id: ds-store-file
+info:
+    author: 0w4ys,pwnhxl
+    metadata:
+        max-request: 1
+    name: Exposed DS_Store File
+    reference:
+        - https://github.com/lijiejie/ds_store_exp
+    severity: info
+    tags:
+        - exposure
+        - files
+        - ds_store
+        - config

@@ -1,0 +1,56 @@
+http:
+    - attack: pitchfork
+      extractors:
+        - group: 1
+          internal: true
+          name: token
+          part: body
+          regex:
+            - hidden' name='user_token' value='([0-9a-z]+)'
+          type: regex
+        - internal: true
+          kval:
+            - PHPSESSID
+          name: session
+          part: body
+          type: kval
+      host-redirects: true
+      matchers:
+        - type: word
+          words:
+            - You have logged in as 'admin'
+      payloads:
+        password:
+            - password
+        username:
+            - admin
+      raw:
+        - |
+          GET /login.php HTTP/1.1
+          Host: {{Hostname}}
+          Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+          Connection: close
+        - |
+          POST /login.php HTTP/1.1
+          Host: {{Hostname}}
+          Content-Type: application/x-www-form-urlencoded
+          Cookie: PHPSESSID={{session}}; security=low
+          Connection: close
+
+          username={{username}}&password={{password}}&Login=Login&user_token={{token}}
+id: dvwa-default-login
+info:
+    author: pdteam
+    classification:
+        cwe-id: CWE-798
+    description: Damn Vulnerable Web App (DVWA) is a test application for security professionals. The hard coded credentials are part of a security testing scenario.
+    metadata:
+        max-request: 2
+    name: DVWA Default Login
+    reference:
+        - https://opensourcelibs.com/lib/dvwa
+    severity: critical
+    tags:
+        - dvwa
+        - default-login
+        - DVWA

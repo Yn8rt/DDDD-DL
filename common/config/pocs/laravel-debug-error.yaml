@@ -1,0 +1,23 @@
+http:
+    - matchers:
+        - type: word
+          words:
+            - Whoops! There was an error
+        - status:
+            - 500
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}'
+id: laravel-debug-error
+info:
+    author: dhiyaneshDK
+    metadata:
+        max-request: 1
+    name: Larvel Debug Method Enabled
+    severity: medium
+    tags:
+        - debug
+        - laravel
+        - misconfig

