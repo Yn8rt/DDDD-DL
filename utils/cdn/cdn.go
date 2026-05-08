@@ -1,6 +1,7 @@
 package cdn
 
 import (
+	"dddd/common/progress"
 	"dddd/ddout"
 	"dddd/structs"
 	"dddd/utils"
@@ -47,6 +48,7 @@ func LookupCNAME(domain string) ([]string, error) {
 		CNAMES, err := LookupCNAMEWithServer(domain, domainServer)
 		if err != nil {
 			lastErr = err
+			continue
 		}
 		return CNAMES, nil
 	}
@@ -99,8 +101,88 @@ func CheckCDN(domain string) (bool, string, []net.IP) {
 	return false, "", ips
 }
 
+func normalizeThreadCount(threads, total int) int {
+	if total <= 0 {
+		return 0
+	}
+	if threads <= 0 {
+		return 1
+	}
+	if threads > total {
+		return total
+	}
+	return threads
+}
+
+func ResolveDomains(domains []string, threads int) []string {
+	domains = utils.RemoveDuplicateElement(domains)
+	threads = normalizeThreadCount(threads, len(domains))
+	if threads == 0 {
+		return nil
+	}
+
+	gologger.Info().Msgf("跳过CDN识别，仅进行域名解析,数量: %d 线程: %d", len(domains), threads)
+	bar := progress.New("域名解析", len(domains))
+	defer bar.Finish()
+
+	addrs := make(chan string, len(domains))
+	results := make(chan structs.CDNResult, len(domains))
+	var wg sync.WaitGroup
+
+	for i := 0; i < threads; i++ {
+		go func() {
+			for domain := range addrs {
+				ips, err := net.LookupIP(domain)
+				if err != nil {
+					results <- structs.CDNResult{Domain: domain}
+					wg.Done()
+					continue
+				}
+				results <- structs.CDNResult{Domain: domain, IPs: ips}
+				wg.Done()
+			}
+		}()
+	}
+
+	for _, domain := range domains {
+		wg.Add(1)
+		addrs <- domain
+	}
+	close(addrs)
+
+	go func() {
+		wg.Wait()
+		close(results)
+	}()
+
+	var resolvedIPs []string
+	for result := range results {
+		if len(result.IPs) > 0 {
+			var ips []string
+			for _, ip := range result.IPs {
+				ipString := ip.String()
+				ips = append(ips, ipString)
+				resolvedIPs = append(resolvedIPs, ipString)
+				structs.AddIPDomain(ipString, result.Domain)
+			}
+			ddout.FormatOutput(ddout.OutputMessage{
+				Type:   "RealIP",
+				IPs:    ips,
+				Domain: result.Domain,
+			})
+		}
+		bar.Add(1)
+	}
+
+	return utils.RemoveDuplicateElement(resolvedIPs)
+}
+
 func CheckCDNs(domains []string, threads int) (rCDNDomains []string, normalDomains []string, rIPs []string) {
 	domains = utils.RemoveDuplicateElement(domains)
+	threads = normalizeThreadCount(threads, len(domains))
+	if threads == 0 {
+		return nil, nil, nil
+	}
 
 	Addrs := make(chan string, len(domains))
 	defer close(Addrs)
@@ -112,15 +194,16 @@ func CheckCDNs(domains []string, threads int) (rCDNDomains []string, normalDomai
 	var normalDomainsLock sync.Mutex
 	var rIPsLock sync.Mutex
 
-	if threads > len(domains) {
-		threads = len(domains)
-	}
 	gologger.Info().Msgf("开始进行域名CDN识别,数量: %d 线程: %d", len(domains), threads)
+
+	bar := progress.New("CDN识别", len(domains))
+	defer bar.Finish()
 
 	//接收结果
 	go func() {
 		for result := range results {
 			if result.Domain == "" {
+				bar.Add(1)
 				wg.Done()
 				continue
 			}
@@ -156,32 +239,7 @@ func CheckCDNs(domains []string, threads int) (rCDNDomains []string, normalDomai
 					// show := fmt.Sprintf("[RealIP] %v => ", result.Domain)
 					for _, ip := range result.IPs {
 						ips = append(ips, ip.String())
-						structs.GlobalIPDomainMapLock.Lock()
-						_, ok := structs.GlobalIPDomainMap[ip.String()]
-						structs.GlobalIPDomainMapLock.Unlock()
-						if ok {
-							// 存在于这个Map中
-							structs.GlobalIPDomainMapLock.Lock()
-							dms, _ := structs.GlobalIPDomainMap[ip.String()]
-							structs.GlobalIPDomainMapLock.Unlock()
-							flag := false
-							for _, dm := range dms {
-								if dm == result.Domain {
-									flag = true
-									break
-								}
-							}
-							if !flag { // 没有这个域名
-								structs.GlobalIPDomainMapLock.Lock()
-								structs.GlobalIPDomainMap[ip.String()] = append(structs.GlobalIPDomainMap[ip.String()],
-									result.Domain)
-								structs.GlobalIPDomainMapLock.Unlock()
-							}
-						} else {
-							structs.GlobalIPDomainMapLock.Lock()
-							structs.GlobalIPDomainMap[ip.String()] = []string{result.Domain}
-							structs.GlobalIPDomainMapLock.Unlock()
-						}
+						structs.AddIPDomain(ip.String(), result.Domain)
 					}
 
 					ddout.FormatOutput(ddout.OutputMessage{
@@ -199,6 +257,7 @@ func CheckCDNs(domains []string, threads int) (rCDNDomains []string, normalDomai
 				}
 
 			}
+			bar.Add(1)
 			wg.Done()
 		}
 	}()

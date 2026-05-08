@@ -5,6 +5,7 @@ import (
 	"dddd/structs"
 	"dddd/utils"
 	"fmt"
+	"github.com/logrusorgru/aurora"
 	"github.com/projectdiscovery/gologger"
 	"github.com/projectdiscovery/httpx"
 	"net/url"
@@ -12,10 +13,11 @@ import (
 )
 
 func HostBindCheck() {
-	gologger.Info().Msg("域名绑定资产发现")
+	gologger.Info().Msg(aurora.BrightBlue("域名绑定资产发现").String())
 
 	var urls []string
-	for rootURL, _ := range structs.GlobalURLMap {
+	urlSet := make(map[string]struct{})
+	for rootURL := range structs.GlobalURLMap {
 		URL, err := url.Parse(rootURL)
 		if err != nil {
 			continue
@@ -35,7 +37,12 @@ func HostBindCheck() {
 				continue
 			}
 			for _, domain := range domains {
-				urls = append(urls, fmt.Sprintf("%v://%v:%v", URL.Scheme, domain, port))
+				target := fmt.Sprintf("%v://%v:%v", URL.Scheme, domain, port)
+				if _, ok := urlSet[target]; ok {
+					continue
+				}
+				urlSet[target] = struct{}{}
+				urls = append(urls, target)
 			}
 		} else {
 			ip := URL.Host
@@ -47,11 +54,15 @@ func HostBindCheck() {
 				continue
 			}
 			for _, domain := range domains {
-				urls = append(urls, fmt.Sprintf("%v://%v", URL.Scheme, domain))
+				target := fmt.Sprintf("%v://%v", URL.Scheme, domain)
+				if _, ok := urlSet[target]; ok {
+					continue
+				}
+				urlSet[target] = struct{}{}
+				urls = append(urls, target)
 			}
 		}
 	}
-	urls = utils.RemoveDuplicateElement(urls)
 
 	httpx.DirBrute(urls, http.HostBindHTTPxCallBack,
 		structs.GlobalConfig.HTTPProxy,

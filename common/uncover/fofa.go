@@ -3,8 +3,6 @@ package uncover
 import (
 	"dddd/ddout"
 	"dddd/structs"
-	"dddd/utils"
-	"dddd/utils/cdn"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -108,6 +106,7 @@ func SearchFOFACore(keyword string, pageSize int) []string {
 	// 确保不会超速
 	time.Sleep(time.Second * 3)
 	var results []string
+	resultSet := make(map[string]struct{})
 
 	resp, errDo := client.Do(req)
 	if errDo != nil {
@@ -138,8 +137,6 @@ func SearchFOFACore(keyword string, pageSize int) []string {
 		return results
 	}
 
-	// 做一个域名缓存，避免重复dns请求
-	domainCDNMap := make(map[string]bool)
 	var domainList []string
 	for _, result := range responseJson.Results {
 		host := result[0]
@@ -152,23 +149,7 @@ func SearchFOFACore(keyword string, pageSize int) []string {
 		}
 		domainList = append(domainList, domain)
 	}
-	domainList = utils.RemoveDuplicateElement(domainList)
-	if len(domainList) != 0 {
-		gologger.Info().Msgf("正在查询 [%v] 个域名是否为CDN资产", len(domainList))
-	}
-	cdnDomains, normalDomains, _ := cdn.CheckCDNs(domainList, structs.GlobalConfig.SubdomainBruteForceThreads)
-	for _, d := range cdnDomains {
-		_, ok := domainCDNMap[d]
-		if !ok {
-			domainCDNMap[d] = true
-		}
-	}
-	for _, d := range normalDomains {
-		_, ok := domainCDNMap[d]
-		if !ok {
-			domainCDNMap[d] = false
-		}
-	}
+	domainCDNMap := buildCDNDomainMap(domainList)
 
 	for _, result := range responseJson.Results {
 		host := result[0]
@@ -228,27 +209,29 @@ func SearchFOFACore(keyword string, pageSize int) []string {
 			show += " [CDN]"
 		}
 
-		if utils.GetItemInArray(results, addTarget) == -1 {
-			if !isCDN || structs.GlobalConfig.AllowCDNAssets {
-				results = append(results, addTarget)
-			}
-			// gologger.Silent().Msg(show)
-			ddout.FormatOutput(ddout.OutputMessage{
-				Type:          "Fofa",
-				IP:            ip,
-				IPs:           nil,
-				Port:          port,
-				Protocol:      protocol,
-				Web:           ddout.WebInfo{},
-				Finger:        nil,
-				Domain:        domain,
-				GoPoc:         ddout.GoPocsResultType{},
-				URI:           host,
-				City:          "",
-				Show:          show,
-				AdditionalMsg: "",
-			})
+		if _, exists := resultSet[addTarget]; exists {
+			continue
 		}
+
+		if !isCDN || structs.GlobalConfig.AllowCDNAssets {
+			results = appendUniqueString(results, resultSet, addTarget)
+		}
+		// gologger.Silent().Msg(show)
+		ddout.FormatOutput(ddout.OutputMessage{
+			Type:          "Fofa",
+			IP:            ip,
+			IPs:           nil,
+			Port:          port,
+			Protocol:      protocol,
+			Web:           ddout.WebInfo{},
+			Finger:        nil,
+			Domain:        domain,
+			GoPoc:         ddout.GoPocsResultType{},
+			URI:           host,
+			City:          "",
+			Show:          show,
+			AdditionalMsg: "",
+		})
 
 	}
 
@@ -260,10 +243,13 @@ func SearchFOFACore(keyword string, pageSize int) []string {
 func FOFASearch(keywords []string) []string {
 	gologger.Info().Msgf("准备从 Fofa 获取数据")
 	var results []string
+	resultSet := make(map[string]struct{})
 	for _, keyword := range keywords {
 		result := SearchFOFACore(keyword,
 			structs.GlobalConfig.FofaMaxCount)
-		results = append(results, result...)
+		for _, item := range result {
+			results = appendUniqueString(results, resultSet, item)
+		}
 	}
-	return utils.RemoveDuplicateElement(results)
+	return results
 }

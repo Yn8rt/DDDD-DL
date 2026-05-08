@@ -35,6 +35,7 @@ import (
 var Results []ResultEvent
 var ResultsLock sync.Mutex
 var AddResultCallback func(result ResultEvent)
+var SuppressStdout bool
 
 // Writer is an interface which writes output to somewhere for nuclei events.
 type Writer interface {
@@ -115,7 +116,7 @@ func (iwe *InternalWrappedEvent) SetOperatorResult(operatorResult *operators.Res
 }
 
 type RequestResponsePair struct {
-	Request string
+	Request  string
 	Response string
 }
 
@@ -269,7 +270,7 @@ func (w *StandardWriter) Write(event *ResultEvent) error {
 	w.mutex.Lock()
 	defer w.mutex.Unlock()
 
-	if !w.DisableStdout {
+	if !w.DisableStdout && !SuppressStdout {
 		_, _ = os.Stdout.Write(data)
 		_, _ = os.Stdout.Write([]byte("\n"))
 	}

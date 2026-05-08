@@ -2,10 +2,11 @@ package structs
 
 import (
 	"embed"
-	"github.com/lcvvvv/gonmap"
-	"github.com/projectdiscovery/hmap/store/hybrid"
 	"net"
 	"sync"
+
+	"github.com/lcvvvv/gonmap"
+	"github.com/projectdiscovery/hmap/store/hybrid"
 )
 
 const (
@@ -27,6 +28,7 @@ type Config struct {
 	Subdomain                  bool
 	SubdomainBruteForceThreads int
 	SkipHostDiscovery          bool
+	NoPortScan                 bool
 	PortScanType               string
 	GetBannerThreads           int
 	GetBannerTimeout           int
@@ -38,7 +40,14 @@ type Config struct {
 	MasscanInterface           string
 	AllowLocalAreaDomain       bool
 	AllowCDNAssets             bool
+	NoCDNCheck                 bool
 	NoHostBind                 bool
+	SubdomainEngine            string
+	DNSXPath                   string
+	KSubdomainPath             string
+	KSubdomainBand             string
+	KSubdomainInterface        string
+	KSubdomainWildcard         string
 	SubdomainWordListFile      string
 	HTTPProxy                  string
 	HTTPProxyTest              bool
@@ -52,6 +61,14 @@ type Config struct {
 	FofaMaxCount               int
 	NoDirSearch                bool
 	EnableJSScan               bool
+	EnableAPIUnauthScan        bool
+	APIUnauthOnly              bool
+	KatanaMode                 string
+	KatanaPath                 string
+	KatanaCrawlDuration        string
+	KatanaDepth                int
+	KatanaTimeout              int
+	APIUnauthMaxTargets        int
 	DirSearchYaml              string
 	NoGolangPoc                bool
 	DisableGeneralPoc          bool
@@ -180,6 +197,8 @@ var DirDB map[string][]string
 
 // GlobalResultMap 存储识别到的指纹
 var GlobalResultMap map[string][]string
+var GlobalActiveFingerMap map[string][]string
+var GlobalActiveFingerMapLock sync.Mutex
 
 // GlobalBlackFingerMap 存储指纹黑名单
 var GlobalBlackFingerMap map[string]bool

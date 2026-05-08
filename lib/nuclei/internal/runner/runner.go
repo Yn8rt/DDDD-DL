@@ -455,42 +455,45 @@ func (r *Runner) RunEnumeration(TargetAndPocsName map[string][]string) error {
 		}
 		return nil // exit
 	}
-	store.Load()
-	// TODO: remove below functions after v3 or update warning messages
-	templates.PrintDeprecatedProtocolNameMsgIfApplicable(r.options.Silent, r.options.Verbose)
+	shouldPreloadStore := !r.options.AutomaticScan || r.options.TemplateList || r.options.TemplateDisplay
+	if shouldPreloadStore {
+		store.Load()
+		// TODO: remove below functions after v3 or update warning messages
+		templates.PrintDeprecatedProtocolNameMsgIfApplicable(r.options.Silent, r.options.Verbose)
 
-	// add the hosts from the metadata queries of loaded templates into input provider
-	if r.options.Uncover && len(r.options.UncoverQuery) == 0 {
-		uncoverOpts := &uncoverlib.Options{
-			Limit:         r.options.UncoverLimit,
-			MaxRetry:      r.options.Retries,
-			Timeout:       r.options.Timeout,
-			RateLimit:     uint(r.options.UncoverRateLimit),
-			RateLimitUnit: time.Minute, // default unit is minute
+		// add the hosts from the metadata queries of loaded templates into input provider
+		if r.options.Uncover && len(r.options.UncoverQuery) == 0 {
+			uncoverOpts := &uncoverlib.Options{
+				Limit:         r.options.UncoverLimit,
+				MaxRetry:      r.options.Retries,
+				Timeout:       r.options.Timeout,
+				RateLimit:     uint(r.options.UncoverRateLimit),
+				RateLimitUnit: time.Minute, // default unit is minute
+			}
+			ret := uncover.GetUncoverTargetsFromMetadata(context.TODO(), store.Templates(), r.options.UncoverField, uncoverOpts)
+			for host := range ret {
+				r.hmapInputProvider.SetWithExclusions(host)
+			}
 		}
-		ret := uncover.GetUncoverTargetsFromMetadata(context.TODO(), store.Templates(), r.options.UncoverField, uncoverOpts)
-		for host := range ret {
-			r.hmapInputProvider.SetWithExclusions(host)
+		// list all templates
+		if r.options.TemplateList || r.options.TemplateDisplay {
+			r.listAvailableStoreTemplates(store)
+			os.Exit(0)
 		}
-	}
-	// list all templates
-	if r.options.TemplateList || r.options.TemplateDisplay {
-		r.listAvailableStoreTemplates(store)
-		os.Exit(0)
-	}
 
-	// display execution info like version , templates used etc
-	r.displayExecutionInfo(store)
+		// display execution info like version , templates used etc
+		r.displayExecutionInfo(store)
 
-	// If not explicitly disabled, check if http based protocols
-	// are used, and if inputs are non-http to pre-perform probing
-	// of urls and storing them for execution.
-	if !r.options.DisableHTTPProbe && loader.IsHTTPBasedProtocolUsed(store) && r.isInputNonHTTP() {
-		inputHelpers, err := r.initializeTemplatesHTTPInput()
-		if err != nil {
-			return errors.Wrap(err, "could not probe http input")
+		// If not explicitly disabled, check if http based protocols
+		// are used, and if inputs are non-http to pre-perform probing
+		// of urls and storing them for execution.
+		if !r.options.DisableHTTPProbe && loader.IsHTTPBasedProtocolUsed(store) && r.isInputNonHTTP() {
+			inputHelpers, err := r.initializeTemplatesHTTPInput()
+			if err != nil {
+				return errors.Wrap(err, "could not probe http input")
+			}
+			executorOpts.InputHelper.InputsHTTP = inputHelpers
 		}
-		executorOpts.InputHelper.InputsHTTP = inputHelpers
 	}
 
 	enumeration := false

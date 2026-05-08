@@ -64,7 +64,6 @@ func shouldScanBase(workflowEntity structs.WorkFlowEntity, scanBase bool) bool {
 }
 
 func UrlCallBack(resp runner.Result) {
-
 	finalUrl := ""
 	if resp.FinalURL != "" {
 		finalUrl = resp.FinalURL
@@ -80,89 +79,7 @@ func UrlCallBack(resp runner.Result) {
 		}
 	}
 
-	url := URLParse(finalUrl)
-	pth := url.Path
-	if pth == "" {
-		pth = "/"
-	}
-	rootURL := fmt.Sprintf("%s://%s", url.Scheme, url.Host)
-	structs.GlobalURLMapLock.Lock()
-	_, rootURLOK := structs.GlobalURLMap[rootURL]
-	structs.GlobalURLMapLock.Unlock()
-	if rootURLOK {
-		// 有这个root，查看这个path，如果没这个path再加
-		structs.GlobalURLMapLock.Lock()
-		_, pathOK := structs.GlobalURLMap[rootURL].WebPaths[url.Path]
-		structs.GlobalURLMapLock.Unlock()
-		if !pathOK {
-			// 没有这个path
-			md5 := resp.Hashes["body_md5"].(string)
-			headerMd5 := resp.Hashes["header_md5"].(string)
-			_ = structs.GlobalHttpBodyHMap.Set(md5, []byte(resp.Body))
-			_ = structs.GlobalHttpHeaderHMap.Set(headerMd5, []byte(resp.Header))
-			structs.GlobalURLMapLock.Lock()
-			structs.GlobalURLMap[rootURL].WebPaths[pth] = structs.UrlPathEntity{
-				Hash:             md5,
-				Title:            resp.Title,
-				StatusCode:       resp.StatusCode,
-				ContentType:      resp.ContentType,
-				Server:           resp.WebServer,
-				ContentLength:    resp.ContentLength,
-				HeaderHashString: headerMd5,
-				IconHash:         resp.FavIconMMH3,
-			}
-			structs.GlobalURLMapLock.Unlock()
-
-			ddout.FormatOutput(ddout.OutputMessage{
-				Type: "Web",
-				IP:   "",
-				Port: "",
-				URI:  resp.URL,
-				Web: ddout.WebInfo{
-					Status: strconv.Itoa(resp.StatusCode),
-					Title:  resp.Title,
-				},
-			})
-
-		}
-	} else {
-		// 没有这个url
-
-		port, err := strconv.Atoi(resp.Port)
-		if err != nil {
-			port = 0
-		}
-
-		md5 := resp.Hashes["body_md5"].(string)
-		headerMd5 := resp.Hashes["header_md5"].(string)
-		_ = structs.GlobalHttpBodyHMap.Set(md5, []byte(resp.Body))
-		_ = structs.GlobalHttpHeaderHMap.Set(headerMd5, []byte(resp.Header))
-
-		webPath := structs.UrlPathEntity{
-			Hash:             md5,
-			Title:            resp.Title,
-			StatusCode:       resp.StatusCode,
-			ContentType:      resp.ContentType,
-			Server:           resp.WebServer,
-			ContentLength:    resp.ContentLength,
-			HeaderHashString: headerMd5,
-			IconHash:         resp.FavIconMMH3,
-		}
-
-		urlE := structs.URLEntity{
-			IP:       resp.Host,
-			Port:     port,
-			WebPaths: nil,
-			Cert:     getTLSString(resp),
-		}
-
-		urlE.WebPaths = make(map[string]structs.UrlPathEntity)
-		urlE.WebPaths[pth] = webPath
-
-		structs.GlobalURLMapLock.Lock()
-		structs.GlobalURLMap[rootURL] = urlE
-		structs.GlobalURLMapLock.Unlock()
-
+	if upsertURLResult(resp, finalUrl) {
 		ddout.FormatOutput(ddout.OutputMessage{
 			Type: "Web",
 			IP:   "",
@@ -212,24 +129,21 @@ func AddYamlSuffix(s string) string {
 	}
 }
 
-func addPocs(target string, result *map[string][]string, workflowEntity structs.WorkFlowEntity) {
-	// 判断有没有加入过
-	_, ok := (*result)[target]
-	if !ok { // 没有添加过这个目标
-		(*result)[target] = []string{}
-		for _, pocName := range workflowEntity.PocsName {
-			(*result)[target] = append((*result)[target], AddYamlSuffix(pocName))
-			gologger.AuditLogger("    - " + pocName)
+func addPocs(target string, result map[string][]string, workflowEntity structs.WorkFlowEntity) {
+	existingPocs := result[target]
+	existingSet := make(map[string]struct{}, len(existingPocs))
+	for _, pocName := range existingPocs {
+		existingSet[pocName] = struct{}{}
+	}
+
+	for _, pocName := range workflowEntity.PocsName {
+		pocWithSuffix := AddYamlSuffix(pocName)
+		if _, ok := existingSet[pocWithSuffix]; ok {
+			continue
 		}
-	} else { // 添加过就逐个比较
-		existPocNames, _ := (*result)[target]
-		for _, pocName := range workflowEntity.PocsName {
-			// 没有就添加
-			if utils.GetItemInArray(existPocNames, pocName) == -1 {
-				(*result)[target] = append((*result)[target], AddYamlSuffix(pocName))
-				gologger.AuditLogger("    - " + pocName)
-			}
-		}
+		result[target] = append(result[target], pocWithSuffix)
+		existingSet[pocWithSuffix] = struct{}{}
+		gologger.AuditLogger("    - " + pocName)
 	}
 }
 
@@ -250,59 +164,8 @@ func GetPocsWithFilter(workflowDB map[string]structs.WorkFlowEntity, blackFinger
 	}
 
 	// 处理用户指定的指纹名称强制扫描
-	if structs.GlobalConfig.FingerNameForSearch != "" {
-		gologger.AuditTimeLogger(fmt.Sprintf("强制扫描指纹: %s", structs.GlobalConfig.FingerNameForSearch))
-		gologger.Info().Msgf(fmt.Sprintf("[指纹强制扫描] 正在匹配: %s", structs.GlobalConfig.FingerNameForSearch))
-		var matchedFingers []string
-		var matchedPocs []string
-
-		// 从 workflowDB 中模糊匹配指纹名称
-		for fingerName, workflowEntity := range workflowDB {
-			if strings.Contains(strings.ToLower(fingerName), strings.ToLower(structs.GlobalConfig.FingerNameForSearch)) {
-				matchedFingers = append(matchedFingers, fingerName)
-				matchedPocs = append(matchedPocs, workflowEntity.PocsName...)
-				gologger.AuditLogger(fmt.Sprintf("  匹配到指纹: %s (%d个POC)", fingerName, len(workflowEntity.PocsName)))
-				// 输出到控制台
-				gologger.Print().Msgf(fmt.Sprintf("  ✓ 匹配到指纹: %s (%d个POC)", fingerName, len(workflowEntity.PocsName)))
-				for _, poc := range workflowEntity.PocsName {
-					gologger.Debug().Msgf(fmt.Sprintf("    - %s", poc))
-				}
-			}
-		}
-
-		if len(matchedFingers) == 0 {
-			gologger.Warning().Msgf("未找到匹配的指纹: %s", structs.GlobalConfig.FingerNameForSearch)
-		} else {
-			gologger.Info().Msgf(fmt.Sprintf("[指纹强制扫描] 共匹配 %d 个指纹，%d 个POC", len(matchedFingers), len(matchedPocs)))
-		}
-
-		// 对所有目标强制添加匹配到的 POC
-		if len(matchedPocs) > 0 {
-			for target := range structs.GlobalResultMap {
-				gologger.AuditLogger(fmt.Sprintf("%s: 强制添加 %d 个POC", target, len(matchedPocs)))
-				gologger.Print().Msgf(fmt.Sprintf("  → %s: 强制添加 %d 个POC", target, len(matchedPocs)))
-				for _, pocName := range matchedPocs {
-					pocWithSuffix := AddYamlSuffix(pocName)
-					if utils.GetItemInArray(result[target], pocWithSuffix) == -1 {
-						result[target] = append(result[target], pocWithSuffix)
-					}
-				}
-				count++
-			}
-		}
-	}
-
-	var generalKeys []string
-	if !structs.GlobalConfig.DisableGeneralPoc {
-		for k, workflowEntity := range workflowDB {
-			if strings.Contains(k, "General-Poc-") {
-				if len(workflowEntity.PocsName) == 0 {
-					continue
-				}
-				generalKeys = append(generalKeys, k)
-			}
-		}
-	}
+	count += applyForcedFingerPocs(workflowDB, result)
+	generalKeys := getGeneralWorkflowKeys(workflowDB)
 
 	for target, fingerprints := range structs.GlobalResultMap {
 		gologger.AuditLogger(target + ":")
@@ -341,40 +204,7 @@ func GetPocsWithFilter(workflowDB map[string]structs.WorkFlowEntity, blackFinger
 				continue
 			}
 
-			if !strings.Contains(target, "http") {
-				if !shouldScanRoot(workflowEntity, scanRoot) { // 与Root无关
-					continue
-				}
-				addPocs(target, &result, workflowEntity)
-				count++
-			} else {
-				Url := URLParse(target)
-
-				// Web
-				if shouldScanRoot(workflowEntity, scanRoot) {
-					rootURL := fmt.Sprintf("%s://%s", Url.Scheme, Url.Host)
-					addPocs(rootURL, &result, workflowEntity)
-					count++
-
-				}
-
-				if (Url.Path != "/" && Url.Path != "") && shouldScanBase(workflowEntity, scanBase) {
-					addPocs(target, &result, workflowEntity)
-					count++
-				}
-
-				if (Url.Path != "/" && Url.Path != "") && shouldScanDir(workflowEntity, scanDir) {
-					splitPath := strings.Split(Url.Path, "/")
-					for i := 1; i < len(splitPath); i++ {
-						newPath := strings.Join(splitPath[:i], "/")
-						t := fmt.Sprintf("%s://%s%s", Url.Scheme, Url.Host, newPath)
-						addPocs(t, &result, workflowEntity)
-						count++
-					}
-
-				}
-			}
-
+			count += addWorkflowTargets(target, workflowEntity, result, scanRoot, scanDir, scanBase)
 		}
 
 		for _, key := range generalKeys {
@@ -382,46 +212,132 @@ func GetPocsWithFilter(workflowDB map[string]structs.WorkFlowEntity, blackFinger
 			if !ok || len(workflowEntity.PocsName) == 0 {
 				continue
 			}
-
-			if !strings.Contains(target, "http") {
-				if !shouldScanRoot(workflowEntity, scanRoot) { // 与Root无关
-					continue
-				}
-				addPocs(target, &result, workflowEntity)
-				count++
-			} else {
-				Url := URLParse(target)
-
-				// Web
-				if shouldScanRoot(workflowEntity, scanRoot) {
-					rootURL := fmt.Sprintf("%s://%s", Url.Scheme, Url.Host)
-					addPocs(rootURL, &result, workflowEntity)
-					count++
-				}
-
-				if (Url.Path != "/" && Url.Path != "") && shouldScanBase(workflowEntity, scanBase) {
-					addPocs(target, &result, workflowEntity)
-					count++
-				}
-
-				if (Url.Path != "/" && Url.Path != "") && shouldScanDir(workflowEntity, scanDir) {
-					splitPath := strings.Split(Url.Path, "/")
-					for i := 1; i < len(splitPath); i++ {
-						newPath := strings.Join(splitPath[:i], "/")
-						t := fmt.Sprintf("%s://%s%s", Url.Scheme, Url.Host, newPath)
-						addPocs(t, &result, workflowEntity)
-						count++
-					}
-
-				}
-			}
+			count += addWorkflowTargets(target, workflowEntity, result, scanRoot, scanDir, scanBase)
 		}
 
 	}
 	return result, count
 }
 
+func applyForcedFingerPocs(workflowDB map[string]structs.WorkFlowEntity, result map[string][]string) int {
+	if structs.GlobalConfig.FingerNameForSearch == "" {
+		return 0
+	}
+
+	gologger.AuditTimeLogger(fmt.Sprintf("强制扫描指纹: %s", structs.GlobalConfig.FingerNameForSearch))
+	gologger.Info().Msgf(fmt.Sprintf("[指纹强制扫描] 正在匹配: %s", structs.GlobalConfig.FingerNameForSearch))
+
+	var matchedFingers []string
+	var matchedPocs []string
+	for fingerName, workflowEntity := range workflowDB {
+		if !strings.Contains(strings.ToLower(fingerName), strings.ToLower(structs.GlobalConfig.FingerNameForSearch)) {
+			continue
+		}
+
+		matchedFingers = append(matchedFingers, fingerName)
+		matchedPocs = append(matchedPocs, workflowEntity.PocsName...)
+		gologger.AuditLogger(fmt.Sprintf("  匹配到指纹: %s (%d个POC)", fingerName, len(workflowEntity.PocsName)))
+		gologger.Print().Msgf(fmt.Sprintf("  ✓ 匹配到指纹: %s (%d个POC)", fingerName, len(workflowEntity.PocsName)))
+		for _, poc := range workflowEntity.PocsName {
+			gologger.Debug().Msgf(fmt.Sprintf("    - %s", poc))
+		}
+	}
+
+	if len(matchedFingers) == 0 {
+		gologger.Warning().Msgf("未找到匹配的指纹: %s", structs.GlobalConfig.FingerNameForSearch)
+		return 0
+	}
+
+	gologger.Info().Msgf(fmt.Sprintf("[指纹强制扫描] 共匹配 %d 个指纹，%d 个POC", len(matchedFingers), len(matchedPocs)))
+	added := 0
+	for target := range structs.GlobalResultMap {
+		gologger.AuditLogger(fmt.Sprintf("%s: 强制添加 %d 个POC", target, len(matchedPocs)))
+		gologger.Print().Msgf(fmt.Sprintf("  → %s: 强制添加 %d 个POC", target, len(matchedPocs)))
+		existingSet := make(map[string]struct{}, len(result[target]))
+		for _, existing := range result[target] {
+			existingSet[existing] = struct{}{}
+		}
+		for _, pocName := range matchedPocs {
+			pocWithSuffix := AddYamlSuffix(pocName)
+			if _, ok := existingSet[pocWithSuffix]; ok {
+				continue
+			}
+			result[target] = append(result[target], pocWithSuffix)
+			existingSet[pocWithSuffix] = struct{}{}
+		}
+		added++
+	}
+	return added
+}
+
+func getGeneralWorkflowKeys(workflowDB map[string]structs.WorkFlowEntity) []string {
+	if structs.GlobalConfig.DisableGeneralPoc {
+		return nil
+	}
+
+	var generalKeys []string
+	for key, workflowEntity := range workflowDB {
+		if strings.Contains(key, "General-Poc-") && len(workflowEntity.PocsName) > 0 {
+			generalKeys = append(generalKeys, key)
+		}
+	}
+	return generalKeys
+}
+
+func addWorkflowTargets(target string, workflowEntity structs.WorkFlowEntity, result map[string][]string, scanRoot, scanDir, scanBase bool) int {
+	if !strings.Contains(target, "http") {
+		if !shouldScanRoot(workflowEntity, scanRoot) {
+			return 0
+		}
+		addPocs(target, result, workflowEntity)
+		return 1
+	}
+
+	targetURL := URLParse(target)
+	targets := buildPOCTargets(targetURL, workflowEntity, scanRoot, scanDir, scanBase)
+	for _, pocTarget := range targets {
+		addPocs(pocTarget, result, workflowEntity)
+	}
+	return len(targets)
+}
+
+func buildPOCTargets(targetURL *url.URL, workflowEntity structs.WorkFlowEntity, scanRoot, scanDir, scanBase bool) []string {
+	var targets []string
+
+	if shouldScanRoot(workflowEntity, scanRoot) {
+		targets = append(targets, fmt.Sprintf("%s://%s", targetURL.Scheme, targetURL.Host))
+	}
+
+	hasSubPath := targetURL.Path != "" && targetURL.Path != "/"
+	if !hasSubPath {
+		return utils.RemoveDuplicateElement(targets)
+	}
+
+	if shouldScanBase(workflowEntity, scanBase) {
+		targets = append(targets, targetURL.String())
+	}
+
+	if shouldScanDir(workflowEntity, scanDir) {
+		splitPath := strings.Split(targetURL.Path, "/")
+		for i := 1; i < len(splitPath); i++ {
+			newPath := strings.Join(splitPath[:i], "/")
+			targets = append(targets, fmt.Sprintf("%s://%s%s", targetURL.Scheme, targetURL.Host, newPath))
+		}
+	}
+
+	return utils.RemoveDuplicateElement(targets)
+}
+
 func DirBruteCallBack(resp runner.Result) {
+	// 软 404 过滤
+	// 当主动指纹请求不存在路径时, 部分服务器 (nginx/tengine/iis) 会返回
+	// 带有服务器 banner 的 404 页面, 这些页面常含 "tengine"/"nginx" 等关键词
+	// 触发指纹库误匹配, 产生大量 false-positive Active-Finger
+	// 策略: 4xx/5xx 状态码 + soft-404 body 特征 → 直接跳过指纹匹配
+	if isSoft404Response(resp) {
+		return
+	}
+
 	var Paths []string
 	for dbPath, _ := range structs.DirDB {
 		if strings.HasSuffix(resp.Path, dbPath) {
@@ -450,36 +366,12 @@ func DirBruteCallBack(resp runner.Result) {
 						// 给对应的urlEntry添加指纹
 						Url := URLParse(resp.URL)
 						rootURL := fmt.Sprintf("%s://%s", Url.Scheme, Url.Host)
-
 						structs.GlobalURLMapLock.Lock()
 						_, rootURLOk := structs.GlobalURLMap[rootURL]
 						structs.GlobalURLMapLock.Unlock()
 						if rootURLOk {
-							// 如果爆破来源上一步验活，那这里必然存在rootURL.
-							// 有这个root，查看这个path，如果没这个path再加
-							structs.GlobalURLMapLock.Lock()
-							_, pathOK := structs.GlobalURLMap[rootURL].WebPaths[Url.Path]
-							structs.GlobalURLMapLock.Unlock()
-							if !pathOK {
-								// 没有这个path
-								md5 := resp.Hashes["body_md5"].(string)
-								headerMd5 := resp.Hashes["header_md5"].(string)
-								_ = structs.GlobalHttpBodyHMap.Set(md5, []byte(resp.Body))
-								_ = structs.GlobalHttpHeaderHMap.Set(headerMd5, []byte(resp.Header))
-								structs.GlobalURLMapLock.Lock()
-								structs.GlobalURLMap[rootURL].WebPaths[Url.Path] = structs.UrlPathEntity{
-									Hash:             md5,
-									Title:            resp.Title,
-									StatusCode:       resp.StatusCode,
-									ContentType:      resp.ContentType,
-									Server:           resp.WebServer,
-									ContentLength:    resp.ContentLength,
-									HeaderHashString: headerMd5,
-									IconHash:         resp.FavIconMMH3,
-								}
-								structs.GlobalURLMapLock.Unlock()
-							}
-
+							upsertURLResult(resp, resp.URL)
+							structs.AddActiveFinger(resp.URL, productName)
 							ddout.FormatOutput(ddout.OutputMessage{
 								Type:          "Active-Finger",
 								IP:            "",
@@ -503,41 +395,7 @@ func DirBruteCallBack(resp runner.Result) {
 }
 
 func HostBindHTTPxCallBack(resp runner.Result) {
-	ips := resp.A
-	path := resp.Path
-	newWeb := false
-	for _, ip := range ips {
-		structs.GlobalURLMapLock.Lock()
-		for rootURL, urlEntry := range structs.GlobalURLMap {
-			URL, err := url.Parse(rootURL)
-			if err != nil {
-				continue
-			}
-			if URL.Scheme != resp.Scheme {
-				continue
-			}
-			if urlEntry.IP != ip {
-				continue
-			}
-			port := strconv.Itoa(urlEntry.Port)
-			if port != resp.Port {
-				continue
-			}
-
-			existPath, ok := urlEntry.WebPaths[path]
-			if !ok {
-				continue
-			}
-
-			if existPath.StatusCode != resp.StatusCode || existPath.Hash != resp.Hashes["body_md5"].(string) {
-				newWeb = true
-			}
-
-		}
-		structs.GlobalURLMapLock.Unlock()
-	}
-
-	if !newWeb {
+	if !hasNewHostBindContent(resp) {
 		return
 	}
 
@@ -571,71 +429,46 @@ func HostBindHTTPxCallBack(resp runner.Result) {
 	}
 
 	urlFinal := URLParse(finalUrl)
-	rootURL := fmt.Sprintf("%s://%s", urlFinal.Scheme, urlFinal.Host)
-	structs.GlobalURLMapLock.Lock()
-	_, rootURLOK := structs.GlobalURLMap[rootURL]
-	structs.GlobalURLMapLock.Unlock()
-	if rootURLOK {
-		// 有这个root，查看这个path，如果没这个path再加
-		structs.GlobalURLMapLock.Lock()
-		_, pathOK := structs.GlobalURLMap[rootURL].WebPaths[urlFinal.Path]
-		structs.GlobalURLMapLock.Unlock()
-		if !pathOK {
-			// 没有这个path
-			md5 := resp.Hashes["body_md5"].(string)
-			headerMd5 := resp.Hashes["header_md5"].(string)
-			_ = structs.GlobalHttpBodyHMap.Set(md5, []byte(resp.Body))
-			_ = structs.GlobalHttpHeaderHMap.Set(headerMd5, []byte(resp.Header))
-			structs.GlobalURLMapLock.Lock()
-			structs.GlobalURLMap[rootURL].WebPaths[urlFinal.Path] = structs.UrlPathEntity{
-				Hash:             md5,
-				Title:            resp.Title,
-				StatusCode:       resp.StatusCode,
-				ContentType:      resp.ContentType,
-				Server:           resp.WebServer,
-				ContentLength:    resp.ContentLength,
-				HeaderHashString: headerMd5,
-				IconHash:         resp.FavIconMMH3,
-			}
-			structs.GlobalURLMapLock.Unlock()
-		}
-	} else {
-		// 没有这个url
+	upsertURLResult(resp, urlFinal.String())
 
-		port, err := strconv.Atoi(resp.Port)
-		if err != nil {
-			port = 0
-		}
+}
 
-		md5 := resp.Hashes["body_md5"].(string)
-		headerMd5 := resp.Hashes["header_md5"].(string)
-		_ = structs.GlobalHttpBodyHMap.Set(md5, []byte(resp.Body))
-		_ = structs.GlobalHttpHeaderHMap.Set(headerMd5, []byte(resp.Header))
+func hasNewHostBindContent(resp runner.Result) bool {
+	path := normalizeURLPath(resp.Path)
+	bodyHash := getBodyHash(resp)
 
-		webPath := structs.UrlPathEntity{
-			Hash:             md5,
-			Title:            resp.Title,
-			StatusCode:       resp.StatusCode,
-			ContentType:      resp.ContentType,
-			Server:           resp.WebServer,
-			ContentLength:    resp.ContentLength,
-			HeaderHashString: headerMd5,
-			IconHash:         resp.FavIconMMH3,
-		}
-
-		urlE := structs.URLEntity{
-			IP:       resp.Host,
-			Port:     port,
-			WebPaths: nil,
-			Cert:     getTLSString(resp),
-		}
-
-		urlE.WebPaths = make(map[string]structs.UrlPathEntity)
-		urlE.WebPaths[urlFinal.Path] = webPath
-
-		structs.GlobalURLMapLock.Lock()
-		structs.GlobalURLMap[rootURL] = urlE
-		structs.GlobalURLMapLock.Unlock()
+	ipSet := make(map[string]struct{}, len(resp.A))
+	for _, ip := range resp.A {
+		ipSet[ip] = struct{}{}
 	}
 
+	structs.GlobalURLMapLock.Lock()
+	defer structs.GlobalURLMapLock.Unlock()
+
+	for rootURL, urlEntry := range structs.GlobalURLMap {
+		parsedURL, err := url.Parse(rootURL)
+		if err != nil {
+			continue
+		}
+		if parsedURL.Scheme != resp.Scheme {
+			continue
+		}
+		if _, ok := ipSet[urlEntry.IP]; !ok {
+			continue
+		}
+		if strconv.Itoa(urlEntry.Port) != resp.Port {
+			continue
+		}
+
+		existPath, ok := urlEntry.WebPaths[path]
+		if !ok {
+			continue
+		}
+
+		if existPath.StatusCode != resp.StatusCode || existPath.Hash != bodyHash {
+			return true
+		}
+	}
+
+	return false
 }

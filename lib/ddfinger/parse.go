@@ -6,6 +6,7 @@ import (
 	"dddd/structs"
 	"dddd/utils"
 	"fmt"
+	"github.com/logrusorgru/aurora"
 	"github.com/projectdiscovery/gologger"
 	"net/url"
 	"regexp"
@@ -14,6 +15,23 @@ import (
 	"strings"
 	"sync"
 )
+
+type matchContext struct {
+	HeaderLower      string
+	BodyLower        string
+	ServerLower      string
+	TitleLower       string
+	CertLower        string
+	PathLower        string
+	HashLower        string
+	ContentTypeLower string
+	BannerLower      string
+	Protocol         string
+	Port             int
+	IconHash         int
+	HasIconHash      bool
+	StatusCode       int
+}
 
 // 判断优先级 非运算符返回0
 func advance(ch int) int {
@@ -309,133 +327,61 @@ func checkPath(Path string,
 		headerString = string(headerBytes)
 	}
 
+	if isWeb && shouldSkipGenericErrorFingerprint(webPath.StatusCode, webPath.Title, body) {
+		return nil
+	}
+
+	matchCtx := buildMatchContext(Protocol, headerString, body, webPath.Server, webPath.Title, Cert, Path, webPath.Hash, webPath.IconHash, webPath.StatusCode, webPath.ContentType, Banner, Port)
+
 	workers := runtime.NumCPU() * 2
 	inputChan := make(chan structs.FingerPEntity, len(structs.FingerprintDB))
-	defer close(inputChan)
 	results := make(chan string, len(structs.FingerprintDB))
-	defer close(results)
+	var workerWG sync.WaitGroup
+	var resultWG sync.WaitGroup
 
-	var wg sync.WaitGroup
-
-	//接收结果
+	resultWG.Add(1)
 	go func() {
+		defer resultWG.Done()
 		for found := range results {
-			if found != "" {
-				fingerPrintResults = append(fingerPrintResults, found)
-			}
-			wg.Done()
+			fingerPrintResults = append(fingerPrintResults, found)
 		}
 	}()
 
 	//多线程扫描
 	for i := 0; i < workers; i++ {
+		workerWG.Add(1)
 		go func() {
+			defer workerWG.Done()
 			for finger := range inputChan {
-				rules := finger.Rule
-				product := finger.ProductName
-				expr := finger.AllString
-
-				for _, singleRule := range rules {
-					singleRuleResult := false
-					if singleRule.Key == "header" {
-						if isWeb && dataCheckString(singleRule.Op, headerString, singleRule.Value) {
-							singleRuleResult = true
-						}
-					} else if singleRule.Key == "body" {
-						if isWeb && dataCheckString(singleRule.Op, body, singleRule.Value) {
-							singleRuleResult = true
-						}
-					} else if singleRule.Key == "server" {
-						if isWeb && dataCheckString(singleRule.Op, webPath.Server, singleRule.Value) {
-							singleRuleResult = true
-						}
-					} else if singleRule.Key == "title" {
-						if isWeb && dataCheckString(singleRule.Op, webPath.Title, singleRule.Value) {
-							singleRuleResult = true
-						}
-					} else if singleRule.Key == "cert" {
-						if dataCheckString(singleRule.Op, Cert, singleRule.Value) {
-							singleRuleResult = true
-						}
-					} else if singleRule.Key == "port" {
-						value, err := strconv.Atoi(singleRule.Value)
-						if err == nil && dataCheckInt(singleRule.Op, Port, value) {
-							singleRuleResult = true
-						}
-					} else if singleRule.Key == "protocol" {
-						if singleRule.Op == 0 {
-							if Protocol == singleRule.Value {
-								singleRuleResult = true
-							}
-						} else if singleRule.Op == 1 {
-							if Protocol != singleRule.Value {
-								singleRuleResult = true
-							}
-						}
-					} else if singleRule.Key == "path" {
-						if isWeb && dataCheckString(singleRule.Op, Path, singleRule.Value) {
-							singleRuleResult = true
-						}
-					} else if singleRule.Key == "body_hash" {
-
-						if isWeb && dataCheckString(singleRule.Op, webPath.Hash, singleRule.Value) {
-							singleRuleResult = true
-						}
-					} else if singleRule.Key == "icon_hash" {
-						value, err := strconv.Atoi(singleRule.Value)
-						hashIcon, errHash := strconv.Atoi(webPath.IconHash)
-						if isWeb && err == nil && errHash == nil && dataCheckInt(singleRule.Op, hashIcon, value) {
-							singleRuleResult = true
-						}
-					} else if singleRule.Key == "status" {
-						value, err := strconv.Atoi(singleRule.Value)
-						if isWeb && err == nil && dataCheckInt(singleRule.Op, webPath.StatusCode, value) {
-							singleRuleResult = true
-						}
-					} else if singleRule.Key == "content_type" {
-						if isWeb && dataCheckString(singleRule.Op, webPath.ContentType, singleRule.Value) {
-							singleRuleResult = true
-						}
-					} else if singleRule.Key == "banner" {
-						if dataCheckString(singleRule.Op, Banner, singleRule.Value) {
-							singleRuleResult = true
-						}
-					} else if singleRule.Key == "type" {
-						if singleRule.Value == "service" {
-							singleRuleResult = true
-						}
-					}
-					if singleRuleResult {
-						expr = expr[:singleRule.Start] + "T" + expr[singleRule.End:]
-					} else {
-						expr = expr[:singleRule.Start] + "F" + expr[singleRule.End:]
-					}
+				if matchFinger(finger, isWeb, matchCtx) {
+					results <- finger.ProductName
 				}
-
-				r := boolEval(expr)
-				if r {
-					results <- product
-				} else {
-					results <- ""
-				}
-
 			}
-
 		}()
 	}
 
 	//添加扫描目标
 	for _, input := range structs.FingerprintDB {
-		wg.Add(1)
 		inputChan <- input
 	}
-	wg.Wait()
+	close(inputChan)
+	workerWG.Wait()
+	close(results)
+	resultWG.Wait()
 
 	return utils.RemoveDuplicateElement(fingerPrintResults)
 }
 
+func prioritizeActiveFingers(target string, detected []string) []string {
+	activeFingers := structs.GetActiveFingers(target)
+	if len(activeFingers) == 0 {
+		return detected
+	}
+	return utils.RemoveDuplicateElement(activeFingers)
+}
+
 func FingerprintIdentification() {
-	gologger.Info().Msg("指纹识别中")
+	gologger.Info().Msg(aurora.BrightGreen("指纹识别中").String())
 
 	// 先识别非Web
 	for hostPort, protocol := range structs.GlobalIPPortMap {
@@ -505,6 +451,7 @@ func FingerprintIdentification() {
 		for path, pathEntity := range urlEntity.WebPaths {
 			results := checkPath(path, pathEntity, urlEntity.Port, URL.Scheme, banner, urlEntity.Cert)
 			fullURL := rootURL + path
+			results = prioritizeActiveFingers(fullURL, results)
 
 			if len(results) > 0 {
 				structs.GlobalResultMap[fullURL] = results
@@ -545,79 +492,40 @@ func FingerprintIdentification() {
 func SingleCheck(finger structs.FingerPEntity, Protocol string, headerString string, body string,
 	Server string, Title string, Cert string, Port int, Path string, Hash string, IconHash string, StatusCode int,
 	ContentType string, Banner string) bool {
+	matchCtx := buildMatchContext(Protocol, headerString, body, Server, Title, Cert, Path, Hash, IconHash, StatusCode, ContentType, Banner, Port)
+	return matchFinger(finger, true, matchCtx)
+}
+
+func buildMatchContext(protocol, headerString, body, server, title, cert, path, hash, iconHash string, statusCode int, contentType, banner string, port int) matchContext {
+	result := matchContext{
+		HeaderLower:      strings.ToLower(headerString),
+		BodyLower:        strings.ToLower(body),
+		ServerLower:      strings.ToLower(server),
+		TitleLower:       strings.ToLower(title),
+		CertLower:        strings.ToLower(cert),
+		PathLower:        strings.ToLower(path),
+		HashLower:        strings.ToLower(hash),
+		ContentTypeLower: strings.ToLower(contentType),
+		BannerLower:      strings.ToLower(banner),
+		Protocol:         protocol,
+		Port:             port,
+		StatusCode:       statusCode,
+	}
+
+	if parsedIconHash, err := strconv.Atoi(iconHash); err == nil {
+		result.IconHash = parsedIconHash
+		result.HasIconHash = true
+	}
+
+	return result
+}
+
+func matchFinger(finger structs.FingerPEntity, isWeb bool, ctx matchContext) bool {
 	rules := finger.Rule
 	expr := finger.AllString
 
 	for _, singleRule := range rules {
-		singleRuleResult := false
-		if singleRule.Key == "header" {
-			if dataCheckString(singleRule.Op, headerString, singleRule.Value) {
-				singleRuleResult = true
-			}
-		} else if singleRule.Key == "body" {
-			if dataCheckString(singleRule.Op, body, singleRule.Value) {
-				singleRuleResult = true
-			}
-		} else if singleRule.Key == "server" {
-			if dataCheckString(singleRule.Op, Server, singleRule.Value) {
-				singleRuleResult = true
-			}
-		} else if singleRule.Key == "title" {
-			if dataCheckString(singleRule.Op, Title, singleRule.Value) {
-				singleRuleResult = true
-			}
-		} else if singleRule.Key == "cert" {
-			if dataCheckString(singleRule.Op, Cert, singleRule.Value) {
-				singleRuleResult = true
-			}
-		} else if singleRule.Key == "port" {
-			value, err := strconv.Atoi(singleRule.Value)
-			if err == nil && dataCheckInt(singleRule.Op, Port, value) {
-				singleRuleResult = true
-			}
-		} else if singleRule.Key == "protocol" {
-			if singleRule.Op == 0 {
-				if Protocol == singleRule.Value {
-					singleRuleResult = true
-				}
-			} else if singleRule.Op == 1 {
-				if Protocol != singleRule.Value {
-					singleRuleResult = true
-				}
-			}
-		} else if singleRule.Key == "path" {
-			if dataCheckString(singleRule.Op, Path, singleRule.Value) {
-				singleRuleResult = true
-			}
-		} else if singleRule.Key == "body_hash" {
-
-			if dataCheckString(singleRule.Op, Hash, singleRule.Value) {
-				singleRuleResult = true
-			}
-		} else if singleRule.Key == "icon_hash" {
-			value, err := strconv.Atoi(singleRule.Value)
-			hashIcon, errHash := strconv.Atoi(IconHash)
-			if err == nil && errHash == nil && dataCheckInt(singleRule.Op, hashIcon, value) {
-				singleRuleResult = true
-			}
-		} else if singleRule.Key == "status" {
-			value, err := strconv.Atoi(singleRule.Value)
-			if err == nil && dataCheckInt(singleRule.Op, StatusCode, value) {
-				singleRuleResult = true
-			}
-		} else if singleRule.Key == "content_type" {
-			if dataCheckString(singleRule.Op, ContentType, singleRule.Value) {
-				singleRuleResult = true
-			}
-		} else if singleRule.Key == "banner" {
-			if dataCheckString(singleRule.Op, Banner, singleRule.Value) {
-				singleRuleResult = true
-			}
-		} else if singleRule.Key == "type" {
-			if singleRule.Value == "service" {
-				singleRuleResult = true
-			}
-		}
+		singleRuleResult := evaluateRule(singleRule, isWeb, ctx)
 		if singleRuleResult {
 			expr = expr[:singleRule.Start] + "T" + expr[singleRule.End:]
 		} else {
@@ -626,4 +534,149 @@ func SingleCheck(finger structs.FingerPEntity, Protocol string, headerString str
 	}
 
 	return boolEval(expr)
+}
+
+func evaluateRule(singleRule structs.RuleData, isWeb bool, ctx matchContext) bool {
+	switch singleRule.Key {
+	case "header":
+		return isWeb && dataCheckString(singleRule.Op, ctx.HeaderLower, singleRule.Value)
+	case "body":
+		return isWeb && dataCheckString(singleRule.Op, ctx.BodyLower, singleRule.Value)
+	case "server":
+		return isWeb && dataCheckString(singleRule.Op, ctx.ServerLower, singleRule.Value)
+	case "title":
+		return isWeb && dataCheckString(singleRule.Op, ctx.TitleLower, singleRule.Value)
+	case "cert":
+		return dataCheckString(singleRule.Op, ctx.CertLower, singleRule.Value)
+	case "port":
+		value, err := strconv.Atoi(singleRule.Value)
+		return err == nil && dataCheckInt(singleRule.Op, ctx.Port, value)
+	case "protocol":
+		if singleRule.Op == 0 {
+			return ctx.Protocol == singleRule.Value
+		}
+		if singleRule.Op == 1 {
+			return ctx.Protocol != singleRule.Value
+		}
+		return false
+	case "path":
+		return isWeb && dataCheckString(singleRule.Op, ctx.PathLower, singleRule.Value)
+	case "body_hash":
+		return isWeb && dataCheckString(singleRule.Op, ctx.HashLower, singleRule.Value)
+	case "icon_hash":
+		value, err := strconv.Atoi(singleRule.Value)
+		return isWeb && err == nil && ctx.HasIconHash && dataCheckInt(singleRule.Op, ctx.IconHash, value)
+	case "status":
+		value, err := strconv.Atoi(singleRule.Value)
+		return isWeb && err == nil && dataCheckInt(singleRule.Op, ctx.StatusCode, value)
+	case "content_type":
+		return isWeb && dataCheckString(singleRule.Op, ctx.ContentTypeLower, singleRule.Value)
+	case "banner":
+		return dataCheckString(singleRule.Op, ctx.BannerLower, singleRule.Value)
+	case "type":
+		return singleRule.Value == "service"
+	default:
+		return false
+	}
+}
+
+// shouldSkipGenericErrorFingerprint 判断响应是否是通用错误页 / 软 404
+// 命中时跳过整个指纹匹配流程，避免把 nginx/tengine 等 web server 的错误页
+// 误识别为某个具体应用
+//
+// 覆盖情况:
+//  1. 4xx/5xx + title 带 HTTP Status/404 标记
+//  2. 状态码 200 但 title 含 "404" / "not found" 等错误词 + body 命中软 404 body 特征
+//     (典型案例: tengine/nginx 的自定义 404 页返回 200 状态码)
+//  3. 内网常见空 web 服务 (IIS 默认页 / Apache "It works!" 默认页)
+// ShouldSkipGenericErrorFingerprint 是 shouldSkipGenericErrorFingerprint 的导出版本
+// 供外部包 (如 common/http.DirBruteCallBack) 做一致的软 404 过滤
+func ShouldSkipGenericErrorFingerprint(statusCode int, title, body string) bool {
+	return shouldSkipGenericErrorFingerprint(statusCode, title, body)
+}
+
+func shouldSkipGenericErrorFingerprint(statusCode int, title, body string) bool {
+	titleLower := strings.ToLower(strings.TrimSpace(title))
+	bodyLower := strings.ToLower(body)
+
+	// === 规则 1: 4xx/5xx 错误页 ===
+	if statusCode >= 400 && statusCode < 600 {
+		if strings.HasPrefix(titleLower, "http status ") && strings.Contains(bodyLower, "<h1>http status ") {
+			return true
+		}
+		if strings.Contains(titleLower, "404 not found") && len(bodyLower) < 1024 {
+			return true
+		}
+		// title 包含错误标识的短响应
+		if isErrorLikeTitle(titleLower) && len(body) < 4096 {
+			if isErrorLikeBody(bodyLower) {
+				return true
+			}
+		}
+		// 404 状态码无论 title/body 怎样都不产生指纹
+		if statusCode == 404 || statusCode == 410 {
+			return true
+		}
+	}
+
+	// === 规则 2: 200 但实际是软 404 ===
+	if statusCode == 200 {
+		if isErrorLikeTitle(titleLower) && isErrorLikeBody(bodyLower) {
+			return true
+		}
+	}
+
+	return false
+}
+
+// isErrorLikeTitle title 是否看起来是错误页
+func isErrorLikeTitle(titleLower string) bool {
+	if titleLower == "" {
+		return false
+	}
+	markers := []string{
+		"404",
+		"not found",
+		"未找到",
+		"找不到",
+		"page not found",
+		"500 internal",
+		"502 bad gateway",
+		"503 service",
+		"bad gateway",
+		"gateway time-out",
+		"service unavailable",
+	}
+	for _, m := range markers {
+		if strings.Contains(titleLower, m) {
+			return true
+		}
+	}
+	return false
+}
+
+// isErrorLikeBody body 是否含常见错误页关键词
+func isErrorLikeBody(bodyLower string) bool {
+	if bodyLower == "" {
+		return false
+	}
+	markers := []string{
+		"sorry for the inconvenience",
+		"带来不便敬请谅解",
+		"the page you requested",
+		"the requested url was not found",
+		"找不到您请求的页面",
+		"您请求的资源",
+		"page not found",
+		"404 not found",
+		"please report this message",
+		"请举报此消息",
+		"report this message",
+	}
+	for _, m := range markers {
+		if strings.Contains(bodyLower, m) {
+			return true
+		}
+	}
+	return false
 }

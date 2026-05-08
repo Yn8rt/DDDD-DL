@@ -3,8 +3,6 @@ package uncover
 import (
 	"dddd/ddout"
 	"dddd/structs"
-	"dddd/utils"
-	"dddd/utils/cdn"
 	"encoding/json"
 	"fmt"
 	"github.com/projectdiscovery/gologger"
@@ -151,6 +149,7 @@ func SearchQuakeCore(keyword string, pageSize int) []string {
 	// 确保不会超速
 	time.Sleep(time.Second * 2)
 	var results []string
+	resultSet := make(map[string]struct{})
 
 	resp, errDo := client.Do(req)
 	if errDo != nil {
@@ -177,36 +176,19 @@ func SearchQuakeCore(keyword string, pageSize int) []string {
 		return results
 	}
 
-	// 做一个域名缓存，避免重复dns请求
-	domainCDNMap := make(map[string]bool)
 	var domainList []string
 
 	for _, d := range serviceInfo.Data {
 		domainList = append(domainList, d.Service.HTTP.Host)
 	}
 
-	domainList = utils.RemoveDuplicateElement(domainList)
-	if len(domainList) != 0 {
-		gologger.Info().Msgf("正在查询 [%v] 个域名是否为CDN资产", len(domainList))
-	}
-	cdnDomains, normalDomains, _ := cdn.CheckCDNs(domainList, structs.GlobalConfig.SubdomainBruteForceThreads)
-	for _, d := range cdnDomains {
-		_, ok := domainCDNMap[d]
-		if !ok {
-			domainCDNMap[d] = true
-		}
-	}
-	for _, d := range normalDomains {
-		_, ok := domainCDNMap[d]
-		if !ok {
-			domainCDNMap[d] = false
-		}
-	}
+	domainCDNMap := buildCDNDomainMap(domainList)
 
 	for _, d := range serviceInfo.Data {
 		if d.Service.HTTP.URL == nil {
 			t := fmt.Sprintf("%s:%d", d.IP, d.Port)
-			if utils.GetItemInArray(results, t) == -1 {
+			if _, exists := resultSet[t]; !exists {
+				results = appendUniqueString(results, resultSet, t)
 				ddout.FormatOutput(ddout.OutputMessage{
 					Type:          "Quake",
 					IP:            d.IP,
@@ -223,7 +205,6 @@ func SearchQuakeCore(keyword string, pageSize int) []string {
 					AdditionalMsg: "",
 				})
 				// gologger.Silent().Msgf("[Quake] %s", t)
-				results = append(results, t)
 			}
 		} else {
 			isCDN := false
@@ -237,8 +218,8 @@ func SearchQuakeCore(keyword string, pageSize int) []string {
 
 			if structs.GlobalConfig.OnlyIPPort && !isCDN {
 				u := fmt.Sprintf("%v://%v:%v", strings.ReplaceAll(d.Service.Name, "http/ssl", "https"), d.IP, d.Port)
-				if utils.GetItemInArray(results, u) == -1 {
-					results = append(results, u)
+				if _, exists := resultSet[u]; !exists {
+					results = appendUniqueString(results, resultSet, u)
 					// gologger.Silent().Msgf("[Quake] %s", u)
 					ddout.FormatOutput(ddout.OutputMessage{
 						Type:          "Quake",
@@ -258,26 +239,27 @@ func SearchQuakeCore(keyword string, pageSize int) []string {
 				}
 			} else {
 				for _, u := range d.Service.HTTP.URL {
-					if utils.GetItemInArray(results, u) == -1 {
-						if !isCDN || structs.GlobalConfig.AllowCDNAssets {
-							// gologger.Silent().Msgf("[Quake] %s", u)
-							ddout.FormatOutput(ddout.OutputMessage{
-								Type:          "Quake",
-								IP:            d.IP,
-								IPs:           nil,
-								Port:          strconv.Itoa(d.Port),
-								Protocol:      d.Service.Name,
-								Web:           ddout.WebInfo{},
-								Finger:        nil,
-								Domain:        "",
-								GoPoc:         ddout.GoPocsResultType{},
-								URI:           u,
-								City:          "",
-								Show:          u,
-								AdditionalMsg: "",
-							})
-							results = append(results, u)
-						}
+					if _, exists := resultSet[u]; exists {
+						continue
+					}
+					if !isCDN || structs.GlobalConfig.AllowCDNAssets {
+						// gologger.Silent().Msgf("[Quake] %s", u)
+						ddout.FormatOutput(ddout.OutputMessage{
+							Type:          "Quake",
+							IP:            d.IP,
+							IPs:           nil,
+							Port:          strconv.Itoa(d.Port),
+							Protocol:      d.Service.Name,
+							Web:           ddout.WebInfo{},
+							Finger:        nil,
+							Domain:        "",
+							GoPoc:         ddout.GoPocsResultType{},
+							URI:           u,
+							City:          "",
+							Show:          u,
+							AdditionalMsg: "",
+						})
+						results = appendUniqueString(results, resultSet, u)
 					}
 				}
 			}
@@ -339,10 +321,13 @@ func QuakeSearch(keywords []string) []string {
 	}
 	gologger.Info().Msgf("准备从 Quake 获取数据")
 	var results []string
+	resultSet := make(map[string]struct{})
 	for _, keyword := range keywords {
 		result := SearchQuakeCore(keyword,
 			structs.GlobalConfig.QuakeSize)
-		results = append(results, result...)
+		for _, item := range result {
+			results = appendUniqueString(results, resultSet, item)
+		}
 	}
-	return utils.RemoveDuplicateElement(results)
+	return results
 }

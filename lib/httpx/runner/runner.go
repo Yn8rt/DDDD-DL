@@ -79,6 +79,10 @@ type Runner struct {
 	browser         *Browser
 	NextCheckUrl    []string
 	CallBack        func(resp Result)
+	// OnItemDone 每处理完一个输入 URL 时触发, 用于外部进度条更新
+	// 该 hook 反映"已发起扫描的 URL 数"而非"已成功回调", 在大量超时/失败 URL 场景下
+	// 能让 bar 稳定推进到 100%
+	OnItemDone func(current, total int)
 }
 
 // New creates a new client for running enumeration process.
@@ -961,7 +965,11 @@ func (r *Runner) RunEnumeration() {
 				gologger.Info().Msgf("[Web] 当前进度: %v [%v/%v]", string(k), currentCount, allCount)
 			}
 
-			return processItem(string(k))
+			err := processItem(string(k))
+			if r.OnItemDone != nil {
+				r.OnItemDone(currentCount, allCount)
+			}
+			return err
 		})
 	}
 

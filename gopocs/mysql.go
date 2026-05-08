@@ -6,7 +6,7 @@ import (
 	"dddd/structs"
 	_ "embed"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/go-sql-driver/mysql"
 	"github.com/projectdiscovery/gologger"
 	"time"
 )
@@ -44,16 +44,37 @@ func MysqlScan(info *structs.HostInfo) (tmperr error) {
 func MysqlConn(info *structs.HostInfo, user string, pass string) (flag bool, err error) {
 	flag = false
 	Host, Port, Username, Password := info.Host, info.Ports, user, pass
-	dataSourceName := fmt.Sprintf("%v:%v@tcp(%v:%v)/mysql?charset=utf8&timeout=%v", Username, Password, Host, Port, time.Duration(6)*time.Second)
-	gologger.AuditTimeLogger("[Go] [MYSQL-Brute] start try %s", dataSourceName)
+
+	// 使用结构化 Config 构建 DSN, 避免密码含 @ # / 等字符时 DSN 解析失败
+	// 原实现 fmt.Sprintf 拼接 DSN, 密码中 "@" 会让 DSN 被错误解析,
+	// sql.Open 快速返回错误, 爆破全程 <1ms/次 实际从未真正连接数据库
+	cfg := mysql.NewConfig()
+	cfg.User = Username
+	cfg.Passwd = Password
+	cfg.Net = "tcp"
+	cfg.Addr = fmt.Sprintf("%v:%v", Host, Port)
+	cfg.DBName = "mysql"
+	cfg.Timeout = 6 * time.Second
+	cfg.Params = map[string]string{"charset": "utf8"}
+	dataSourceName := cfg.FormatDSN()
+
+	gologger.AuditTimeLogger("[Go] [MYSQL-Brute] start try %s:%v user=%s", Host, Port, Username)
 	db, err := sql.Open("mysql", dataSourceName)
-	if err == nil {
-		db.SetConnMaxLifetime(time.Duration(6) * time.Second)
-		db.SetConnMaxIdleTime(time.Duration(6) * time.Second)
-		db.SetMaxIdleConns(0)
-		defer db.Close()
-		err = db.Ping()
-		if err == nil {
+	if err != nil {
+		gologger.AuditTimeLogger("[Go] [MYSQL-Brute] sql.Open failed: %v", err)
+		return flag, err
+	}
+	db.SetConnMaxLifetime(time.Duration(6) * time.Second)
+	db.SetConnMaxIdleTime(time.Duration(6) * time.Second)
+	db.SetMaxIdleConns(0)
+	defer db.Close()
+	err = db.Ping()
+	if err != nil {
+		gologger.AuditTimeLogger("[Go] [MYSQL-Brute] Ping failed (%s): %v", Username, err)
+		return flag, err
+	}
+	{
+		{
 			result := fmt.Sprintf("Mysql://%v:%v:%v %v", Host, Port, Username, Password)
 			// gologger.Silent().Msg("[GoPoc] " + result)
 

@@ -229,60 +229,7 @@ func GoPocWriteResult(result structs.GoPocsResultType) {
 	WriteResultLock.Unlock()
 }
 
-func readDict(name string) string {
-	bt, err := os.ReadFile(name)
-	if err != nil {
-		return ""
-	}
-	return string(bt)
-}
-
-func fileExists(filePath string) bool {
-	_, err := os.Stat(filePath)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return false
-		}
-	}
-	return true
-}
-
 // initDic 初始化用于爆破的字典
 func initDic() {
-	basePath := "config/dict/"
-
-	if fileExists(basePath + "ftp.txt") {
-		ftpUserPasswdDict = readDict(basePath + "ftp.txt")
-	}
-	if fileExists(basePath + "") {
-		mssqlUserPasswdDict = readDict(basePath + "mssql.txt")
-	}
-	if fileExists(basePath + "") {
-		mysqlUserPasswdDict = readDict(basePath + "mysql.txt")
-	}
-	if fileExists(basePath + "") {
-		oracleUserPasswdDict = readDict(basePath + "oracle.txt")
-	}
-	if fileExists(basePath + "") {
-		postgreSQLUserPasswdDict = readDict(basePath + "postgresql.txt")
-	}
-	if fileExists(basePath + "") {
-		rdpUserPasswdDict = readDict(basePath + "rdp.txt")
-	}
-	if fileExists(basePath + "") {
-		redisUserPasswdDict = readDict(basePath + "redis.txt")
-	}
-	if fileExists(basePath + "") {
-		smbUserPasswdDict = readDict(basePath + "smb.txt")
-	}
-	if fileExists(basePath + "") {
-		sshUserPasswdDict = readDict(basePath + "ssh.txt")
-	}
-	if fileExists(basePath + "") {
-		telnetUserPasswdDict = readDict(basePath + "telnet.txt")
-	}
-	if fileExists(basePath + "") {
-		ShiroKeys = readDict(basePath + "shirokeys.txt")
-	}
-
+	// 爆破字典已通过 go:embed 编译进程序，运行时不再依赖外部 config/dict。
 }

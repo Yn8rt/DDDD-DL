@@ -4,7 +4,6 @@ import (
 	"dddd/ddout"
 	"dddd/structs"
 	"dddd/utils"
-	"dddd/utils/cdn"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -94,6 +93,8 @@ func SearchHunterCore(keyword string, pageSize int, maxQueryPage int) ([]string,
 
 	var results []string
 	var ipResult []string
+	resultSet := make(map[string]struct{})
+	ipResultSet := make(map[string]struct{})
 	for page <= maxQueryPage {
 		req, err := retryablehttp.NewRequest(http.MethodGet, url, nil)
 		if err != nil {
@@ -153,31 +154,13 @@ func SearchHunterCore(keyword string, pageSize int, maxQueryPage int) ([]string,
 			return results, ipResult
 		}
 
-		// 做一个域名缓存，避免重复dns请求
-		domainCDNMap := make(map[string]bool)
 		var domainList []string
 
 		for _, v := range responseJson.Data.InfoArr {
 			domainList = append(domainList, v.Domain)
 		}
 
-		domainList = utils.RemoveDuplicateElement(domainList)
-		if len(domainList) != 0 {
-			gologger.Info().Msgf("正在查询 [%v] 个域名是否为CDN资产", len(domainList))
-		}
-		cdnDomains, normalDomains, _ := cdn.CheckCDNs(domainList, structs.GlobalConfig.SubdomainBruteForceThreads)
-		for _, d := range cdnDomains {
-			_, ok := domainCDNMap[d]
-			if !ok {
-				domainCDNMap[d] = true
-			}
-		}
-		for _, d := range normalDomains {
-			_, ok := domainCDNMap[d]
-			if !ok {
-				domainCDNMap[d] = false
-			}
-		}
+		domainCDNMap := buildCDNDomainMap(domainList)
 
 		for _, v := range responseJson.Data.InfoArr {
 			isCDN := false
@@ -245,9 +228,9 @@ func SearchHunterCore(keyword string, pageSize int, maxQueryPage int) ([]string,
 					} else {
 						p = v.URL
 					}
-					if utils.GetItemInArray(results, p) == -1 {
+					if _, exists := resultSet[p]; !exists {
 						if !isCDN || structs.GlobalConfig.AllowCDNAssets {
-							results = append(results, p)
+							results = appendUniqueString(results, resultSet, p)
 							// gologger.Silent().Msgf("[Hunter] [%d] %s [%s] [%s] [%s]", v.Code, p, v.Title, v.City, v.Company)
 							ddout.FormatOutput(ddout.OutputMessage{
 								Type:     "Hunter",
@@ -272,22 +255,12 @@ func SearchHunterCore(keyword string, pageSize int, maxQueryPage int) ([]string,
 			} else {
 				if structs.GlobalConfig.LowPerceptionMode {
 					hostPort := fmt.Sprintf("%s:%d", v.IP, v.Port)
-					structs.GlobalIPPortMapLock.Lock()
-					_, ok := structs.GlobalIPPortMap[hostPort]
-					structs.GlobalIPPortMapLock.Unlock()
-					if !ok {
-						structs.GlobalBannerHMap.Set(hostPort, []byte(v.Banner))
-						structs.GlobalIPPortMapLock.Lock()
-						structs.GlobalIPPortMap[hostPort] = v.Protocol
-						structs.GlobalIPPortMapLock.Unlock()
-					}
+					structs.AddIPPortService(hostPort, v.Protocol, []byte(v.Banner))
 				} else {
-					results = append(results, fmt.Sprintf("%s:%v", v.IP, v.Port))
-
 					p := fmt.Sprintf("%s:%d", v.IP, v.Port)
-					if utils.GetItemInArray(results, p) == -1 {
+					if _, exists := resultSet[p]; !exists {
 						if !isCDN || structs.GlobalConfig.AllowCDNAssets {
-							results = append(results, p)
+							results = appendUniqueString(results, resultSet, p)
 							// gologger.Silent().Msgf("[Hunter] %s://%s:%d", v.Protocol, v.IP, v.Port)
 							ddout.FormatOutput(ddout.OutputMessage{
 								Type:          "Hunter",
@@ -308,7 +281,7 @@ func SearchHunterCore(keyword string, pageSize int, maxQueryPage int) ([]string,
 				}
 			}
 			if !isCDN {
-				ipResult = append(ipResult, v.IP)
+				ipResult = appendUniqueString(ipResult, ipResultSet, v.IP)
 			}
 		}
 
@@ -329,17 +302,52 @@ func SearchHunterCore(keyword string, pageSize int, maxQueryPage int) ([]string,
 	return results, ipResult
 }
 
+func normalizeHunterKeyword(keyword string) string {
+	keyword = strings.TrimSpace(keyword)
+	if keyword == "" {
+		return keyword
+	}
+
+	if strings.Contains(keyword, "&&") || strings.Contains(keyword, "||") || strings.ContainsAny(keyword, " \t\r\n()\"'") {
+		return keyword
+	}
+
+	parts := strings.Split(keyword, "=")
+	if len(parts) != 2 {
+		return keyword
+	}
+
+	field := strings.TrimSpace(parts[0])
+	value := strings.TrimSpace(parts[1])
+	if field == "" || value == "" {
+		return keyword
+	}
+
+	return fmt.Sprintf("%s=\"%s\"", field, value)
+}
+
 func HunterSearch(keywords []string) ([]string, []string) {
 	gologger.Info().Msgf("准备从 Hunter 获取数据")
 	gologger.AuditTimeLogger("准备从 Hunter 获取数据")
 	var results []string
 	var ipResults []string
+	resultSet := make(map[string]struct{})
+	ipResultSet := make(map[string]struct{})
 	for _, keyword := range keywords {
+		normalizedKeyword := normalizeHunterKeyword(keyword)
+		if normalizedKeyword != keyword {
+			gologger.Info().Msgf("[Hunter] 查询语句已规范化: %s -> %s", keyword, normalizedKeyword)
+		}
+		keyword = normalizedKeyword
 		result, ipResult := SearchHunterCore(keyword,
 			structs.GlobalConfig.HunterPageSize,
 			structs.GlobalConfig.HunterMaxPageCount)
-		results = append(results, result...)
-		ipResults = append(ipResults, ipResult...)
+		for _, item := range result {
+			results = appendUniqueString(results, resultSet, item)
+		}
+		for _, item := range ipResult {
+			ipResults = appendUniqueString(ipResults, ipResultSet, item)
+		}
 	}
-	return utils.RemoveDuplicateElement(results), utils.RemoveDuplicateElement(ipResults)
+	return results, ipResults
 }

@@ -404,13 +404,15 @@ func (request *Request) ExecuteWithResults(input *contextargs.Context, dynamicVa
 					allOASTUrls := httputils.GetInteractshURLSFromEvent(event.InternalEvent)
 					allOASTUrls = append(allOASTUrls, generatedHttpRequest.interactshURLs...)
 					request.options.Interactsh.RequestEvent(sliceutil.Dedupe(allOASTUrls), requestData)
-					gotMatches = request.options.Interactsh.AlreadyMatched(requestData)
+					gotMatches = gotMatches || request.options.Interactsh.AlreadyMatched(requestData)
 				}
 				// Add the extracts to the dynamic values if any.
 				if event.OperatorsResult != nil {
-					gotMatches = event.OperatorsResult.Matched
+					gotMatches = gotMatches || event.OperatorsResult.Matched
 					gotDynamicValues = generators.MergeMapsMany(event.OperatorsResult.DynamicValues, dynamicValues, gotDynamicValues)
 				}
+				gotMatches = gotMatches || event.HasResults()
+				gotMatches = gotMatches || event.HasResults()
 				// Note: This is a race condition prone zone i.e when request has interactsh_matchers
 				// Interactsh.RequestEvent tries to access/update output.InternalWrappedEvent depending on logic
 				// to avoid conflicts with `callback` mutex is used here and in Interactsh.RequestEvent

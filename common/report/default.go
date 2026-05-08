@@ -254,6 +254,9 @@ func defaultHeader() string {
 			.highlight.yellow {
 				color: #FFC107;
 			}
+			.highlight.red {
+				color: #f44336;
+			}
 			/* 指纹分布图表 */
 			.fingerprint-chart {
 				background: #1a1a1a;
@@ -305,6 +308,12 @@ func defaultHeader() string {
 			.url-table {
 				width: 100%;
 				border-collapse: collapse;
+			}
+			.url-table tbody {
+				display: table-row-group;
+			}
+			.url-table thead {
+				cursor: default;
 			}
 			.url-table th {
 				background: #252525;
@@ -413,6 +422,7 @@ func defaultHeader() string {
 	<div class="tab-container">
 		<div class="tab-nav">
 			<button class="tab-btn active" onclick="switchTab('vuln')">漏洞扫描结果</button>
+			<button class="tab-btn" onclick="switchTab('api-unauth')">API-Unauth 结果</button>
 			<button class="tab-btn" onclick="switchTab('fingerprint')">指纹分类统计</button>
 		</div>
 		<div id="tab-vuln" class="tab-content active">

@@ -2,6 +2,7 @@ package common
 
 import (
 	"bytes"
+	"dddd/common/progress"
 	"dddd/ddout"
 	"fmt"
 	"github.com/projectdiscovery/gologger"
@@ -11,8 +12,12 @@ import (
 	"runtime"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 )
+
+var liveBar *progress.Bar
+var liveBarProgress atomic.Int64
 
 var (
 	AliveHosts []string
@@ -33,6 +38,17 @@ func IsContain(items []string, item string) bool {
 func CheckLive(hostslist []string, Ping bool) []string {
 	gologger.AuditTimeLogger("ICMP发包探测存活，目标IP如下")
 	gologger.AuditLogger(strings.Join(hostslist, ","))
+
+	// 进度条: 大目标量下显式告诉用户还在工作
+	liveBar = progress.New("主机存活", len(hostslist))
+	liveBarProgress.Store(0)
+	defer func() {
+		if liveBar != nil {
+			liveBar.Finish()
+			liveBar = nil
+		}
+	}()
+
 	chanHosts := make(chan string, len(hostslist))
 	go func() {
 		for ip := range chanHosts {
@@ -105,21 +121,32 @@ func RunIcmp1(hostslist []string, conn *icmp.PacketConn, chanHosts chan string) 
 	}
 	//根据hosts数量修改icmp监听时间
 	start := time.Now()
+	var wait time.Duration
+	if len(hostslist) <= 256 {
+		wait = time.Second * 3
+	} else {
+		wait = time.Second * 6
+	}
 	for {
 		if len(AliveHosts) == len(hostslist) {
 			break
 		}
 		since := time.Now().Sub(start)
-		var wait time.Duration
-		switch {
-		case len(hostslist) <= 256:
-			wait = time.Second * 3
-		default:
-			wait = time.Second * 6
+		// 基于等待时间的粗略进度
+		if liveBar != nil {
+			ratio := float64(since) / float64(wait)
+			if ratio > 1 {
+				ratio = 1
+			}
+			liveBar.Set(int(ratio * float64(len(hostslist))))
 		}
 		if since > wait {
 			break
 		}
+		time.Sleep(100 * time.Millisecond)
+	}
+	if liveBar != nil {
+		liveBar.Set(len(hostslist))
 	}
 	endflag = true
 	conn.Close()
@@ -139,6 +166,9 @@ func RunIcmp2(hostslist []string, chanHosts chan string) {
 			if icmpalive(host) {
 				livewg.Add(1)
 				chanHosts <- host
+			}
+			if liveBar != nil {
+				liveBar.Add(1)
 			}
 			<-limiter
 			wg.Done()
@@ -189,6 +219,9 @@ func RunPing(hostslist []string, chanHosts chan string) {
 			if ExecCommandPing(host, bsenv) {
 				livewg.Add(1)
 				chanHosts <- host
+			}
+			if liveBar != nil {
+				liveBar.Add(1)
 			}
 			<-limiter
 			wg.Done()

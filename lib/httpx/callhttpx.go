@@ -1,6 +1,7 @@
 package httpx
 
 import (
+	"github.com/logrusorgru/aurora"
 	"github.com/projectdiscovery/gologger"
 	"github.com/projectdiscovery/httpx/runner"
 	errorutil "github.com/projectdiscovery/utils/errors"
@@ -57,7 +58,12 @@ func RemoveUsedUrl(urls []string) []string {
 }
 
 func CallHTTPx(urls []string, callBack func(resp runner.Result), proxy string, threads int, timeout int) {
-	gologger.Info().Msg("获取Web响应中")
+	CallHTTPxWithProgress(urls, callBack, nil, proxy, threads, timeout)
+}
+
+// CallHTTPxWithProgress CallHTTPx 的带进度钩子版本
+func CallHTTPxWithProgress(urls []string, callBack func(resp runner.Result), onItemDone ProgressHook, proxy string, threads int, timeout int) {
+	gologger.Info().Msg(aurora.BrightBlue("获取Web响应中").String())
 
 	nextUrls := RemoveDuplicateElement(urls)
 	gologger.AuditLogger("响应探测目标: %s", strings.Join(nextUrls, ","))
@@ -92,6 +98,9 @@ func CallHTTPx(urls []string, callBack func(resp runner.Result), proxy string, t
 			gologger.Error().Msgf("runner.New(&options) error")
 		}
 		httpxRunner.CallBack = callBack
+		if onItemDone != nil {
+			httpxRunner.OnItemDone = func(current, total int) { onItemDone(current, total) }
+		}
 
 		for _, u := range nextUrls {
 			GlobalUsedUrl = append(GlobalUsedUrl, u)
@@ -128,7 +137,16 @@ func init() {
 	}
 }
 
+// ProgressHook 每处理完一个输入 URL 触发(包含超时/失败)
+// dddd 侧传入用于进度条推进, 避免 callback 只统计成功响应导致 bar 卡在中间
+type ProgressHook func(current, total int)
+
 func DirBrute(urls []string, callBack func(resp runner.Result), proxy string, threads int, timeout int) {
+	DirBruteWithProgress(urls, callBack, nil, proxy, threads, timeout)
+}
+
+// DirBruteWithProgress DirBrute 的带进度钩子版本
+func DirBruteWithProgress(urls []string, callBack func(resp runner.Result), onItemDone ProgressHook, proxy string, threads int, timeout int) {
 	urls = RemoveDuplicateElement(urls)
 
 	options := runner.Options{
@@ -159,6 +177,9 @@ func DirBrute(urls []string, callBack func(resp runner.Result), proxy string, th
 		gologger.Error().Msgf("runner.New(&options) error")
 	}
 	httpxRunner.CallBack = callBack
+	if onItemDone != nil {
+		httpxRunner.OnItemDone = func(current, total int) { onItemDone(current, total) }
+	}
 
 	httpxRunner.RunEnumeration()
 	httpxRunner.Close()

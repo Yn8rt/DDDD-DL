@@ -1,6 +1,7 @@
 package common
 
 import (
+	"dddd/common/progress"
 	"dddd/ddout"
 	"dddd/structs"
 	"dddd/utils"
@@ -25,6 +26,9 @@ func GetProtocol(hostPorts []string, threads int, timeout int) {
 
 	gologger.AuditTimeLogger("TCP指纹识别，识别目标: %s", strings.Join(hostPorts, ","))
 
+	bar := progress.New("协议识别", len(hostPorts))
+	defer bar.Finish()
+
 	workers := threads
 	Addrs := make(chan string, len(hostPorts))
 	defer close(Addrs)
@@ -36,6 +40,7 @@ func GetProtocol(hostPorts []string, threads int, timeout int) {
 	go func() {
 		for found := range results {
 			if found.Status == int(gonmap.Closed) {
+				bar.Add(1)
 				wg.Done()
 				continue
 			}
@@ -46,6 +51,7 @@ func GetProtocol(hostPorts []string, threads int, timeout int) {
 					Port:     strconv.Itoa(found.Port),
 					Protocol: "tcp",
 				})
+				bar.Add(1)
 				wg.Done()
 				continue
 			}
@@ -54,15 +60,7 @@ func GetProtocol(hostPorts []string, threads int, timeout int) {
 				found.Response.FingerPrint.Service = "telnet"
 			}
 			hostPort := fmt.Sprintf("%s:%v", found.IP, found.Port)
-			structs.GlobalIPPortMapLock.Lock()
-			_, ok := structs.GlobalIPPortMap[hostPort]
-			structs.GlobalIPPortMapLock.Unlock()
-			if !ok {
-				structs.GlobalBannerHMap.Set(hostPort, []byte(found.Response.Raw))
-				structs.GlobalIPPortMapLock.Lock()
-				structs.GlobalIPPortMap[hostPort] = found.Response.FingerPrint.Service
-				structs.GlobalIPPortMapLock.Unlock()
-			}
+			structs.AddIPPortService(hostPort, found.Response.FingerPrint.Service, []byte(found.Response.Raw))
 			proto := found.Response.FingerPrint.Service
 			if proto == "" {
 				proto = "tcp"
@@ -74,6 +72,7 @@ func GetProtocol(hostPorts []string, threads int, timeout int) {
 				Protocol: proto,
 			})
 
+			bar.Add(1)
 			wg.Done()
 		}
 	}()

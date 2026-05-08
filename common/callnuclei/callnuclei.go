@@ -3,11 +3,14 @@ package callnuclei
 import (
 	"embed"
 	"fmt"
+	"io/fs"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"runtime"
 	"runtime/pprof"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/projectdiscovery/gologger"
@@ -26,6 +29,10 @@ var (
 	cfgFile    string
 	memProfile string // optional profile file path
 	options    = &types.Options{}
+
+	embeddedTemplatesOnce sync.Once
+	embeddedTemplatesDir  string
+	embeddedTemplatesErr  error
 )
 
 type NucleiParams struct {
@@ -44,8 +51,20 @@ type NucleiParams struct {
 
 func CallNuclei(param NucleiParams) []output.ResultEvent {
 
+	originalCB := param.CallBack
+	param.CallBack = func(result output.ResultEvent) {
+		if originalCB != nil {
+			originalCB(result)
+		}
+	}
+
 	// 设置结果回调
 	output.AddResultCallback = param.CallBack
+	previousSuppressStdout := output.SuppressStdout
+	output.SuppressStdout = false
+	defer func() {
+		output.SuppressStdout = previousSuppressStdout
+	}()
 	if err := exportrunner.ExportRunnerConfigureOptions(); err != nil {
 		gologger.Fatal().Msgf("Could not initialize options: %s\n", err)
 	}
@@ -167,12 +186,10 @@ func readConfig(param NucleiParams) {
 	// 不嵌入可执行文件是为了方便增删poc。
 	// dddd v2.0开始默认支持内嵌，此文件夹内的pocs做补充处理
 
-	if strings.HasPrefix(param.NP, "/") || param.NP[1] == ':' {
-		// unix绝对路径，windows绝对路径
-		options.Templates = []string{param.NP}
-	} else {
-		// 相对路径转绝对路径
-		options.Templates = []string{pwd + "/" + param.NP}
+	options.Templates = nil
+	templateDir := resolveTemplateDir(param, pwd)
+	if templateDir != "" {
+		options.Templates = []string{templateDir}
 	}
 
 	// 同步更新 nuclei 的默认模板目录，解决 workflow 引用外部模板时的路径问题
@@ -585,4 +602,63 @@ func init() {
 	// if os.Getenv("DEBUG") != "" {
 	// 	errorutil.ShowStackTrace = true
 	// }
+}
+
+func resolveTemplateDir(param NucleiParams, pwd string) string {
+	if param.NP != "" {
+		if strings.HasPrefix(param.NP, "/") || (len(param.NP) > 1 && param.NP[1] == ':') {
+			return param.NP
+		}
+		return filepath.Join(pwd, param.NP)
+	}
+
+	embeddedTemplatesOnce.Do(func() {
+		embeddedTemplatesDir, embeddedTemplatesErr = extractEmbeddedTemplates(param.Fs)
+	})
+	if embeddedTemplatesErr != nil {
+		gologger.Warning().Msgf("[Nuclei] 内嵌模板解包失败，将继续使用 EmbedPocsFS: %v", embeddedTemplatesErr)
+		return ""
+	}
+	return embeddedTemplatesDir
+}
+
+func extractEmbeddedTemplates(embeddedFS embed.FS) (string, error) {
+	rootDir, err := os.MkdirTemp("", "dddd-nuclei-pocs-")
+	if err != nil {
+		return "", err
+	}
+
+	baseDir := filepath.Join(rootDir, "config", "pocs")
+	if err := os.MkdirAll(baseDir, 0o755); err != nil {
+		return "", err
+	}
+
+	err = fs.WalkDir(embeddedFS, "config/pocs", func(path string, d fs.DirEntry, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		if path == "config/pocs" {
+			return nil
+		}
+		relativePath := strings.TrimPrefix(path, "config/pocs/")
+
+		targetPath := filepath.Join(baseDir, relativePath)
+		if d.IsDir() {
+			return os.MkdirAll(targetPath, 0o755)
+		}
+
+		data, err := embeddedFS.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		if err := os.MkdirAll(filepath.Dir(targetPath), 0o755); err != nil {
+			return err
+		}
+		return os.WriteFile(targetPath, data, 0o644)
+	})
+	if err != nil {
+		return "", err
+	}
+
+	return baseDir, nil
 }

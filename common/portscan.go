@@ -2,14 +2,17 @@ package common
 
 import (
 	"bytes"
+	"dddd/common/progress"
 	"dddd/ddout"
 	"dddd/lib/masscan"
 	"dddd/structs"
 	"dddd/utils"
 	"fmt"
+	"github.com/logrusorgru/aurora"
 	"github.com/projectdiscovery/gologger"
 	"os"
 	"os/exec"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -26,25 +29,33 @@ func ParsePort(ports string) (scanPorts []int) {
 		if port == "" {
 			continue
 		}
-		upper := port
+		startText := port
+		endText := port
 		if strings.Contains(port, "-") {
 			ranges := strings.Split(port, "-")
 			if len(ranges) < 2 {
 				continue
 			}
-
-			startPort, _ := strconv.Atoi(ranges[0])
-			endPort, _ := strconv.Atoi(ranges[1])
-			if startPort < endPort {
-				port = ranges[0]
-				upper = ranges[1]
-			} else {
-				port = ranges[1]
-				upper = ranges[0]
-			}
+			startText = strings.TrimSpace(ranges[0])
+			endText = strings.TrimSpace(ranges[1])
 		}
-		start, _ := strconv.Atoi(port)
-		end, _ := strconv.Atoi(upper)
+		start, errStart := strconv.Atoi(startText)
+		end, errEnd := strconv.Atoi(endText)
+		if errStart != nil || errEnd != nil {
+			continue
+		}
+		if start > end {
+			start, end = end, start
+		}
+		if start < 1 {
+			start = 1
+		}
+		if end > 65535 {
+			end = 65535
+		}
+		if start > end {
+			continue
+		}
 		for i := start; i <= end; i++ {
 			scanPorts = append(scanPorts, i)
 		}
@@ -53,38 +64,92 @@ func ParsePort(ports string) (scanPorts []int) {
 	return scanPorts
 }
 
+func FilterPorts(ports, noPorts string) []int {
+	scanPorts := ParsePort(ports)
+	excludePorts := ParsePort(noPorts)
+	if len(excludePorts) == 0 {
+		return scanPorts
+	}
+
+	excludeSet := make(map[int]struct{}, len(excludePorts))
+	for _, port := range excludePorts {
+		excludeSet[port] = struct{}{}
+	}
+
+	probePorts := make([]int, 0, len(scanPorts))
+	for _, port := range scanPorts {
+		if _, excluded := excludeSet[port]; excluded {
+			continue
+		}
+		probePorts = append(probePorts, port)
+	}
+	return probePorts
+}
+
+func FormatPorts(ports []int) string {
+	if len(ports) == 0 {
+		return ""
+	}
+	sort.Ints(ports)
+
+	var ranges []string
+	start := ports[0]
+	previous := ports[0]
+	appendRange := func(from, to int) {
+		if from == to {
+			ranges = append(ranges, strconv.Itoa(from))
+			return
+		}
+		ranges = append(ranges, fmt.Sprintf("%d-%d", from, to))
+	}
+
+	for _, port := range ports[1:] {
+		if port == previous+1 {
+			previous = port
+			continue
+		}
+		appendRange(start, previous)
+		start = port
+		previous = port
+	}
+	appendRange(start, previous)
+
+	return strings.Join(ranges, ",")
+}
+
 var BackList map[string]struct{}
 var BackListLock sync.Mutex
 
 func PortScanTCP(IPs []string, Ports string, NoPorts string, timeout int) []string {
 	var AliveAddress []string
 	gologger.AuditTimeLogger("开始TCP端口扫描，端口设置: %s\nTCP端口扫描目标:%s", Ports, strings.Join(IPs, ","))
-	ports := ParsePort(Ports)
-	noPorts := ParsePort(NoPorts)
-
-	var probePorts []int
-	for _, port := range ports {
-		ok := false
-		for _, nport := range noPorts {
-			if nport == port {
-				ok = true
-				break
-			}
-		}
-		if !ok {
-			probePorts = append(probePorts, port)
-		}
+	probePorts := FilterPorts(Ports, NoPorts)
+	if len(probePorts) == 0 {
+		gologger.Info().Msg("端口扫描列表为空，跳过TCP端口扫描")
+		return nil
 	}
 
 	IPPortCount := make(map[string]int)
 	BackList = make(map[string]struct{})
 
 	workers := structs.GlobalConfig.TCPPortScanThreads
-	if workers > len(IPs)*len(probePorts) {
-		workers = len(IPs) * len(probePorts)
+	totalJobs := len(IPs) * len(probePorts)
+	if workers <= 0 {
+		workers = 1
 	}
-	Addrs := make(chan Addr, structs.GlobalConfig.TCPPortScanThreads)
-	results := make(chan string, structs.GlobalConfig.TCPPortScanThreads)
+	if workers > totalJobs {
+		workers = totalJobs
+	}
+
+	// 端口扫描进度条
+	var bar *progress.Bar
+	if totalJobs > 0 {
+		bar = progress.New("端口扫描", totalJobs)
+		defer bar.Finish()
+	}
+
+	Addrs := make(chan Addr, workers)
+	results := make(chan string, workers)
 	var wg sync.WaitGroup
 
 	//接收结果
@@ -123,6 +188,9 @@ func PortScanTCP(IPs []string, Ports string, NoPorts string, timeout int) []stri
 		go func() {
 			for addr := range Addrs {
 				PortConnect(addr, results, timeout, &wg)
+				if bar != nil {
+					bar.Add(1)
+				}
 				wg.Done()
 			}
 		}()
@@ -190,6 +258,12 @@ func PortConnect(addr Addr, respondingHosts chan<- string, adjustedTimeout int, 
 }
 
 func PortScanSYN(IPs []string) []string {
+	ports := FilterPorts(structs.GlobalConfig.Ports, structs.GlobalConfig.NoPortString)
+	if len(ports) == 0 {
+		gologger.Info().Msg("端口扫描列表为空，跳过SYN端口扫描")
+		return nil
+	}
+
 	ips := strings.Join(utils.RemoveDuplicateElement(IPs), "\n")
 	err := os.WriteFile("masscan_tmp.txt", []byte(ips), 0666)
 	if err != nil {
@@ -199,12 +273,12 @@ func PortScanSYN(IPs []string) []string {
 
 	ms := masscan.New(structs.GlobalConfig.MasscanPath)
 	ms.SetFileName("masscan_tmp.txt")
-	ms.SetPorts("1-65535")
+	ms.SetPorts(FormatPorts(ports))
 	ms.SetRate(strconv.Itoa(structs.GlobalConfig.SYNPortScanThreads))
 	if structs.GlobalConfig.MasscanInterface != "" {
 		ms.SetInterface(structs.GlobalConfig.MasscanInterface)
 	}
-	gologger.Info().Msgf("调用masscan进行SYN端口扫描")
+	gologger.Info().Msg(aurora.BrightMagenta("调用masscan进行SYN端口扫描").String())
 	err = ms.Run()
 	gologger.AuditTimeLogger("masscan扫描结束")
 	if err != nil {

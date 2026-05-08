@@ -3,12 +3,12 @@ package report
 import (
 	"dddd/ddout"
 	"dddd/structs"
-	"encoding/json"
 	"fmt"
 	"os"
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/projectdiscovery/nuclei/v3/pkg/model/types/severity"
@@ -47,30 +47,80 @@ func writeFile(result string, filename string) {
 }
 
 var ReportIndex = 1
+var nucleiResultSeen map[string]struct{}
+var nucleiResultSeenLock sync.Mutex
+var reportInitialized bool
+var reportFinalized bool
+var apiUnauthResults []ddout.OutputMessage
+var apiUnauthScanResults []ddout.OutputMessage
+var apiUnauthResultsLock sync.Mutex
 
 func GenerateHTMLReportHeader() {
 	if structs.GlobalConfig.ReportName == "" {
 		structs.GlobalConfig.ReportName = strconv.Itoa(int(time.Now().Unix())) + ".html"
 	}
+	if reportInitialized {
+		return
+	}
+	nucleiResultSeenLock.Lock()
+	nucleiResultSeen = make(map[string]struct{})
+	nucleiResultSeenLock.Unlock()
+	apiUnauthResultsLock.Lock()
+	apiUnauthResults = nil
+	apiUnauthScanResults = nil
+	apiUnauthResultsLock.Unlock()
+	reportInitialized = true
+	reportFinalized = false
+	_ = os.Remove(structs.GlobalConfig.ReportName)
 	showData := defaultHeader()
 	writeFile(showData, structs.GlobalConfig.ReportName)
+}
+
+func AddAPIUnauthResult(result ddout.OutputMessage) {
+	GenerateHTMLReportHeader()
+
+	apiUnauthResultsLock.Lock()
+	defer apiUnauthResultsLock.Unlock()
+	for _, existing := range apiUnauthResults {
+		if existing.URI == result.URI {
+			return
+		}
+	}
+	apiUnauthResults = append(apiUnauthResults, result)
+}
+
+func AddAPIUnauthScanResult(result ddout.OutputMessage) {
+	GenerateHTMLReportHeader()
+
+	apiUnauthResultsLock.Lock()
+	defer apiUnauthResultsLock.Unlock()
+	for _, existing := range apiUnauthScanResults {
+		if existing.URI == result.URI {
+			return
+		}
+	}
+	apiUnauthScanResults = append(apiUnauthScanResults, result)
+}
+
+func shouldSkipNucleiResult(result output.ResultEvent) bool {
+	key := fmt.Sprintf("%s|%s|%s|%s", result.TemplateID, result.Host, result.Matched, strings.Join(result.ExtractedResults, ","))
+
+	nucleiResultSeenLock.Lock()
+	defer nucleiResultSeenLock.Unlock()
+
+	if _, ok := nucleiResultSeen[key]; ok {
+		return true
+	}
+	nucleiResultSeen[key] = struct{}{}
+	return false
 }
 
 func AddResultByResultEvent(result output.ResultEvent) {
 	if structs.GlobalConfig.ReportName == "" {
 		return
 	}
-
-	b, e := json.Marshal(result)
-	if e == nil {
-		show := fmt.Sprintf("[%s] [%s] %v", result.TemplateID,
-			result.Info.SeverityHolder.Severity.String(),
-			result.Matched)
-		ddout.FormatOutput(ddout.OutputMessage{
-			Type:   "Nuclei",
-			Nuclei: string(b),
-			Show:   show,
-		})
+	if shouldSkipNucleiResult(result) {
+		return
 	}
 
 	severityString := getSeverity(result.Info.SeverityHolder.Severity)
@@ -212,9 +262,22 @@ type urlInfo struct {
 }
 
 func AddFingerprintSection() {
-	if structs.GlobalConfig.ReportName == "" || len(structs.GlobalResultMap) == 0 {
+	if structs.GlobalConfig.ReportName == "" {
 		return
 	}
+	if reportFinalized {
+		return
+	}
+	if !reportInitialized {
+		GenerateHTMLReportHeader()
+	}
+
+	apiUnauthResultsLock.Lock()
+	apiResults := make([]ddout.OutputMessage, len(apiUnauthResults))
+	copy(apiResults, apiUnauthResults)
+	apiScanResults := make([]ddout.OutputMessage, len(apiUnauthScanResults))
+	copy(apiScanResults, apiUnauthScanResults)
+	apiUnauthResultsLock.Unlock()
 
 	fingerprintGroups := make(map[string][]urlInfo)
 	identifiedURLs := make(map[string]bool)
@@ -267,6 +330,155 @@ func AddFingerprintSection() {
 
 	var html strings.Builder
 	html.WriteString(`</div>
+		<div id="tab-api-unauth" class="tab-content">
+		<div class="fingerprint-section">
+		<h2 class="fingerprint-title">API-Unauth 结果分组</h2>
+		<div class="fingerprint-stats">
+			<div class="stats-row">
+				<span class="stats-label">扫描目标：</span><span class="highlight">`)
+	html.WriteString(fmt.Sprintf("%d", len(apiScanResults)))
+	html.WriteString(`</span>
+				<span class="stats-separator">|</span>
+				<span class="stats-label">疑似未授权目标：</span><span class="highlight red">`)
+	html.WriteString(fmt.Sprintf("%d", len(apiResults)))
+	html.WriteString(`</span>
+			</div>
+		</div>`)
+
+	if len(apiScanResults) > 0 {
+		html.WriteString(`<div class="fingerprint-list">
+			<h3 class="list-title">未授权扫描明细</h3>
+			<div class="fingerprint-item">
+				<div class="fingerprint-header" onclick="$(this).next('.fingerprint-urls').toggle();$(this).find('.toggle-icon').toggleClass('rotated')">
+					<span class="fingerprint-name">全部扫描目标</span>
+					<span class="fingerprint-count">`)
+		html.WriteString(fmt.Sprintf("%d", len(apiScanResults)))
+		html.WriteString(` 个URL</span>
+					<span class="toggle-icon">▼</span>
+				</div>
+				<div class="fingerprint-urls" style="display:none;">
+					<table class="url-table">
+						<thead>
+							<tr><th>URL</th><th>状态码</th><th>标题</th><th>来源</th></tr>
+						</thead>
+						<tbody>`)
+		for _, result := range apiScanResults {
+			statusCode, _ := strconv.Atoi(result.Web.Status)
+			statusClass := "status-ok"
+			if statusCode >= 400 {
+				statusClass = "status-error"
+			} else if statusCode >= 300 {
+				statusClass = "status-redirect"
+			}
+			html.WriteString(`<tr>
+				<td><a href="`)
+			html.WriteString(xssfilter(result.URI))
+			html.WriteString(`" target="_blank">`)
+			html.WriteString(xssfilter(result.URI))
+			html.WriteString(`</a></td>
+				<td class="`)
+			html.WriteString(statusClass)
+			html.WriteString(`">`)
+			html.WriteString(xssfilter(result.Web.Status))
+			html.WriteString(`</td>
+				<td>`)
+			html.WriteString(xssfilter(result.Web.Title))
+			html.WriteString(`</td>
+				<td>`)
+			html.WriteString(xssfilter(result.AdditionalMsg))
+			html.WriteString(`</td>
+			</tr>`)
+		}
+		html.WriteString(`</tbody></table></div></div></div>`)
+	}
+
+	if len(apiResults) == 0 {
+		html.WriteString(`<div class="fingerprint-item">
+			<div class="fingerprint-header">
+				<span class="fingerprint-name">当前无 API-Unauth 命中结果</span>
+			</div>
+		</div>`)
+	} else {
+		html.WriteString(`<div class="fingerprint-list"><h3 class="list-title">疑似未授权命中</h3>`)
+		sourceGroups := make(map[string][]ddout.OutputMessage)
+		for _, result := range apiResults {
+			source := result.AdditionalMsg
+			if source == "" {
+				source = "Katana"
+			}
+			sourceGroups[source] = append(sourceGroups[source], result)
+		}
+
+		type apiGroup struct {
+			Name    string
+			Results []ddout.OutputMessage
+			Count   int
+		}
+
+		var sortedAPIGroups []apiGroup
+		for name, results := range sourceGroups {
+			sortedAPIGroups = append(sortedAPIGroups, apiGroup{
+				Name:    name,
+				Results: results,
+				Count:   len(results),
+			})
+		}
+		sort.Slice(sortedAPIGroups, func(i, j int) bool {
+			if sortedAPIGroups[i].Count == sortedAPIGroups[j].Count {
+				return sortedAPIGroups[i].Name < sortedAPIGroups[j].Name
+			}
+			return sortedAPIGroups[i].Count > sortedAPIGroups[j].Count
+		})
+
+		html.WriteString(`<div class="fingerprint-list">`)
+		for _, group := range sortedAPIGroups {
+			html.WriteString(`<div class="fingerprint-item">
+				<div class="fingerprint-header" onclick="$(this).next('.fingerprint-urls').toggle();$(this).find('.toggle-icon').toggleClass('rotated')">
+					<span class="fingerprint-name">`)
+			html.WriteString(xssfilter(group.Name))
+			html.WriteString(`</span>
+					<span class="fingerprint-count">`)
+			html.WriteString(fmt.Sprintf("%d", group.Count))
+			html.WriteString(` 个结果</span>
+					<span class="toggle-icon">▼</span>
+				</div>
+				<div class="fingerprint-urls" style="display:none;">
+					<table class="url-table">
+						<thead>
+							<tr><th>URL</th><th>状态码</th><th>标题</th></tr>
+						</thead>
+						<tbody>`)
+			for _, result := range group.Results {
+				statusCode, _ := strconv.Atoi(result.Web.Status)
+				statusClass := "status-ok"
+				if statusCode >= 400 {
+					statusClass = "status-error"
+				} else if statusCode >= 300 {
+					statusClass = "status-redirect"
+				}
+				html.WriteString(`<tr>
+					<td><a href="`)
+				html.WriteString(xssfilter(result.URI))
+				html.WriteString(`" target="_blank">`)
+				html.WriteString(xssfilter(result.URI))
+				html.WriteString(`</a></td>
+					<td class="`)
+				html.WriteString(statusClass)
+				html.WriteString(`">`)
+				html.WriteString(xssfilter(result.Web.Status))
+				html.WriteString(`</td>
+					<td>`)
+				html.WriteString(xssfilter(result.Web.Title))
+				html.WriteString(`</td>
+				</tr>`)
+			}
+			html.WriteString(`</tbody></table></div></div>`)
+		}
+		html.WriteString(`</div>`)
+	}
+
+	html.WriteString(`</div>
+		</div>
 		<div id="tab-fingerprint" class="tab-content">
 		<div class="fingerprint-section">
 		<h2 class="fingerprint-title">指纹分类统计</h2>
@@ -395,6 +607,15 @@ func AddFingerprintSection() {
 	</html>`)
 
 	writeFile(html.String(), structs.GlobalConfig.ReportName)
+	reportFinalized = true
+}
+
+func FinalizeHTMLReport() {
+	if structs.GlobalConfig.ReportName == "" && !structs.GlobalConfig.EnableAPIUnauthScan {
+		return
+	}
+	GenerateHTMLReportHeader()
+	AddFingerprintSection()
 }
 
 func extractURLs(infos []urlInfo) []string {

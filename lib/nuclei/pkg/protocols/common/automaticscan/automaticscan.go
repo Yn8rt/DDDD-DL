@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/logrusorgru/aurora"
 	"github.com/pkg/errors"
 	"github.com/projectdiscovery/gologger"
 	"github.com/projectdiscovery/nuclei/v3/pkg/catalog/config"
@@ -161,7 +162,7 @@ const maxDefaultBody = 2 * 1024 * 1024
 //
 // The returned tags are then used for further execution.
 func (s *Service) executeWappalyzerTechDetection() error {
-	gologger.Info().Msgf("Nuclei引擎启动")
+	gologger.Info().Msg(aurora.BrightRed("Nuclei引擎启动").String())
 
 	// Iterate through each target making http request and identifying fingerprints
 	inputPool := s.engine.WorkPool().InputPool(types.HTTPProtocol)

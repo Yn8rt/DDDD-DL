@@ -9,21 +9,20 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"strconv"
 	"strings"
 	"sync"
 	"time"
 
+	"dddd/common/callnuclei"
+	commonhttp "dddd/common/http"
+	"dddd/common/report"
+	"dddd/lib/ddfinger"
+	structs "dddd/structs"
 	"github.com/logrusorgru/aurora"
 	"github.com/projectdiscovery/gologger"
 	"github.com/projectdiscovery/httpx"
 	"github.com/projectdiscovery/httpx/runner"
 	"github.com/projectdiscovery/nuclei/v3/pkg/output"
-	structs "dddd/structs"
-	"dddd/common/callnuclei"
-	commonhttp "dddd/common/http"
-	"dddd/common/report"
-	"dddd/lib/ddfinger"
 	"gopkg.in/yaml.v2"
 )
 
@@ -540,14 +539,14 @@ func (p *PassiveScanProxy) scanTarget(target string) {
 						report.AddResultByResultEvent(result)
 					}
 				},
-				NameForSearch:     structs.GlobalConfig.PocNameForSearch,
-				NoInteractsh:      structs.GlobalConfig.NoInteractsh,
-				Fs:                structs.GlobalEmbedPocs,
-				NP:                structs.GlobalConfig.NucleiTemplate,
-				ExcludeTags:       strings.Split(structs.GlobalConfig.ExcludeTags, ","),
-				Severities:        strings.Split(structs.GlobalConfig.Severities, ","),
-				InteractshServer:  structs.GlobalConfig.InteractshURL,
-				InteractshToken:   structs.GlobalConfig.InteractshToken,
+				NameForSearch:    structs.GlobalConfig.PocNameForSearch,
+				NoInteractsh:     structs.GlobalConfig.NoInteractsh,
+				Fs:               structs.GlobalEmbedPocs,
+				NP:               structs.GlobalConfig.NucleiTemplate,
+				ExcludeTags:      strings.Split(structs.GlobalConfig.ExcludeTags, ","),
+				Severities:       strings.Split(structs.GlobalConfig.Severities, ","),
+				InteractshServer: structs.GlobalConfig.InteractshURL,
+				InteractshToken:  structs.GlobalConfig.InteractshToken,
 			}
 
 			callnuclei.CallNuclei(param)
@@ -555,7 +554,7 @@ func (p *PassiveScanProxy) scanTarget(target string) {
 			gologger.Info().Msgf(aurora.Yellow("[-] 该指纹未配置对应 POC，跳过漏洞扫描").String())
 		}
 	} else {
-		gologger.Info().Msgf(aurora.Yellow("[-] 漏洞扫描已禁用 (-np)").String())
+		gologger.Info().Msgf(aurora.Yellow("[-] 漏洞扫描已禁用 (-npoc)").String())
 	}
 
 	gologger.Info().Msgf(aurora.BrightGreen("[✓] 扫描完成: %s").String(), normalizedTarget)
@@ -580,76 +579,7 @@ func (p *PassiveScanProxy) urlCallBack(resp runner.Result) {
 	if err != nil {
 		return
 	}
-
-	pth := url.Path
-	if pth == "" {
-		pth = "/"
-	}
-	rootURL := fmt.Sprintf("%s://%s", url.Scheme, url.Host)
-
-	structs.GlobalURLMapLock.Lock()
-	_, rootURLOK := structs.GlobalURLMap[rootURL]
-	structs.GlobalURLMapLock.Unlock()
-
-	if rootURLOK {
-		// 有这个root，查看这个path，如果没这个path再加
-		structs.GlobalURLMapLock.Lock()
-		_, pathOK := structs.GlobalURLMap[rootURL].WebPaths[url.Path]
-		structs.GlobalURLMapLock.Unlock()
-		if !pathOK {
-			// 没有这个path
-			md5 := resp.Hashes["body_md5"].(string)
-			headerMd5 := resp.Hashes["header_md5"].(string)
-			_ = structs.GlobalHttpBodyHMap.Set(md5, []byte(resp.Body))
-			_ = structs.GlobalHttpHeaderHMap.Set(headerMd5, []byte(resp.Header))
-			structs.GlobalURLMapLock.Lock()
-			structs.GlobalURLMap[rootURL].WebPaths[pth] = structs.UrlPathEntity{
-				Hash:             md5,
-				Title:            resp.Title,
-				StatusCode:       resp.StatusCode,
-				ContentType:      resp.ContentType,
-				Server:           resp.WebServer,
-				ContentLength:    resp.ContentLength,
-				HeaderHashString: headerMd5,
-				IconHash:         resp.FavIconMMH3,
-			}
-			structs.GlobalURLMapLock.Unlock()
-		}
-	} else {
-		// 没有这个url，创建新的
-		port, err := strconv.Atoi(resp.Port)
-		if err != nil {
-			port = 0
-		}
-
-		md5 := resp.Hashes["body_md5"].(string)
-		headerMd5 := resp.Hashes["header_md5"].(string)
-		_ = structs.GlobalHttpBodyHMap.Set(md5, []byte(resp.Body))
-		_ = structs.GlobalHttpHeaderHMap.Set(headerMd5, []byte(resp.Header))
-
-		// 获取 TLS 证书信息
-		cert := p.getTLSString(resp)
-
-		structs.GlobalURLMapLock.Lock()
-		structs.GlobalURLMap[rootURL] = structs.URLEntity{
-			IP:   resp.Host,
-			Port: port,
-			Cert: cert,
-			WebPaths: map[string]structs.UrlPathEntity{
-				pth: {
-					Hash:             md5,
-					Title:            resp.Title,
-					StatusCode:       resp.StatusCode,
-					ContentType:      resp.ContentType,
-					Server:           resp.WebServer,
-					ContentLength:    resp.ContentLength,
-					HeaderHashString: headerMd5,
-					IconHash:         resp.FavIconMMH3,
-				},
-			},
-		}
-		structs.GlobalURLMapLock.Unlock()
-	}
+	commonhttp.StoreURLResult(resp, url.String())
 }
 
 // getTLSString 从 TLSData 中提取证书信息
@@ -734,7 +664,7 @@ func (p *PassiveScanProxy) loadBlackFinger() map[string]bool {
 	blackFingerMap := make(map[string]bool)
 
 	// 如果用户指定了自定义黑名单文件，优先使用
-	if structs.GlobalConfig.ProxyBlackFingerFile != "" && structs.GlobalConfig.ProxyBlackFingerFile != "common/config/blackfinger.yaml" {
+	if structs.GlobalConfig.ProxyBlackFingerFile != "" && structs.GlobalConfig.ProxyBlackFingerFile != "embedded" {
 		data, err := os.ReadFile(structs.GlobalConfig.ProxyBlackFingerFile)
 		if err == nil {
 			// 解析 YAML
@@ -757,6 +687,14 @@ func (p *PassiveScanProxy) loadBlackFinger() map[string]bool {
 			}
 		}
 		gologger.Warning().Msgf("[代理] 无法读取自定义黑名单文件，使用默认黑名单")
+	}
+
+	if len(structs.GlobalBlackFingerMap) > 0 {
+		for finger := range structs.GlobalBlackFingerMap {
+			blackFingerMap[finger] = true
+		}
+		gologger.Info().Msgf("[代理] 已加载内嵌指纹黑名单 (%d 个)", len(blackFingerMap))
+		return blackFingerMap
 	}
 
 	// 使用硬编码的默认黑名单
