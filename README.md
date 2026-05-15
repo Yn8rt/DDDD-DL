@@ -85,6 +85,9 @@ domain.suffix="example.com"
 | --- | --- |
 | `-npoc` | 关闭漏洞探测，只做信息收集 |
 | `-dgp` | 关闭 `General-Poc-*` 通用 POC 映射 |
+| `--nuclei-timeout` | Nuclei 单请求超时时间，默认 `20` 秒，慢跳转/慢响应站点建议调大 |
+| `--nuclei-retries` | Nuclei 请求失败重试次数，默认 `2` |
+| `--nuclei-max-host-error` | Nuclei 主机错误跳过阈值，默认 `0` 表示不因累计错误跳过已探活目标 |
 | `-nps` | 关闭 IP 自动端口扫描 |
 | `-nd` | 关闭主动 Web 路径指纹探测 |
 | `-nhb` | 关闭域名绑定探测 |
