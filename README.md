@@ -1,6 +1,10 @@
 # dddd-dl
 
 `dddd-dl` 是一款面向授权渗透测试、红队资产梳理和供应链漏洞排查的自动化工具。项目基于 dddd 工作流进行增强，重点优化了低感知扫描、外部子域名引擎、进度统计、被动/主动指纹识别、POC 映射和结果输出。
+## POC更新
+
+<img width="2514" height="1604" alt="image" src="https://github.com/user-attachments/assets/bc8e0001-e35b-4d61-b9c0-078024a2a08a" />
+
 
 ## 功能特性
 
